@@ -1,63 +1,51 @@
 #!/usr/bin/env python3
-import json, sys, urllib.request, urllib.parse, time, http.cookiejar, re
+import json, urllib.request, urllib.parse
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
-cj = http.cookiejar.CookieJar()
-op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
-def get(url, n=1500, data=None, headers=None, quiet=False):
-    h = {"User-Agent": UA, "Accept": "*/*", "Accept-Language": "de-DE,de;q=0.9,en;q=0.8"}
+def get(url, n=1200, data=None, headers=None, quiet=False):
+    h = {"User-Agent": UA, "Accept": "*/*"}
     if headers: h.update(headers)
     try:
-        with op.open(urllib.request.Request(url, data=data, headers=h), timeout=25) as r:
+        with urllib.request.urlopen(urllib.request.Request(url, data=data, headers=h), timeout=25) as r:
             b = r.read().decode("utf-8", "replace")
-            if not quiet: print(f"\n### {r.status} {r.geturl()} ({len(b)} B)\n{b[:n]}")
+            if not quiet: print(f"\n### {r.status} {url} ({len(b)} B)\n{b[:n]}")
             return b
     except urllib.error.HTTPError as e:
-        b = e.read().decode("utf-8", "replace"); print(f"\n### HTTP {e.code} {url}\n{b[:300]}")
+        b = e.read().decode("utf-8", "replace"); print(f"\n### HTTP {e.code} {url}\n{b[:400]}")
     except Exception as e:
         print(f"\n### ERR {url} {e!r}")
 def sec(s): print("\n\n================ " + s + " ================")
 
-sec("YAHOO cookie+crumb")
-get("https://fc.yahoo.com", 200)
-print("cookies:", [c.name + "@" + c.domain for c in cj])
-crumb = get("https://query1.finance.yahoo.com/v1/test/getcrumb", 100)
-print("crumb:", crumb)
-if crumb and len(crumb) < 30:
-    get(f"https://query1.finance.yahoo.com/v8/finance/chart/7203.T?range=5d&interval=1d&crumb={crumb}", 1200)
-    get(f"https://query1.finance.yahoo.com/v7/finance/quote?symbols=AAPL,7203.T&crumb={crumb}", 800)
-get("https://finance.yahoo.com/quote/7203.T/", 300)
-print("cookies after page:", [c.name + "@" + c.domain for c in cj])
-
-sec("ONVISTA detail")
-s = get("https://api.onvista.de/api/v1/stocks/ISIN:DE0007164600/snapshot", 0, quiet=True)
-j = json.loads(s)
-print("quote keys:", json.dumps(j["quote"])[:1200])
-print("\nfirst quoteList entry:", json.dumps(j["quoteList"]["list"][0])[:1500])
-print("\nchart:", json.dumps(j.get("chart"))[:800])
-q0 = j["quoteList"]["list"][1]
-idn = q0.get("market", {}).get("idNotation") or q0.get("idNotation")
-print("idNotation candidates", {k: v for k, v in q0.items() if "otation" in k.lower()}, {k: v for k, v in q0.get("market", {}).items()})
-for path in ["eod_history?idNotation={i}&range=Y1&startDate=2025-10-01", "chart_history?idNotation={i}&range=M1&resolution=1D", "eod_history?idNotation={i}&range=M1"]:
-    get(f"https://api.onvista.de/api/v1/instruments/STOCK/82849/" + path.format(i=idn), 900)
-for isin in ["US0378331005", "AU000000PDN8", "JE00BF50RG45", "SE0000108656"]:
-    s = get(f"https://api.onvista.de/api/v1/stocks/ISIN:{isin}/snapshot", 0, quiet=True)
-    if s:
-        jj = json.loads(s)
-        print(isin, jj["instrument"].get("name"), [(q["market"].get("name"), q["market"].get("codeMarket"), q.get("isoCurrency")) for q in jj.get("quoteList", {}).get("list", [])])
-get("https://api.onvista.de/api/v1/instruments/search/facet?searchValue=Cameco", 600)
-
+sec("FT search")
+for q in ["CA13321L1085", "Cameco", "Paladin Energy", "Kazatomprom", "Ericsson", "TotalEnergies", "Eni", "Equinor", "Nestle", "NexGen Energy", "Skyharbour", "Toyota", "Denison Mines", "Yellow Cake", "Energy Fuels"]:
+    b = get("https://markets.ft.com/data/searchapi/searchsecurities?" + urllib.parse.urlencode({"query": q}), quiet=True)
+    if b:
+        for s in json.loads(b)["data"]["security"][:12]:
+            print(f"   {q:16} {s['symbol']:18} xid={s['xid']:10} {s.get('assetClass')} prim={s.get('isPrimary')} {s['name']}")
+sec("FT chart")
+for xid in ["27182"]:
+    body = json.dumps({"days": 400, "dataNormalized": False, "dataPeriod": "Day", "dataInterval": 1, "realtime": False, "yFormat": "0.###", "timeServiceFormat": "JSON", "returnDateType": "ISO8601", "elements": [{"Type": "price", "Symbol": xid, "OverlayIndicators": [], "Params": {}}]}).encode()
+    b = get("https://markets.ft.com/data/chartapi/series", 600, data=body, headers={"Content-Type": "application/json"})
+    if b:
+        j = json.loads(b); print("keys", list(j.keys())); print("dates", j.get("Dates", [])[:3], j.get("Dates", [])[-2:], len(j.get("Dates", [])))
+        for el in j.get("Elements", []):
+            print("el", el.get("Type"), el.get("Symbol"), el.get("Currency"), el.get("Label"), [(c.get("Type"), c.get("Values", [])[-3:]) for c in el.get("ComponentSeries", [])])
+get("https://markets.ft.com/data/equities/tearsheet/summary?s=7203:TYO", 0, quiet=True) and print("tearsheet ok")
 sec("CNBC")
-get("https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=7203-JP%7CCCO-CA%7CPDN-AU%7CSHEL-GB&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json", 1500)
-get("https://ts-api.cnbc.com/harmony/app/charts/1Y.json?symbol=7203-JP", 800)
-get("https://ts-api.cnbc.com/harmony/app/bars/7203-JP/1D/20250101000000/20261017000000/adjusted/EST5EDT.json", 800)
-
-sec("FT")
-get("https://markets.ft.com/data/searchapi/searchsecurities?query=toyota", 800)
-body = json.dumps({"days": 30, "dataNormalized": False, "dataPeriod": "Day", "dataInterval": 1, "realtime": False, "yFormat": "0.###", "timeServiceFormat": "JSON", "returnDateType": "ISO8601", "elements": [{"Type": "price", "Symbol": "7203:TYO"}]}).encode()
-get("https://markets.ft.com/data/chartapi/series", 800, data=body, headers={"Content-Type": "application/json"})
-
-sec("STOOQ")
-get("https://stooq.com/q/d/l/?s=7203.jp&i=d", 300)
-
-sec("LS-TC history")
-get("https://www.ls-tc.de/_rpc/json/instrument/chart/dataForInstrument?container=chart1&instrumentId=34313&marketId=1&quotetype=mid&series=history&type=mini&localeId=2", 600)
+get("https://ts-api.cnbc.com/harmony/app/bars/CCO-CA/1D/20250101000000/20261017000000/adjusted/EST5EDT.json", 700)
+get("https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=7203-JP%7C7203-TK%7CTM&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json", 500)
+sec("ONVISTA more")
+for path in ["eod_history?idNotation=163500&range=Y1", "eod_history?idNotation=163500&range=Y5&startDate=2024-01-01"]:
+    b = get("https://api.onvista.de/api/v1/instruments/STOCK/82849/" + path, 0, quiet=True)
+    if b:
+        j = json.loads(b); print(path, {k: (len(v) if isinstance(v, list) else v) for k, v in j.items() if k not in ("market",)})
+b = get("https://api.onvista.de/api/v1/instruments/search/facet?searchValue=Cameco", 0, quiet=True)
+for f in json.loads(b)["facets"]:
+    for r in (f.get("results") or []): print("  ", f["type"], r.get("entityValue"), r.get("name"), r.get("isin"), r.get("symbol"))
+b = get("https://api.onvista.de/api/v1/instruments/search/facet?searchValue=Bitcoin", 0, quiet=True)
+for f in json.loads(b)["facets"]:
+    for r in (f.get("results") or [])[:3]: print("  ", f["type"], r.get("entityValue"), r.get("name"), r.get("isin"), r.get("symbol"))
+sec("LS-TC")
+get("https://www.ls-tc.de/_rpc/json/instrument/chart/dataForInstrument?container=chart1&instrumentId=34313&marketId=1&quotetype=mid&series=intraday&type=mini&localeId=2", 400)
+sec("TwelveData keyless reference")
+get("https://api.twelvedata.com/symbol_search?symbol=JP3633400001", 800)
+get("https://api.twelvedata.com/exchanges?type=stock", 600)
