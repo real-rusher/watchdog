@@ -1,0 +1,190 @@
+
+
+================ FT search ================
+   CA13321L1085     CCO:TOR            xid=71674      Equities prim=True Cameco Corporation
+   CA13321L1085     0R35:LSE           xid=447847727  Equities prim=False Cameco Corporation
+   CA13321L1085     CCJ:NYQ            xid=71569      Equities prim=False Cameco Corporation
+   CA13321L1085     CJ6:FRA            xid=71670      Equities prim=False Cameco Corporation
+   CA13321L1085     CJ6:MUN            xid=71672      Equities prim=False Cameco Corporation
+   CA13321L1085     IDIN:LSE:USD       xid=5869645    ETFs prim=True iShares Global Infrastructure UCITS ETF USD (Dist)
+   CA13321L1085     IH2O:LSE:GBX       xid=7012026    ETFs prim=True iShares Global Water UCITS ETF USD (Dist)
+   CA13321L1085     INRG:LSE:GBX       xid=8038361    ETFs prim=True iShares Global Clean Energy Transition UCITS ETF USD (Dist)
+   CA13321L1085     WOOD:LSE:GBX       xid=8967065    ETFs prim=True iShares Global Timber & Forestry UCITS ETF USD (Dist)
+   CA13321L1085     LU0093176195:USD   xid=4046       Funds prim=True Goldman Sachs Global Fixed Income Portfolio Base Inc USD
+   Cameco           CCO:TOR            xid=71674      Equities prim=True Cameco Corporation
+   Cameco           0R35:LSE           xid=447847727  Equities prim=False Cameco Corporation
+   Cameco           CCJ:NYQ            xid=71569      Equities prim=False Cameco Corporation
+   Cameco           CCJ:NYS            xid=71571      Equities prim=False Cameco Corporation
+   Cameco           CJ6:FRA            xid=71670      Equities prim=False Cameco Corporation
+   Cameco           CCOE:TOR           xid=1008125978 ETFs prim=True Harvest Cameco Enhanced High Income Shares ETF
+   Cameco           CCHI:TOR           xid=1008373928 ETFs prim=True Ninepoint Cameco Highshares ETF
+   Cameco           CCOU:TOR           xid=1022094570 ETFs prim=True SavvyLong (2X) Cameco ETF
+   Paladin Energy   PDN:ASX            xid=879705953  Equities prim=True Paladin Energy Ltd
+   Paladin Energy   PUR:FRA            xid=226969     Equities prim=False Paladin Energy Ltd
+   Paladin Energy   PUR:MUN            xid=226970     Equities prim=False Paladin Energy Ltd
+   Paladin Energy   PUR:STU            xid=226971     Equities prim=False Paladin Energy Ltd
+   Paladin Energy   PUR:HAM            xid=79839021   Equities prim=False Paladin Energy Ltd
+   Kazatomprom      KAP:LSE            xid=501063446  Equities prim=False Natsional'naya Atomnaya Kompaniya Kazatomprom AO
+   Kazatomprom      59OT:LSE           xid=501810518  Equities prim=False Natsional'naya Atomnaya Kompaniya Kazatomprom AO
+   Kazatomprom      0ZQ:STU            xid=501673361  Equities prim=False Natsional'naya Atomnaya Kompaniya Kazatomprom AO
+   Kazatomprom      0ZQ:FRA            xid=503800881  Equities prim=False Natsional'naya Atomnaya Kompaniya Kazatomprom AO
+   Kazatomprom      0ZQ:MUN            xid=504679027  Equities prim=False Natsional'naya Atomnaya Kompaniya Kazatomprom AO
+   Ericsson         ERIC B:STO         xid=100115     Equities prim=True Telefonaktiebolaget LM Ericsson
+   Ericsson         0O87:LSE           xid=13378042   Equities prim=False Telefonaktiebolaget LM Ericsson
+   Ericsson         0O86:LSE           xid=442747512  Equities prim=False Telefonaktiebolaget LM Ericsson
+   Ericsson         0IID:LSE           xid=447818811  Equities prim=False Telefonaktiebolaget LM Ericsson
+   Ericsson         ERIC:NSQ           xid=100104     Equities prim=False Telefonaktiebolaget LM Ericsson
+   Ericsson         TRISSERIC:FSI      xid=849777755  Indices prim=True FTSE Telefonaktiebolaget LM Ericsson Total Index
+   Ericsson         FTSSERICCNYT:FSI   xid=944905280  Indices prim=True FTSE Telefonaktiebolaget LM Ericsson Total Return Index CNY End of Day
+   Ericsson         FTSSERICJPYP:FSI   xid=944901461  Indices prim=True FTSE Telefonaktiebolaget LM Ericsson Price Return Index JPY End of Day
+   Ericsson         FTSSERICGBPP:FSI   xid=944883910  Indices prim=True FTSE Telefonaktiebolaget LM Ericsson Price Return Index GBP End of Day
+   Ericsson         FTSSERICEURT:FSI   xid=944873126  Indices prim=True FTSE Telefonaktiebolaget LM Ericsson Total Return Index EUR End of Day
+   TotalEnergies    TTE:PAR            xid=271072     Equities prim=True TotalEnergies SE
+   TotalEnergies    TTE:LSE            xid=9395285    Equities prim=False TotalEnergies SE
+   TotalEnergies    TTE:NYQ            xid=271046     Equities prim=False TotalEnergies SE
+   TotalEnergies    TTE:NYS            xid=271051     Equities prim=False TotalEnergies SE
+   TotalEnergies    TOTB:DUS           xid=271065     Equities prim=False TotalEnergies SE
+   TotalEnergies    IDTTE1:SES         xid=687990909  Indices prim=True IEDGE TOTALENERGIES SE EUR INDEX
+   TotalEnergies    IDTTE1_TR:SES      xid=688015101  Indices prim=True IEDGE TOTALENERGIES SE EUR GTR INDEX
+   TotalEnergies    SOTTEUAR:STU       xid=958306150  Indices prim=True Solactive TOTALENERGIES EOD AR 2.96  (2025-01-02) Index
+   TotalEnergies    SOTTE330:STU       xid=982205345  Indices prim=True Solactive TOTALENERGIES AR 3.3 Index
+   TotalEnergies    SOTOT322:STU       xid=998914930  Indices prim=True Solactive TOTALENERGIES EOD AR 3.22 (2020-06-02) Index
+   Eni              ENI:MIL            xid=98835      Equities prim=True Eni SpA
+   Eni              ENI:DUS            xid=98828      Equities prim=False Eni SpA
+   Eni              ENIX:GER           xid=98829      Equities prim=False Eni SpA
+   Eni              ENI:FRA            xid=98831      Equities prim=False Eni SpA
+   Eni              ENI:HAM            xid=98832      Equities prim=False Eni SpA
+   Eni              ENI.UN:TOR         xid=3393503    Funds prim=True Energy Income Fund
+   Eni              ENIAX              xid=7387502    Funds prim=True SEI Institutional Investments Trust Opportunistic Income Fund A
+   Eni              LI1317639378:USD   xid=889042734  Funds prim=True ENIGMA Legacy Fund A
+   Eni              LI1317642745:USD   xid=889216009  Funds prim=True ENIGMA Legacy Fund B
+   Eni              LI1317659301:USD   xid=943537106  Funds prim=True ENIGMA Legacy Fund R
+   Eni              ENIK:MIL:EUR       xid=47948617   ETFs prim=False WisdomTree Nickel - EUR Daily Hedged
+   Eni              ENIFTY:NSI:INR     xid=1032898802 ETFs prim=True Edelweiss Nifty 50 ETF
+   Equinor          EQNR:OSL           xid=261247     Equities prim=True Equinor ASA
+   Equinor          0M2Z:LSE           xid=13377860   Equities prim=False Equinor ASA
+   Equinor          0A7F:LSE           xid=644418941  Equities prim=False Equinor ASA
+   Equinor          EQNR:NYQ           xid=261428     Equities prim=False Equinor ASA
+   Equinor          STOHF:PKL          xid=255090     Equities prim=False Equinor ASA
+   Equinor          NO0010759871:NOK   xid=101959974  Funds prim=True Equinor Aksjer Europa
+   Equinor          NO0010759939:NOK   xid=104237495  Funds prim=True Equinor Likviditet Norge
+   Equinor          NO0010759913:NOK   xid=116337638  Funds prim=True Equinor Kreditt Norge
+   Equinor          NO0010759905:NOK   xid=116357645  Funds prim=True Equinor Aksjer USA
+   Equinor          NO0010759897:NOK   xid=116366032  Funds prim=True Equinor Aksjer Pacific Indeks
+   Equinor          TRISSEQNR:FSI      xid=939124157  Indices prim=True FTSE Equinor ASA Index
+   Equinor          FTSSEQNRUSDT:FSI   xid=944587287  Indices prim=True FTSE Equinor ASA Total Return Index USD End of Day
+   Nestle           NESTLE:LAG         xid=217549     Equities prim=True Nestle Nigeria PLC
+   Nestle           NESTLE:KLS         xid=211025     Equities prim=True Nestle (Malaysia) Bhd
+   Nestle           NSLYF:PKL          xid=3367568    Equities prim=False Nestle (Malaysia) Bhd
+   Nestle           NESTLEIND:NSI      xid=22398554   Equities prim=True Nestle India Ltd
+   Nestle           NESN:SWX           xid=211037     Equities prim=True Nestle SA
+   Nestle           FTSSDNES02JPYT:FSI xid=944864894  Indices prim=True FTSE Nestle SE 2.75 Fixed Point Decrement Act-365 2015 Apr30 Total Return Index JPY End of Day
+   Nestle           FTSSDNES01CNYT:FSI xid=944865216  Indices prim=True FTSE Nestle SE 2.3 Fixed Point Decrement Act-365 2021 Aug25 Total Return Index CNY End of Day
+   Nestle           FTSSDNES02AUDT:FSI xid=944866601  Indices prim=True FTSE Nestle SE 2.75 Fixed Point Decrement Act-365 2015 Apr30 Total Return Index AUD End of Day
+   Nestle           FTSSNESUSDT:FSI    xid=944866645  Indices prim=True FTSE Nestle Total Return Index USD End of Day
+   Nestle           FTSSDNES01JPYT:FSI xid=944867079  Indices prim=True FTSE Nestle SE 2.3 Fixed Point Decrement Act-365 2021 Aug25 Total Return Index JPY End of Day
+   NexGen Energy    NXE:TOR            xid=49530454   Equities prim=True NexGen Energy Ltd.
+   NexGen Energy    0V9D:LSE           xid=447818810  Equities prim=False NexGen Energy Ltd.
+   NexGen Energy    NXE:NYQ            xid=59942813   Equities prim=False NexGen Energy Ltd.
+   NexGen Energy    6NE:FRA            xid=72869625   Equities prim=False NexGen Energy Ltd.
+   NexGen Energy    6NE:STU            xid=73700770   Equities prim=False NexGen Energy Ltd.
+   Skyharbour       SYH:CVE            xid=264058     Equities prim=True Skyharbour Resources Ltd
+   Skyharbour       SYHBF:QXE          xid=264059     Equities prim=False Skyharbour Resources Ltd
+   Skyharbour       SC1P:FRA           xid=73184014   Equities prim=False Skyharbour Resources Ltd
+   Skyharbour       SC1P:STU           xid=381024212  Equities prim=False Skyharbour Resources Ltd
+   Skyharbour       SC1P:MUN           xid=690269072  Equities prim=False Skyharbour Resources Ltd
+   Toyota           7203:TYO           xid=27182      Equities prim=True TOYOTA MOTOR CORPORATION
+   Toyota           TOYOTA80:SET       xid=891618794  Equities prim=False Krung Thai Bank PCL
+   Toyota           TYT:LSE            xid=27183      Equities prim=False TOYOTA MOTOR CORPORATION
+   Toyota           0LG5:LSE           xid=449734121  Equities prim=False TOYOTA MOTOR CORPORATION
+   Toyota           TM:NYQ             xid=269774     Equities prim=False TOYOTA MOTOR CORPORATION
+   Toyota           TMH:PCQ:USD        xid=971557712  ETFs prim=True Toyota Motor Corporation ADRhedged
+   Toyota           TMH:NYS            xid=971564936  ETFs prim=False Toyota Motor Corporation ADRhedged
+   Toyota           TMH:ASE            xid=971570899  ETFs prim=False Toyota Motor Corporation ADRhedged
+   Denison Mines    DML:TOR            xid=88683      Equities prim=True Denison Mines Corp
+   Denison Mines    0URY:LSE           xid=448539394  Equities prim=False Denison Mines Corp
+   Denison Mines    DNN:ASQ            xid=91439      Equities prim=False Denison Mines Corp
+   Denison Mines    IUQ:FRA            xid=170818     Equities prim=False Denison Mines Corp
+   Denison Mines    IUQ:STU            xid=1551353    Equities prim=False Denison Mines Corp
+   Yellow Cake      YCA:LSE            xid=477828121  Equities prim=True Yellow Cake PLC
+   Yellow Cake      YLLXF:QXE          xid=481823901  Equities prim=False Yellow Cake PLC
+   Yellow Cake      0LZ:FRA            xid=546075749  Equities prim=False Yellow Cake PLC
+   Yellow Cake      0LZ:STU            xid=547478589  Equities prim=False Yellow Cake PLC
+   Yellow Cake      0LZ:MUN            xid=616862732  Equities prim=False Yellow Cake PLC
+   Energy Fuels     UUUU:ASQ           xid=281557     Equities prim=True Energy Fuels Inc.
+   Energy Fuels     0UU0:LSE           xid=447835159  Equities prim=False Energy Fuels Inc.
+   Energy Fuels     EFR:TOR            xid=281555     Equities prim=False Energy Fuels Inc.
+   Energy Fuels     VO51:FRA           xid=5966037    Equities prim=False Energy Fuels Inc.
+   Energy Fuels     CLNE:NSQ           xid=7577846    Equities prim=True Clean Energy Fuels Corp.
+   Energy Fuels     TRXFLDINPE1:REU    xid=21605810   Indices prim=True FR India Energy - Fossil Fuels Price Return Index
+   Energy Fuels     TRXFLDTWTE1:REU    xid=23825761   Indices prim=True FR Taiwan Fossil Fuels Energy Total Return Index
+   Energy Fuels     TRXFLDTWPE1:REU    xid=23825754   Indices prim=True FR Taiwan Fossil Fuels Energy Index
+   Energy Fuels     TRXFLDSGTE1:REU    xid=23825736   Indices prim=True FR Singapore Energy - Fossil Fuels Total Return Index
+   Energy Fuels     TRXFLDSGPE1:REU    xid=23825727   Indices prim=True FR Singapore Energy - Fossil Fuels Price Return Index
+
+
+================ FT chart ================
+
+### 200 https://markets.ft.com/data/chartapi/series (208613 B)
+{"Dates":["2025-09-16T00:00:00","2025-09-17T00:00:00","2025-09-18T00:00:00","2025-09-19T00:00:00","2025-09-22T00:00:00","2025-09-24T00:00:00","2025-09-25T00:00:00","2025-09-26T00:00:00","2025-09-29T00:00:00","2025-09-30T00:00:00","2025-10-01T00:00:00","2025-10-02T00:00:00","2025-10-03T00:00:00","2025-10-06T00:00:00","2025-10-07T00:00:00","2025-10-08T00:00:00","2025-10-09T00:00:00","2025-10-10T00:00:00","2025-10-14T00:00:00","2025-10-15T00:00:00","2025-10-16T00:00:00","2025-10-17T00:00:00","2025-10-20T00:00:00","2025-10-21T00:00:00","2025-10-22T00:00:00","2025-10-23T00:00:00","2025-10-24T00:00:
+keys ['Dates', 'NormalizeDate', 'NormalizeValues', 'Status', 'StatusString', 'MetaData', 'TimeService', 'Elements']
+dates ['2025-09-16T00:00:00', '2025-09-17T00:00:00', '2025-09-18T00:00:00'] ['2026-10-15T00:00:00', '2026-10-16T00:00:00'] 263
+el price 27182 JPY Price [('Open', [2988.0, 2987.0, 3051.0]), ('High', [3022.0, 3046.0, 3096.0]), ('Low', [2972.5, 2975.0, 3047.0]), ('Close', [3011.0, 3029.0, 3094.0])]
+tearsheet ok
+
+
+================ CNBC ================
+
+### 200 https://ts-api.cnbc.com/harmony/app/bars/CCO-CA/1D/20250101000000/20261017000000/adjusted/EST5EDT.json (68327 B)
+{"barData":{"priceBars":[{"open":"74.0600","high":"76.0550","low":"73.8000","close":"75.0900","volume":886963,"tradeTime":"20250102000000","tradeTimeinMills":1735794000000},{"open":"75.9000","high":"76.7600","low":"74.8700","close":"76.7000","volume":1377186,"tradeTime":"20250103000000","tradeTimeinMills":1735880400000},{"open":"77.4600","high":"80.6300","low":"77.2000","close":"78.6000","volume":855153,"tradeTime":"20250106000000","tradeTimeinMills":1736139600000},{"open":"79.4800","high":"79.5200","low":"73.6800","close":"74.1100","volume":1594867,"tradeTime":"20250107000000","tradeTimeinMills":1736226000000},{"open":"74.2500","high":"74.2500","low":"71.3800","close":"73.8700","volume":126
+
+### 200 https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=7203-JP%7C7203-TK%7CTM&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json (1701 B)
+{"FormattedQuoteResult":{"FormattedQuote":[{"symbol":"7203-JP","code":1},{"symbol":"7203-TK","code":1},{"symbol":"TM","symbolType":"symbol","code":0,"name":"TOYOTA MOTOR CORPORATION","shortName":"TM","onAirName":"TOYOTA MOTOR CORPORATION","altName":"TOYOTA MOTOR CORPORATION","last":"194.61","last_timedate":"10/16/26 EDT","last_time":"2026-10-16","changetype":"UP","type":"STOCK","subType":"Depositary Receipt","exchange":"NYSE","source":"Last NASDAQ LS, VOL From CTA","open":"195.58","high":"196.41
+
+
+================ ONVISTA more ================
+eod_history?idNotation=163500&range=Y1 {'expires': 1792358334247, 'entityType': 'STOCK', 'entityValue': '82849', 'idInstrument': 82849, 'idNotation': 163500, 'isoCurrency': 'EUR', 'unitType': 'STK', 'datetimeStartAvailableHistory': '1996-12-13T00:00:00.000+00:00', 'datetimeEndAvailableHistory': '2026-10-16T23:59:59.000+00:00', 'idTradingSchedule': 71, 'datetimeLast': 21, 'first': 21, 'last': 21, 'high': 21, 'low': 21, 'volume': 21, 'numberPrices': 21, 'displayUnit': 'EUR'}
+eod_history?idNotation=163500&range=Y5&startDate=2024-01-01 {'expires': 1792358334530, 'entityType': 'STOCK', 'entityValue': '82849', 'idInstrument': 82849, 'idNotation': 163500, 'isoCurrency': 'EUR', 'unitType': 'STK', 'datetimeStartAvailableHistory': '1996-12-13T00:00:00.000+00:00', 'datetimeEndAvailableHistory': '2026-10-16T23:59:59.000+00:00', 'idTradingSchedule': 71, 'datetimeLast': 709, 'first': 709, 'last': 709, 'high': 709, 'low': 709, 'volume': 709, 'numberPrices': 709, 'displayUnit': 'EUR'}
+   STOCK 88013 Cameco CA13321L1085 CJ6
+   FUTURE 239291995 CAMECO CORP. FUTURE (CCJF) - EUX/C15 None CCJFC15
+   FUTURE 239291452 CAMECO CORP. FUTURE (CCJF) - EUX/C13 None CCJFC13
+   FUTURE 239292118 CAMECO CORP. FUTURE (CCJF) - EUX/C14 None CCJFC14
+   FUND 311562212 SAVVYLONG (2X) CAMECO ETF CA54315B6153 None
+   FUND 306625652 HARVEST CAMECO ENHANCED HIGH INCOME SHARES ETF CA4179163015 None
+   FUND 306696484 NINEPOINT CAMECO HIGHSHARES ETF CA6539443060 None
+   CRYPTO BTCUSD Bitcoin (BTC) Kurs in US Dollar XC000A2YY636 
+   CRYPTO BTCEUR Bitcoin Kurs in Euro EU000A2YZK67 
+   CRYPTO BCHUSD Bitcoin Cash Kurs in US Dollar XC000A3DJU43 
+   STOCK 59949737 Bitcoin Group DE000A1TNV91 ADE
+   STOCK 135062252 AMERICAN BITCOIN CORP. A US02462A2033 0IF0
+   STOCK 159718060 Advanced Bitcoin Technologies DE000A2YPJ22 ABT
+   ETF 251489549 iShares Bitcoin Trust ETF USD Acc US46438F1012 None
+   ETF 322618102 CoinShares Bitcoin Mining UCITS ETF - USD ACC IE0008EKJPN4 MINE
+   ETF 208329898 ProShares Bitcoin Strategy ETF US74347G4405 PROA
+   FUND 320310997 ISHARES BITCOIN PREMIUM INCOME ETF US46439G1085 None
+   FUND 212071900 PURPOSE BITCOIN YIELD ETF REG.SHS CAD ACC. ON CA74642T2048 None
+   FUND 323004043 MORG.ST.BITCOIN TR. REG.SHS USD ACC. ON US61692G1094 None
+   INDEX 446796538 VANECK BITCOIN ETF INTRADAY None None
+   INDEX 269957560 INAV AMUN BITCOIN SUISSE ETP ETP IND.,FORTL. FONDSANTEILSW. DE000SLA9ZM6 None
+   INDEX 407359774 SAMSUNG BITCOIN ETF None None
+   BOND 319635111 26.7% MAREX-BITCOIN AND ETHER-BRCV- 27.07.27(15267 XS3244538149 None
+   BOND 301765526 MAREX-ISHS BITCOIN TRUST ETF -RCV- 21.06.27(144949 XS2931511138 None
+   BOND 303829926 MAREX BITCOIN CALL WT. 21.02.27(146296294) XS2928767776 None
+   FUTURE 245450502 FTSE BITCOIN INDEX FUTURE (FBTU) - EUX/C2 None FBTUC2
+   FUTURE 245450506 FTSE BITCOIN INDEX FUTURE (FBTE) - EUX/C3 None FBTEC3
+   FUTURE 320749847 CoinDesk Bitcoin Future (CDB) - NYB/C1 None CDBC1
+
+
+================ LS-TC ================
+
+### 200 https://www.ls-tc.de/_rpc/json/instrument/chart/dataForInstrument?container=chart1&instrumentId=34313&marketId=1&quotetype=mid&series=intraday&type=mini&localeId=2 (1298 B)
+{"info":{"isin":"DE0007164600","chartType":"mini","textMaxValue":"Hoch","textMinValue":"Tief","plotlines":[{"label":"Vortag 198,970","value":198.97,"align":"left","y":8,"id":"previousDay","color":"#333"}]},"container":"chart1","series":{"intraday":{"id":"34313midi","data":[[1792342740000,198.85],[1792342920000,198.85],[1792343100000,198.85],[1792343280000,198.85],[1792343460000,198.85],[1792343640
+
+
+================ TwelveData keyless reference ================
+
+### 200 https://api.twelvedata.com/symbol_search?symbol=JP3633400001 (1858 B)
+{"data":[{"symbol":"7203","instrument_name":"Toyota Motor Corporation","exchange":"JPX","mic_code":"XJPX","exchange_timezone":"Asia/Tokyo","instrument_type":"Common Stock","country":"Japan","currency":"JPY"},{"symbol":"TOYOF","instrument_name":"Toyota Motor Corporation","exchange":"OTC","mic_code":"PINX","exchange_timezone":"America/New_York","instrument_type":"Common Stock","country":"United States","currency":"USD"},{"symbol":"TOM","instrument_name":"Tomra Systems ASA","exchange":"XSTU","mic_code":"XSTU","exchange_timezone":"Europe/Berlin","instrument_type":"Common Stock","country":"Germany","currency":"EUR"},{"symbol":"TOM","instrument_name":"Toyota Motor Corporation","exchange":"FSX","mic_code":"XFRA","exchange_timezone":"Europe/Berlin","instrument_type":"Common Stock","country":"Germa
+
+### 200 https://api.twelvedata.com/exchanges?type=stock (9971 B)
+{"data":[{"title":"Bolsas y Mercados Argentinos","name":"BCBA","code":"XBUE","country":"Argentina","timezone":"America/Argentina/Buenos_Aires"},{"title":"Cboe Australia","name":"CXA","code":"CXAC","country":"Australia","timezone":"Australia/Sydney"},{"title":"Australian Securities Exchange","name":"ASX","code":"XASX","country":"Australia","timezone":"Australia/Sydney"},{"title":"Vienna Stock Exchange","name":"VSE","code":"XWBO","country":"Austria","timezone":"Europe/Vienna"},{"title":"Euronext Brussels","name":"Euronext","code":"XBRU","country":"Belgium","timezone":"Europe/Brussels"},{"title":
