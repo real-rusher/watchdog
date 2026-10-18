@@ -53,7 +53,7 @@ struct ImportView: View {
         .frame(minWidth: 860, idealWidth: 980, minHeight: 600, idealHeight: 720)
         .background(Palette.surface)
         .fileImporter(isPresented: $showFile, allowedContentTypes: [.commaSeparatedText, .tabSeparatedText, .plainText, .text]) { result in
-            if case .success(let url) = result { open(url) }
+            if case .success(let url) = result { openFile(url) }
         }
         .onAppear { defaultExchange = model.local.defaultImportExchange }
     }
@@ -135,7 +135,7 @@ struct ImportView: View {
         }
     }
 
-    private func open(_ url: URL) {
+    private func openFile(_ url: URL) {
         let access = url.startAccessingSecurityScopedResource()
         defer { if access { url.stopAccessingSecurityScopedResource() } }
         guard let data = try? Data(contentsOf: url) else { return }

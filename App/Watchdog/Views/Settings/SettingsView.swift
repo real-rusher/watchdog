@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 import WatchdogCore
 
 struct SettingsView: View {

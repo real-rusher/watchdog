@@ -297,7 +297,7 @@ struct QuoteRow: View {
         }
         .padding(.horizontal, Metrics.gutter)
         .frame(height: Metrics.rowHeight * scale)
-        .background(selected ? Palette.selection : hover ? Palette.zebra.opacity(1) : (zebra ? Palette.zebra : Palette.surface))
+        .background(rowBackground(selected: selected))
         .overlay(alignment: .leading) {
             if selected { Rectangle().fill(Palette.signal).frame(width: 4) }
         }
@@ -316,6 +316,12 @@ struct QuoteRow: View {
             Button("Löschen", role: .destructive) { model.delete(row.id) }
         }
         .help(helpText)
+    }
+
+    private func rowBackground(selected: Bool) -> Color {
+        if selected { return Palette.selection }
+        if hover { return Palette.band }
+        return zebra ? Palette.zebra : Palette.surface
     }
 
     private var helpText: String {

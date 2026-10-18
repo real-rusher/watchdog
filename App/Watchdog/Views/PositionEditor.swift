@@ -43,7 +43,8 @@ struct ListingOption: Identifiable, Hashable {
                 if o.wkn == nil { o.wkn = c.wkn }
                 if o.lastPrice == nil { o.lastPrice = c.lastPrice }
                 // Ticker preference: Yahoo, FT, Twelve Data, then the rest.
-                let rank: (ProviderID) -> Int = { [.yahoo, .ft, .twelvedata, .finnhub, .eodhd, .onvista, .lstc, .bitfinex].firstIndex(of: $0) ?? 9 }
+                let tickerOrder: [ProviderID] = [.yahoo, .ft, .twelvedata, .finnhub, .eodhd, .onvista, .lstc, .bitfinex]
+                let rank: (ProviderID) -> Int = { tickerOrder.firstIndex(of: $0) ?? 9 }
                 if rank(c.provider) < (o.candidates.map { rank($0.provider) }.min() ?? 9) || o.ticker.isEmpty { o.ticker = c.ticker }
                 if c.provider == .onvista { o.name = c.name }
                 groups[k]![exKey] = o
@@ -212,7 +213,7 @@ struct PositionEditor: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 14) {
                     ForEach(Array(results.enumerated()), id: \.offset) { _, group in
-                        let options = group.filter { o in !onlyActive || (o.exchangeID.flatMap { model.catalog[$0]?.isActive } ?? false) }
+                        let options = group.filter { o in !onlyActive || isActive(o) }
                         if !options.isEmpty, let first = group.first {
                             VStack(alignment: .leading, spacing: 0) {
                                 HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -230,7 +231,7 @@ struct PositionEditor: View {
                     if !isLoading && results.isEmpty && query.count >= 2 {
                         Text("Keine Treffer. Mit ISIN oder anderem Namen versuchen.").type(13).foregroundStyle(Palette.inkSoft)
                     }
-                    if !isLoading && !results.isEmpty && onlyActive && results.allSatisfy({ g in g.allSatisfy { o in !(o.exchangeID.flatMap { model.catalog[$0]?.isActive } ?? false) } }) {
+                    if !isLoading && onlyActive && onlyInactiveHits {
                         Text("Treffer nur an Börsen, die nicht in deiner Liste sind. Haken bei \u{201E}Nur meine Börsen\u{201C} entfernen.").type(13).foregroundStyle(Palette.inkSoft)
                     }
                 }
@@ -239,6 +240,26 @@ struct PositionEditor: View {
             }
         }
         .task(id: query) { await runSearch(immediate: false) }
+    }
+
+    private func isActive(_ o: ListingOption) -> Bool {
+        guard let id = o.exchangeID, let e = model.catalog[id] else { return false }
+        return e.isActive
+    }
+
+    /// There are hits, but none at a venue in the user's list.
+    private var onlyInactiveHits: Bool {
+        let all = results.flatMap { $0 }
+        return !all.isEmpty && !all.contains(where: isActive)
+    }
+
+    private func symbolSummary(_ l: Listing) -> String {
+        let parts: [String] = l.symbols.keys.sorted().map { key in
+            let name = ProviderID(rawValue: key)?.displayName ?? key
+            let sym = l.symbols[key]?.split(separator: "|").first.map(String.init) ?? ""
+            return "\(name) \(sym)"
+        }
+        return "Bekannte Kürzel: " + parts.joined(separator: ", ")
     }
 
     private func runSearch(immediate: Bool) async {
@@ -356,7 +377,7 @@ struct PositionEditor: View {
                         Text("Automatisch (Reihenfolge aus den Einstellungen)").tag(ProviderID?.none)
                         ForEach(ProviderID.defaultOrder.filter { ex.supports($0) }) { p in Text(p.displayName).tag(ProviderID?.some(p)) }
                     }
-                    Text("Bekannte Kürzel: " + l.symbols.sorted { $0.key < $1.key }.map { "\(ProviderID(rawValue: $0.key)?.displayName ?? $0.key) \($0.value.split(separator: "|").first ?? "")" }.joined(separator: ", "))
+                    Text(symbolSummary(l))
                         .type(12).foregroundStyle(Palette.inkSoft)
                 }
             }
