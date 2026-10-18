@@ -118,14 +118,15 @@ final class AppModel {
         let l = LocalSettings.load()
         local = l
         let url = l.depotPath.map { URL(fileURLWithPath: $0) } ?? DepotStore.defaultURL()
-        store = DepotStore(url: url)
+        let s = DepotStore(url: url)
+        store = s
         engine = MarketEngine(cacheDir: LocalSettings.supportDir.appendingPathComponent("Cache", isDirectory: true))
-        if store.exists, let d = try? store.load() {
+        if s.exists, let d = try? s.load() {
             depot = d
         } else {
             depot = DepotFile()
         }
-        knownModification = store.modificationDate()
+        knownModification = s.modificationDate()
     }
 
     // MARK: Lifecycle

@@ -32,7 +32,7 @@ jobs:
           xcodebuild -project App/Watchdog.xcodeproj -scheme Watchdog -configuration Release \
             -derivedDataPath build/dd -destination 'generic/platform=macOS' \
             ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO \
-            build > out/build.log 2>&1 || (grep -E "error:|error -|fatal" out/build.log | sort -u | head -150 > out/errors.txt; tail -80 out/build.log > out/build-tail.txt; exit 1)
+            -continueBuildingAfterErrors build > out/build.log 2>&1 || (grep -E "error:|error -|fatal" out/build.log | sort -u | head -150 > out/errors.txt; tail -80 out/build.log > out/build-tail.txt; exit 1)
           grep -E "warning:" out/build.log | grep -v "DerivedData" | sort -u | head -80 > out/warnings.txt || true
           tail -30 out/build.log > out/build-tail.txt
       - name: Core tests on macOS
