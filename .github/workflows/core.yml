@@ -1,0 +1,34 @@
+name: core-linux
+on:
+  push:
+    paths: [Core/**, .github/workflows/core.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Unit tests
+        working-directory: Core
+        run: swift test 2>&1 | tee ../test.log
+      - name: Live provider checks
+        if: always()
+        working-directory: Core
+        run: |
+          mkdir -p ../out
+          cp ../test.log ../out/ 2>/dev/null || true
+          swift build -c release --product watchdog-cli
+          BIN=$(swift build -c release --show-bin-path)/watchdog-cli
+          timeout 600 $BIN probe > ../out/probe.txt 2>&1 || true
+          timeout 300 $BIN search DE0007164600 Cameco Toyota "Yellow Cake" Bitcoin "ERIC B" > ../out/search.txt 2>&1 || true
+          timeout 600 $BIN depot > ../out/depot.txt 2>&1 || true
+      - name: Publish results
+        if: always()
+        run: |
+          mkdir -p out && cd out
+          git init -q -b r && git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -A && git commit -qm "core results ${GITHUB_SHA::7}" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:results-core
