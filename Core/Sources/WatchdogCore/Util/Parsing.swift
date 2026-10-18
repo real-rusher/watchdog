@@ -38,6 +38,18 @@ public enum Lenient {
         return Double(s)
     }
 
+    /// German input: "1.000" means one thousand (dots followed by groups of three digits), "0.5" stays a decimal.
+    public static func germanDouble(_ raw: String?) -> Double? {
+        guard let t = raw?.trimmingCharacters(in: .whitespaces), !t.isEmpty else { return nil }
+        if !t.contains(","), t.contains("."), !t.hasPrefix("0"), !t.hasPrefix("-0") {
+            let groups = t.replacingOccurrences(of: "-", with: "").split(separator: ".", omittingEmptySubsequences: false)
+            if groups.count > 1, (1...3).contains(groups[0].count), groups.dropFirst().allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isNumber) }) {
+                return double(t.replacingOccurrences(of: ".", with: ""))
+            }
+        }
+        return double(t)
+    }
+
     /// Accepts numbers that arrive either as JSON numbers or as strings.
     public static func double(any value: Any?) -> Double? {
         switch value {

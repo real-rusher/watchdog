@@ -1,0 +1,71 @@
+name: mac-app
+on:
+  push:
+    paths: [App/**, Core/Sources/**, Core/Package.swift, .github/workflows/mac.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: mac-app
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      APP: build/dd/Build/Products/Release/Watchdog.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          mkdir -p out/shots
+          xcodebuild -version | tee out/versions.txt
+          sw_vers | tee -a out/versions.txt
+          brew install xcodegen >/dev/null 2>&1 || brew upgrade xcodegen >/dev/null 2>&1 || true
+          xcodegen --version | tee -a out/versions.txt
+      - name: Generate project
+        working-directory: App
+        run: xcodegen generate
+      - name: Build (universal, Release)
+        run: |
+          set -o pipefail
+          xcodebuild -project App/Watchdog.xcodeproj -scheme Watchdog -configuration Release \
+            -derivedDataPath build/dd -destination 'generic/platform=macOS' \
+            ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO \
+            build > out/build.log 2>&1 || (grep -E "error:|error -|fatal" out/build.log | sort -u | head -150 > out/errors.txt; tail -80 out/build.log > out/build-tail.txt; exit 1)
+          grep -E "warning:" out/build.log | grep -v "DerivedData" | sort -u | head -80 > out/warnings.txt || true
+          tail -30 out/build.log > out/build-tail.txt
+      - name: Core tests on macOS
+        continue-on-error: true
+        working-directory: Core
+        run: swift test > ../out/core-tests-mac.txt 2>&1
+      - name: Screenshots with live data
+        continue-on-error: true
+        run: |
+          "$APP/Contents/MacOS/Watchdog" --snapshot "$PWD/out/shots" > out/app.log 2>&1 &
+          PID=$!
+          for i in $(seq 1 300); do sleep 1; kill -0 $PID 2>/dev/null || break; done
+          kill $PID 2>/dev/null || true
+          ls -la out/shots >> out/app.log
+      - name: Package (ad-hoc signed DMG)
+        run: |
+          codesign --force --deep --sign - "$APP"
+          codesign --verify --deep --strict "$APP" && echo "signature ok" >> out/versions.txt
+          lipo -archs "$APP/Contents/MacOS/Watchdog" >> out/versions.txt
+          mkdir -p dmg && cp -R "$APP" dmg/ && ln -s /Applications dmg/Applications
+          hdiutil create -volname Watchdog -srcfolder dmg -ov -format UDZO out/Watchdog.dmg
+          ditto -c -k --keepParent "$APP" out/Watchdog.zip
+          ls -la out >> out/versions.txt
+      - name: Publish test build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view nightly >/dev/null 2>&1 || gh release create nightly --prerelease --title "Watchdog Testversion" --notes "Automatisch gebaut aus dem aktuellen Stand."
+          gh release upload nightly out/Watchdog.dmg out/Watchdog.zip --clobber
+      - name: Publish results
+        if: always()
+        run: |
+          rm -f out/Watchdog.dmg out/Watchdog.zip
+          [ -f out/build.log ] && gzip -9 out/build.log || true
+          cd out && git init -q -b r && git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -A && git commit -qm "mac results ${GITHUB_SHA::7}" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:results-mac

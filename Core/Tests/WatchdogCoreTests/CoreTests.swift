@@ -35,6 +35,10 @@ final class ParsingTests: XCTestCase {
         XCTAssertEqual(Lenient.double("1.234.567"), 1234567)
         XCTAssertEqual(Lenient.double("2.000,00 €"), 2000)
         XCTAssertNil(Lenient.double(""))
+        XCTAssertEqual(Lenient.germanDouble("1.000"), 1000)
+        XCTAssertEqual(Lenient.germanDouble("0.345"), 0.345)
+        XCTAssertEqual(Lenient.germanDouble("14,50"), 14.5)
+        XCTAssertEqual(Lenient.germanDouble("12.5"), 12.5)
     }
 
     func testDays() {
