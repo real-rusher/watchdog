@@ -6,15 +6,25 @@ struct MenuBarContent: View {
     @Environment(AppModel.self) private var model
     @Environment(\.openWindow) private var openWindow
 
+    /// Red, yellow and freshly crossed values; fresh ones first, then the most urgent.
+    static func attention(_ rows: [TableRow]) -> [TableRow] {
+        func needsLook(_ r: TableRow) -> Bool {
+            guard let a = r.metrics?.ampel else { return false }
+            return a.state == .red || a.state == .yellow || a.isFresh
+        }
+        func rank(_ r: TableRow) -> (Int, Int, Double) {
+            let a = r.metrics?.ampel
+            let fresh = a?.isFresh == true ? 0 : 1
+            let urgency = a?.state.urgency ?? 3
+            let distance = a?.distancePercent ?? 0
+            return (fresh, urgency, distance)
+        }
+        return rows.filter(needsLook).sorted { rank($0) < rank($1) }
+    }
+
     var body: some View {
         let t = model.totals
-        let attention = model.allRows
-            .filter { ($0.metrics?.ampel.state == .red) || ($0.metrics?.ampel.isFresh == true) || ($0.metrics?.ampel.state == .yellow) }
-            .sorted { a, b in
-                let fa = a.metrics?.ampel.isFresh == true, fb = b.metrics?.ampel.isFresh == true
-                if fa != fb { return fa }
-                return (a.metrics?.ampel.state.urgency ?? 3, a.metrics?.ampel.distancePercent ?? 0) < (b.metrics?.ampel.state.urgency ?? 3, b.metrics?.ampel.distancePercent ?? 0)
-            }
+        let attention = Self.attention(model.allRows)
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .firstTextBaseline) {
