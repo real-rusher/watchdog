@@ -54,7 +54,7 @@ struct DetailView: View {
     private func header(_ p: Position, _ m: PositionMetrics?, _ ex: Exchange?) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top, spacing: 12) {
-                AmpelDot(state: m?.ampel.state ?? .unknown, fresh: m?.ampel.isFresh == true)
+                AmpelDot(state: m?.ampel.state ?? .unknown, fresh: m?.ampel.isFresh == true, dimmed: model.freshness(p)?.isProblem == true)
                     .scaleEffect(1.35)
                     .padding(.top, 6)
                 VStack(alignment: .leading, spacing: 4) {
