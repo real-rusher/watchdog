@@ -3,7 +3,7 @@ on:
   push:
     branches: ['**']
     tags: ['v*']
-    paths: [App/**, Core/Sources/**, Core/Package.swift, .github/workflows/mac.yml]
+    paths: [App/**, Core/Sources/**, Core/Package.swift, .github/workflows/mac.yml, .github/release-version]
   workflow_dispatch:
     inputs:
       release:
@@ -70,6 +70,11 @@ jobs:
         run: |
           TAG="${{ github.event.inputs.release }}"
           if [[ -z "$TAG" && "$GITHUB_REF" == refs/tags/v* ]]; then TAG="${GITHUB_REF#refs/tags/}"; fi
+          # A new version number in .github/release-version publishes a versioned release once.
+          if [[ -z "$TAG" && -f .github/release-version ]]; then
+            V="$(tr -d '[:space:]' < .github/release-version)"
+            if [[ -n "$V" ]] && ! gh release view "$V" >/dev/null 2>&1; then TAG="$V"; fi
+          fi
           if [[ -n "$TAG" ]]; then
             gh release create "$TAG" out/Watchdog.dmg out/Watchdog.zip --target "$GITHUB_SHA" --title "Watchdog ${TAG#v}" --notes-file .github/release-notes.md --latest || gh release upload "$TAG" out/Watchdog.dmg out/Watchdog.zip --clobber
           else
