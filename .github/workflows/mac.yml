@@ -5,6 +5,11 @@ on:
     tags: ['v*']
     paths: [App/**, Core/Sources/**, Core/Package.swift, .github/workflows/mac.yml]
   workflow_dispatch:
+    inputs:
+      release:
+        description: "Version für ein Release, z. B. v1.0.0 (leer = Testversion)"
+        required: false
+        default: ""
 permissions:
   contents: write
 concurrency:
@@ -63,9 +68,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            TAG="${GITHUB_REF#refs/tags/}"
-            gh release create "$TAG" out/Watchdog.dmg out/Watchdog.zip --title "Watchdog ${TAG#v}" --notes-file .github/release-notes.md || gh release upload "$TAG" out/Watchdog.dmg out/Watchdog.zip --clobber
+          TAG="${{ github.event.inputs.release }}"
+          if [[ -z "$TAG" && "$GITHUB_REF" == refs/tags/v* ]]; then TAG="${GITHUB_REF#refs/tags/}"; fi
+          if [[ -n "$TAG" ]]; then
+            gh release create "$TAG" out/Watchdog.dmg out/Watchdog.zip --target "$GITHUB_SHA" --title "Watchdog ${TAG#v}" --notes-file .github/release-notes.md --latest || gh release upload "$TAG" out/Watchdog.dmg out/Watchdog.zip --clobber
           else
             gh release view nightly >/dev/null 2>&1 || gh release create nightly --prerelease --title "Watchdog Testversion" --notes "Automatisch gebaut aus dem aktuellen Stand."
             gh release upload nightly out/Watchdog.dmg out/Watchdog.zip --clobber
