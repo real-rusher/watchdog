@@ -136,7 +136,8 @@ func ntfy() async {
     let n = NtfyNotifier(settings: s, http: http)
     do {
         try await n.send(title: "Öl & Gas · Tradegate", body: "Durchbruch der 200-Tage-Linie nach unten am 16.10. · Kurs 72,54 €", severity: .alarm)
-        let (data, _) = try await http.get(URL(string: "https://ntfy.sh/\(s.ntfyTopic)/json?poll=1")!)
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
+        let (data, _) = try await http.get(URL(string: "https://ntfy.sh/\(s.ntfyTopic)/json?poll=1&since=all")!)
         print("ntfy topic \(s.ntfyTopic):")
         print(String(data: data, encoding: .utf8) ?? "")
     } catch {
