@@ -116,11 +116,12 @@ public struct DataRouter: Sendable {
 
     /// Runs `body` against each candidate until one succeeds.
     public func first<T: Sendable>(_ cap: ProviderCapabilities, what: String, ref: SecurityRef, exchange: Exchange, prefs: SourcePreferences,
-                                   env: ProviderEnvironment, symbols: SymbolCache?,
+                                   env: ProviderEnvironment, symbols: SymbolCache?, excluding: Set<ProviderID> = [],
                                    _ body: @Sendable (MarketDataProvider, String) async throws -> T) async -> Outcome<T> {
         var attempts: [Attempt] = []
-        let list = candidates(cap, exchange: exchange, listing: ref.listing, prefs: prefs, keys: env.keys)
-        let tryList = prefs.autoFallback ? list : Array(list.prefix(1))
+        let list = candidates(cap, exchange: exchange, listing: ref.listing, prefs: prefs, keys: env.keys).filter { !excluding.contains($0) }
+        // A confirmation request always looks at every other source, even without automatic fallback.
+        let tryList = (prefs.autoFallback || !excluding.isEmpty) ? list : Array(list.prefix(1))
         for pid in tryList {
             guard let p = registry[pid] else { continue }
             guard await health.isAvailable(pid) else {

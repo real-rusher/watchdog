@@ -39,6 +39,14 @@ struct MenuBarContent: View {
                     }
                 }
                 SignalBar(totals: t)
+                if !t.stale.isEmpty {
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 11)).foregroundStyle(Palette.caution)
+                        Text(t.stale.count == 1 ? "1 Wert ohne aktuelle Kurse: \(t.stale[0].name)" : "\(t.stale.count) Werte ohne aktuelle Kurse")
+                            .type(12, .medium).foregroundStyle(Palette.ink).lineLimit(2)
+                    }
+                    .help(t.stale.map { "\($0.name): \($0.headline)" }.joined(separator: "\n"))
+                }
             }
             .padding(14)
             Divider()
@@ -57,7 +65,7 @@ struct MenuBarContent: View {
                                 NSApp.activate(ignoringOtherApps: true)
                             } label: {
                                 HStack(spacing: 8) {
-                                    AmpelDot(state: r.metrics?.ampel.state ?? .unknown, fresh: r.metrics?.ampel.isFresh == true)
+                                    AmpelDot(state: r.metrics?.ampel.state ?? .unknown, fresh: r.metrics?.ampel.isFresh == true, dimmed: r.isStale)
                                     VStack(alignment: .leading, spacing: 0) {
                                         Text(r.position.name).type(13, .medium).foregroundStyle(Palette.ink).lineLimit(1)
                                         if let c = r.metrics?.ampel.lastCrossing, r.metrics?.ampel.isFresh == true {

@@ -7,6 +7,13 @@ public struct ListingStatus: Sendable {
     public var attempts: [DataRouter.Attempt] = []
     public var updatedAt: Date?
     public var isLoading = false
+    public var lastQuoteAttempt: Date?
+    public var lastQuoteSuccess: Date?
+    public var quoteFailures = 0
+    public var lastHistorySuccess: Date?
+    public var historyFailures = 0
+    /// Set when a large price jump could not be confirmed by a second source, or was replaced by it.
+    public var plausibilityNote: String?
 
     public init() {}
 }
@@ -29,6 +36,8 @@ public struct EngineSnapshot: Sendable {
     public var health: [ProviderID: ProviderHealth.Status]
     public var lastRefresh: Date?
     public var eventLog: [SignalEvent]
+    /// Data freshness per listing key.
+    public var freshness: [String: Freshness]
 }
 
 /// Fetches, caches and evaluates market data for a depot.
@@ -123,7 +132,12 @@ public actor MarketEngine {
         var history: Bool
         var historyFrom: DayKey
         var quote: Bool
+        /// Last completed close before today, used to spot implausible jumps.
+        var refClose: Double?
     }
+
+    /// A move larger than this (relative to the previous close) must be confirmed by a second source.
+    public static func jumpThreshold(_ e: Exchange) -> Double { e.kind == .crypto ? 0.25 : 0.20 }
 
     public func desiredStart(_ rules: RuleSet) -> DayKey {
         // Trading days to calendar days: about 1.45, plus a safety margin.
@@ -186,7 +200,9 @@ public actor MarketEngine {
                 needQ = now.timeIntervalSince(lastQuoteAttempt[key] ?? .distantPast) > 20
             }
             if needH || needQ {
-                jobs.append(Job(ref: SecurityRef(p), exchange: ex, history: needH, historyFrom: from, quote: needQ))
+                let todayLocal = DayKey(date: now, timeZone: ex.tz)
+                let refClose = h?.bars.last(where: { $0.day < todayLocal })?.close
+                jobs.append(Job(ref: SecurityRef(p), exchange: ex, history: needH, historyFrom: from, quote: needQ, refClose: refClose))
             }
         }
 
@@ -231,6 +247,20 @@ public actor MarketEngine {
             guard let m = snap[p.id], let ex = catalog[p.listing.exchangeID] else { continue }
             summary.events += signalState.process(metrics: m, position: p, exchange: ex, rules: depot.rules)
         }
+
+        // Sources that went quiet: one summary message per day, after the gap has lasted a while.
+        if only == nil {
+            let fresh = freshnessMap(depot: depot, now: Date())
+            var seenKeys = Set<String>()
+            let quiet: [(String, String)] = depot.positions.compactMap { p in
+                guard let f = fresh[p.listing.key], f.isProblem, !seenKeys.contains(p.listing.key) else { return nil }
+                seenKeys.insert(p.listing.key)
+                return (p.name, f.headline)
+            }
+            if let e = signalState.processOutage(quiet, enabled: depot.notifications.dataAlerts) {
+                summary.events.append(e)
+            }
+        }
         lastRefresh = Date()
         summary.finishedAt = Date()
         await persist()
@@ -245,6 +275,7 @@ public actor MarketEngine {
         var quoteAttempts: [DataRouter.Attempt] = []
         var wantedHistory: Bool
         var wantedQuote: Bool
+        var plausibilityNote: String?
     }
 
     private static func run(_ j: Job, router: DataRouter, prefs: SourcePreferences, env: ProviderEnvironment, symbols: SymbolCache) async -> JobResult {
@@ -264,8 +295,42 @@ public actor MarketEngine {
             }
             r.quote = o.value
             r.quoteAttempts = o.attempts
+            if let q = o.value {
+                let checked = await verify(q, refClose: j.refClose, job: j, router: router, prefs: prefs, env: env, symbols: symbols)
+                r.quote = checked.quote
+                r.plausibilityNote = checked.note
+            }
         }
         return r
+    }
+
+    /// Large jumps are double-checked with another source at the same venue. Unconfirmed jumps are kept for display
+    /// but marked as suspect, so they do not fire alarms until a closing price confirms them.
+    private static func verify(_ q: Quote, refClose: Double?, job j: Job, router: DataRouter, prefs: SourcePreferences,
+                               env: ProviderEnvironment, symbols: SymbolCache) async -> (quote: Quote, note: String?) {
+        guard let ref = q.previousClose ?? refClose, ref > 0 else { return (q, nil) }
+        let move = q.price / ref - 1
+        let limit = jumpThreshold(j.exchange)
+        guard abs(move) > limit else { return (q, nil) }
+        let ex = j.exchange
+        let o = await router.first(.quote, what: "confirm", ref: j.ref, exchange: ex, prefs: prefs, env: env, symbols: symbols,
+                                   excluding: [q.source]) { p, sym in
+            try await p.quote(symbol: sym, exchange: ex, env: env)
+        }
+        let pct = Format.pct(move * 100, signed: true)
+        var out = q
+        if let c = o.value, c.currency == q.currency,
+           DayKey(date: c.time, timeZone: ex.tz) == DayKey(date: q.time, timeZone: ex.tz) {
+            if abs(c.price / q.price - 1) < 0.04 {
+                out.confirmedBy = c.source
+                return (out, "Kurssprung \(pct) von \(c.source.displayName) bestätigt.")
+            }
+            if abs(c.price / ref - 1) <= limit {
+                return (c, "\(q.source.displayName) meldete \(pct), \(c.source.displayName) nicht; Kurs von \(c.source.displayName) verwendet.")
+            }
+        }
+        out.suspect = true
+        return (out, "Kurssprung \(pct) laut \(q.source.displayName), von keiner zweiten Quelle bestätigt. Signale warten auf den Schlusskurs.")
     }
 
     private func apply(_ r: JobResult, key: String, summary: inout RefreshSummary) {
@@ -275,6 +340,8 @@ public actor MarketEngine {
         if r.wantedHistory {
             lastHistoryAttempt[key] = Date()
             if let h = r.history, !h.bars.isEmpty {
+                s.lastHistorySuccess = Date()
+                s.historyFailures = 0
                 if var existing = histories[key], existing.currency == h.currency, r.historyFrom > (existing.bars.first?.day ?? r.historyFrom) {
                     existing.merge(h.bars, source: h.source)
                     histories[key] = existing
@@ -285,17 +352,23 @@ public actor MarketEngine {
                 s.historySource = h.source
                 summary.historiesUpdated += 1
             } else {
+                s.historyFailures += 1
                 errors.append("Verlauf: " + Self.describe(r.historyAttempts))
                 summary.failures += 1
             }
         }
         if r.wantedQuote {
             lastQuoteAttempt[key] = Date()
+            s.lastQuoteAttempt = Date()
             if let q = r.quote {
                 quotes[key] = q
                 s.quoteSource = q.source
+                s.lastQuoteSuccess = Date()
+                s.quoteFailures = 0
+                s.plausibilityNote = r.plausibilityNote
                 summary.quotesUpdated += 1
             } else {
+                s.quoteFailures += 1
                 errors.append("Kurs: " + Self.describe(r.quoteAttempts))
                 summary.failures += 1
             }
@@ -362,7 +435,20 @@ public actor MarketEngine {
         fxTableSync = await fx.current()
         let m = snapshotMetrics(depot: depot)
         return EngineSnapshot(metrics: m, status: status, fx: fxTableSync, health: await router.health.snapshot(),
-                              lastRefresh: lastRefresh, eventLog: signalState.log)
+                              lastRefresh: lastRefresh, eventLog: signalState.log, freshness: freshnessMap(depot: depot, now: Date()))
+    }
+
+    private func freshnessMap(depot: DepotFile, now: Date) -> [String: Freshness] {
+        var out: [String: Freshness] = [:]
+        let catalog = depot.catalog
+        for p in depot.positions where out[p.listing.key] == nil {
+            guard let ex = catalog[p.listing.exchangeID] else { continue }
+            let key = p.listing.key
+            let cur = histories[key]?.currency ?? quotes[key]?.currency ?? ex.currency
+            out[key] = FreshnessCheck.evaluate(exchange: ex, quote: quotes[key], lastBarDay: histories[key]?.lastDay, status: status[key],
+                                               currency: cur, fxLatest: fxTableSync.latestDay(cur), interval: quoteInterval, now: now)
+        }
+        return out
     }
 
     public func chart(position p: Position, depot: DepotFile, from: DayKey, lines: [LineSpec]) async -> [Evaluator.ChartPoint] {
@@ -386,6 +472,17 @@ public actor MarketEngine {
     /// Sends a test message to ntfy.
     public func sendTestPush(_ settings: NotificationSettings) async throws {
         try await NtfyNotifier(settings: settings, http: http).send(title: "Watchdog", body: "Test: Mitteilungen von Watchdog kommen an.", severity: .info)
+    }
+
+    /// Calls the heartbeat URL. Returns nil on success or a short error text.
+    public func heartbeat(_ url: URL) async -> String? {
+        do {
+            let (data, resp) = try await http.get(url)
+            try HTTPClient.check(resp, data)
+            return nil
+        } catch {
+            return (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
     }
 
     public func push(_ events: [SignalEvent], settings: NotificationSettings) async {

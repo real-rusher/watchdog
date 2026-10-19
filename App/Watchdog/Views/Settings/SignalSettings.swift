@@ -166,9 +166,11 @@ struct NotificationSettingsView: View {
     @Environment(AppModel.self) private var model
     @State private var macStatus = "wird geprüft"
     @State private var testResult: String?
+    @State private var heartbeatTesting = false
 
     var body: some View {
         let n = model.depot.notifications
+        let allowed = max(3 * model.local.quoteIntervalMinutes, 45)
         Form {
             Section("Auf dem Mac") {
                 Toggle("Mitteilungen anzeigen", isOn: Binding(get: { n.macEnabled }, set: { v in
@@ -225,6 +227,33 @@ struct NotificationSettingsView: View {
                     }
                 }
             }
+            Section("Wenn Kurse ausbleiben") {
+                Toggle("Melden, wenn Kurse ausbleiben", isOn: Binding(get: { n.dataAlerts }, set: { v in model.mutate { $0.notifications.dataAlerts = v } }))
+                Text("Kommt während der Handelszeit \(allowed) Minuten lang kein Kurs an, fehlt ein Schlusskurs, endet der Kursverlauf oder fehlt ein Wechselkurs, wird der Wert in der Tabelle sofort markiert. Hält das 20 Minuten an, kommt eine Mitteilung auf dem Mac und über ntfy, höchstens eine am Tag.")
+                    .type(11).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            }
+            Section("Lebenszeichen (freiwillig)") {
+                Text("Watchdog kann nur warnen, solange er läuft. Damit auch ein ausgeschalteter oder schlafender Mac auffällt, ruft Watchdog alle 5 Minuten eine Adresse auf. Ein kostenloser Dienst wie healthchecks.io meldet sich über ntfy oder E-Mail, sobald diese Aufrufe ausbleiben.")
+                    .type(11).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+                TextField("Adresse", text: Binding(get: { n.heartbeatURL ?? "" }, set: { v in
+                    model.mutate { $0.notifications.heartbeatURL = v.isEmpty ? nil : v }
+                }), prompt: Text("https://hc-ping.com/…"))
+                HStack {
+                    Button("Jetzt testen") {
+                        heartbeatTesting = true
+                        Task {
+                            await model.heartbeat(force: true)
+                            heartbeatTesting = false
+                        }
+                    }
+                    .disabled(n.heartbeat == nil || heartbeatTesting)
+                    Text(heartbeatStatus(n)).type(12).foregroundStyle(heartbeatColor(n))
+                    Spacer()
+                    Link("healthchecks.io", destination: URL(string: "https://healthchecks.io")!).type(12)
+                }
+                Text("Tipp: Dort als Zeitplan die Handelszeiten eintragen, zum Beispiel Cron \u{201E}*/5 8-22 * * 1-5\u{201C} mit Zeitzone Europe/Berlin und 30 Minuten Kulanz. Dann gibt es nachts und am Wochenende keine Fehlalarme.")
+                    .type(11).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            }
             Section("Letzte Meldungen") {
                 let log = model.snapshot?.eventLog ?? []
                 if log.isEmpty {
@@ -241,6 +270,20 @@ struct NotificationSettingsView: View {
         }
         .formStyle(.grouped)
         .onAppear(perform: refreshStatus)
+    }
+
+    private func heartbeatStatus(_ n: NotificationSettings) -> String {
+        if heartbeatTesting { return "wird gesendet …" }
+        if n.heartbeatURL?.isEmpty == false && n.heartbeat == nil { return "Adresse ungültig" }
+        guard n.heartbeat != nil else { return "aus" }
+        guard let r = model.heartbeatResult else { return "noch nicht gesendet" }
+        if let e = r.error { return "Fehler \(Format.time(r.date)): \(e)" }
+        return "zuletzt gemeldet \(Format.time(r.date))"
+    }
+
+    private func heartbeatColor(_ n: NotificationSettings) -> Color {
+        if model.heartbeatResult?.error != nil || (n.heartbeatURL?.isEmpty == false && n.heartbeat == nil) { return Palette.down }
+        return Palette.inkSoft
     }
 
     private func refreshStatus() {

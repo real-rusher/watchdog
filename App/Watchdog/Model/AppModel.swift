@@ -7,7 +7,11 @@ struct TableRow: Identifiable {
     let metrics: PositionMetrics?
     let exchange: Exchange?
     let status: ListingStatus?
+    let freshness: Freshness?
     var id: UUID { position.id }
+
+    /// Data should be there but is not (source down, throttled, symbol broken, no exchange rate).
+    var isStale: Bool { freshness?.isProblem == true }
 }
 
 struct Totals {
@@ -17,12 +21,15 @@ struct Totals {
     var holdings = 0
     var counts: [AmpelState: Int] = [:]
     var fresh = 0
+    /// Values without current data, with the short reason.
+    var stale: [(name: String, headline: String)] = []
 
     var sincePurchase: Double { value - cost }
     var sincePurchasePercent: Double? { cost > 0 ? (value / cost - 1) * 100 : nil }
     var dayPercent: Double? { value - dayChange > 0 ? (dayChange / (value - dayChange)) * 100 : nil }
 
     mutating func add(_ r: TableRow) {
+        if r.isStale { stale.append((r.position.name, r.freshness?.headline ?? "")) }
         if let m = r.metrics {
             counts[m.ampel.state, default: 0] += 1
             if m.ampel.isFresh { fresh += 1 }
@@ -50,6 +57,7 @@ struct TableSection: Identifiable {
 enum AmpelFilter: Equatable {
     case state(AmpelState)
     case fresh
+    case stale
 }
 
 enum EditorRequest: Identifiable, Equatable {
@@ -88,6 +96,10 @@ final class AppModel {
     var settingsRequest = 0
     /// Text handed to the import dialog when it opens (pasted list or file content).
     var importPrefill: String?
+    /// Last heartbeat call: time and error text (nil = ok).
+    var heartbeatResult: (date: Date, error: String?)?
+    /// Screenshot run only: pretend these listings have gone quiet, to show what an outage looks like.
+    var simulatedOutage: [String: Freshness] = [:]
 
     let engine: MarketEngine
     private(set) var store: DepotStore
@@ -156,7 +168,13 @@ final class AppModel {
         }
         notifier.onOpen = { [weak self] id in
             Task { @MainActor in
-                self?.selection = id
+                if id == SignalState.dataAlertID {
+                    // "Kurse bleiben aus": show the affected values.
+                    self?.selection = nil
+                    self?.filter = .stale
+                } else {
+                    self?.selection = id
+                }
                 NSApp.activate(ignoringOtherApps: true)
                 NSApp.windows.first(where: { $0.identifier?.rawValue.contains("main") == true })?.makeKeyAndOrderFront(nil)
             }
@@ -192,9 +210,19 @@ final class AppModel {
             if only == nil {
                 isRefreshing = false
                 lastSummary = summary
+                await heartbeat()
             }
             deliver(summary.events)
         }
+    }
+
+    /// Tells an outside monitor that Watchdog is running and online, at most every five minutes.
+    /// If these calls stop (Mac off or asleep, app quit, no internet), the monitor sends the alert.
+    func heartbeat(force: Bool = false) async {
+        guard snapshotDir == nil, let url = depot.notifications.heartbeat else { return }
+        if !force, let last = heartbeatResult?.date, Date().timeIntervalSince(last) < 290 { return }
+        let error = await engine.heartbeat(url)
+        heartbeatResult = (Date(), error)
     }
 
     func recompute() async {
@@ -276,6 +304,7 @@ final class AppModel {
 
     func position(_ id: UUID?) -> Position? { depot.positions.first { $0.id == id } }
     func metrics(_ id: UUID?) -> PositionMetrics? { id.flatMap { snapshot?.metrics[$0] } }
+    func freshness(_ p: Position) -> Freshness? { simulatedOutage[p.listing.key] ?? snapshot?.freshness[p.listing.key] }
 
     func add(_ p: Position) {
         mutate { $0.positions.append(p) }
@@ -374,7 +403,8 @@ final class AppModel {
     var catalog: ExchangeCatalog { depot.catalog }
 
     func row(_ p: Position) -> TableRow {
-        TableRow(position: p, metrics: snapshot?.metrics[p.id], exchange: catalog[p.listing.exchangeID], status: snapshot?.status[p.listing.key])
+        TableRow(position: p, metrics: snapshot?.metrics[p.id], exchange: catalog[p.listing.exchangeID], status: snapshot?.status[p.listing.key],
+                 freshness: simulatedOutage[p.listing.key] ?? snapshot?.freshness[p.listing.key])
     }
 
     var allRows: [TableRow] { depot.positions.map(row) }
@@ -395,6 +425,7 @@ final class AppModel {
         case .none: return true
         case .state(let s): return (r.metrics?.ampel.state ?? .unknown) == s
         case .fresh: return r.metrics?.ampel.isFresh == true
+        case .stale: return r.isStale
         }
     }
 

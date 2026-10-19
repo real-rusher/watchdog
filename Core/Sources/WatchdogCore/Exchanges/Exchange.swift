@@ -95,6 +95,28 @@ public struct Exchange: Codable, Hashable, Identifiable, Sendable {
         return day
     }
 
+    /// Minutes since today's session opened (only meaningful while open; nil for crypto and weekends).
+    public func minutesSinceOpen(at date: Date = Date()) -> Int? {
+        if kind == .crypto { return nil }
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = tz
+        let c = cal.dateComponents([.weekday, .hour, .minute], from: date)
+        guard let wd = c.weekday, wd != 1, wd != 7 else { return nil }
+        return (c.hour ?? 0) * 60 + (c.minute ?? 0) - opens
+    }
+
+    /// Trading days (Mon to Fri) after `from` up to and including `to`. Crypto counts every day.
+    public func sessions(after from: DayKey, upTo to: DayKey) -> Int {
+        guard to > from else { return 0 }
+        var n = 0
+        var d = from.adding(days: 1)
+        while d <= to {
+            if kind == .crypto || (d.weekday != 1 && d.weekday != 7) { n += 1 }
+            d = d.adding(days: 1)
+        }
+        return n
+    }
+
     public var hoursText: String {
         if kind == .crypto { return "rund um die Uhr" }
         func hm(_ m: Int) -> String { String(format: "%02d:%02d", m / 60, m % 60) }

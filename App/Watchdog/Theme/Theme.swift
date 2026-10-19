@@ -26,6 +26,7 @@ enum Palette {
     static let up = dyn(0x15774A, 0x4CC68A)
     static let down = dyn(0xC1352A, 0xFF7366)
     static let caution = dyn(0xD99E00, 0xF4C430)
+    static let cautionWash = dyn(0xFBEBC4, 0x3D3219)
     static let unknown = dyn(0xB4BAB9, 0x4D555B)
     static let line38 = dyn(0x2D6CB5, 0x72AAF0)
     static let line200 = dyn(0xD2701F, 0xF29A4B)

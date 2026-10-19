@@ -42,6 +42,22 @@ enum SnapshotRunner {
             capture(window, dir, "2-detail-\(tag)", note)
         }
 
+        // Simulated outage: what the user sees when a source goes quiet.
+        NSApp.appearance = NSAppearance(named: .aqua)
+        let victims = Array(model.allRows.filter { $0.metrics?.hasData == true && $0.metrics?.ampel.state != .unknown }.prefix(2))
+        for (i, r) in victims.enumerated() {
+            let since = Date().addingTimeInterval(-Double(70 + i * 25) * 60)
+            model.simulatedOutage[r.position.listing.key] = Freshness(
+                level: .stale, headline: "seit \(Format.time(since)) keine Kurse",
+                detail: "Die Börse ist geöffnet, aber seit \(Format.time(since)) kam kein neuer Kurs. Signale für diesen Wert sind solange nicht aktuell.\nKurs: Yahoo Finance: gedrosselt (HTTP 429), OnVista: keine Antwort",
+                lastSuccess: since)
+        }
+        model.selection = victims.first?.id
+        try? await Task.sleep(nanoseconds: 2_500_000_000)
+        capture(window, dir, "7-outage-light", note)
+        model.simulatedOutage = [:]
+        model.selection = nil
+
         // Theme grouping.
         model.selection = nil
         model.updateLocal { $0.grouping = .theme }

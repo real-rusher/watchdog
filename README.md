@@ -41,6 +41,26 @@ Die Linie ist der einfache gleitende Durchschnitt der letzten 200 Schlusskurse a
 
 Standard ist Yahoo Finance. Fällt Yahoo aus oder drosselt, nimmt Watchdog automatisch die nächste Quelle: OnVista (Tradegate, gettex, LS Exchange und weitere), Financial Times (Tokio, Australien, Kanada, Skandinavien und weitere), Lang & Schwarz, Tradegate, Bitfinex. Mit eigenem API-Schlüssel zusätzlich EODHD, Twelve Data, Alpha Vantage und Finnhub. Reihenfolge und erste Quelle lassen sich in der Symbolleiste und unter Einstellungen > Datenquellen ändern.
 
+Die Kurse sind echte Börsenkurse, aber keine Echtzeitkurse: je nach Börse und Quelle 15 bis 20 Minuten verzögert, bei der Financial Times nur Schlusskurse. Umgerechnet wird mit dem Referenzkurs der EZB vom jeweiligen Tag; die eigene Bank rechnet mit ihrem Kurs und Aufschlag, daher weichen Euro-Werte leicht ab.
+
+### Wenn Daten ausbleiben
+
+Watchdog prüft bei jeder Aktualisierung, ob die Daten jedes Werts aktuell sind, und richtet sich dabei nach den Handelszeiten der jeweiligen Börse:
+
+| Fall | Anzeige |
+|---|---|
+| Börse offen, aber seit 45 Minuten kein Kurs angekommen | Warnzeichen und „seit 14:05 keine Kurse“ in der Zeile, Uhrzeit orange |
+| Börse geschlossen, Schlusskurs nicht angekommen | „Schlusskurs 14.10. fehlt“ |
+| Kursverlauf endet mehrere Handelstage zu früh | „Verlauf endet 08.10.“, die 200-Tage-Linie ist dann nicht aktuell |
+| Wechselkurs fehlt oder ist älter als 5 Tage | „Wechselkurs JPY fehlt“ |
+| Quelle antwortet, der Wert wurde aber nicht gehandelt | dezenter Hinweis „kein Kurs von heute“, keine Warnung |
+
+Betroffene Werte zeigen Ampel und Abstand blass mit gestricheltem Rand: Das ist der letzte bekannte Stand, kein aktuelles Signal. Oben im Fenster erscheint ein Hinweis mit den Namen, in der Menüleiste ein Warnzeichen. Hält der Ausfall 20 Minuten an, kommt eine Mitteilung auf Mac und iPhone (höchstens eine am Tag, abschaltbar unter Einstellungen > Mitteilungen).
+
+Springt ein Kurs um mehr als 20 % (Krypto 25 %), fragt Watchdog eine zweite Quelle. Bestätigt sie den Kurs, gilt er. Zeigt sie keinen Sprung, wird ihr Kurs verwendet. Kann keine zweite Quelle bestätigen, steht ein „?“ am Kurs und Durchbrüche werden erst mit dem Schlusskurs gemeldet. So löst ein einzelner Fehlkurs keinen Alarm aus.
+
+Watchdog kann nur prüfen, solange er läuft. Damit auch ein ausgeschalteter oder schlafender Mac auffällt, lässt sich unter Einstellungen > Mitteilungen > Lebenszeichen eine Adresse von [healthchecks.io](https://healthchecks.io) (kostenlos) eintragen. Watchdog ruft sie alle 5 Minuten auf; bleibt das aus, schickt healthchecks.io eine Nachricht über ntfy oder E-Mail. Durchbrüche, die in die Zeit fallen, in der der Mac aus war, werden beim nächsten Start nachgemeldet.
+
 ## Daten und Sicherung
 
 Das Depot ist eine einzige Datei, standardmäßig `iCloud Drive/Watchdog/Watchdog.json`. Jede Stunde entsteht eine Sicherung im Unterordner `Backups`; wiederherstellen unter Einstellungen > Allgemein. API-Schlüssel und Kurse liegen nur lokal auf dem Mac.

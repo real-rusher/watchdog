@@ -32,14 +32,35 @@ public struct Quote: Codable, Hashable, Sendable {
     public var source: ProviderID
     /// When Watchdog received it.
     public var fetchedAt: Date
+    /// A second source reported the same price for a large move.
+    public var confirmedBy: ProviderID?
+    /// Large move that no second source confirmed: shown, but not used for alarms.
+    public var suspect: Bool
 
-    public init(price: Double, time: Date, previousClose: Double?, currency: String, source: ProviderID, fetchedAt: Date = Date()) {
+    public init(price: Double, time: Date, previousClose: Double?, currency: String, source: ProviderID, fetchedAt: Date = Date(),
+                confirmedBy: ProviderID? = nil, suspect: Bool = false) {
         self.price = price
         self.time = time
         self.previousClose = previousClose
         self.currency = currency
         self.source = source
         self.fetchedAt = fetchedAt
+        self.confirmedBy = confirmedBy
+        self.suspect = suspect
+    }
+
+    enum CodingKeys: String, CodingKey { case price, time, previousClose, currency, source, fetchedAt, confirmedBy, suspect }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        price = try c.decode(Double.self, forKey: .price)
+        time = try c.decode(Date.self, forKey: .time)
+        previousClose = try c.decodeIfPresent(Double.self, forKey: .previousClose)
+        currency = try c.decode(String.self, forKey: .currency)
+        source = try c.decode(ProviderID.self, forKey: .source)
+        fetchedAt = (try? c.decode(Date.self, forKey: .fetchedAt)) ?? time
+        confirmedBy = try? c.decodeIfPresent(ProviderID.self, forKey: .confirmedBy)
+        suspect = (try? c.decodeIfPresent(Bool.self, forKey: .suspect)) ?? false
     }
 }
 

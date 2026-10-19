@@ -59,10 +59,13 @@ struct WatchdogApp: App {
 struct MenuBarLabel: View {
     var model: AppModel
     var body: some View {
-        let red = model.totals.counts[.red] ?? 0
+        let t = model.totals
+        let red = t.counts[.red] ?? 0
         HStack(spacing: 3) {
             Image("MenuIcon")
             if red > 0 { Text("\(red)") }
+            // Data outage: a small warning sign next to the count.
+            if !t.stale.isEmpty { Image(systemName: "exclamationmark.triangle") }
         }
         .onAppear { model.start() }
     }

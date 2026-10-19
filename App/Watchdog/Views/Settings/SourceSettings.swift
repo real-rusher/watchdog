@@ -77,7 +77,11 @@ private struct SourceRow: View {
             if let until = s.cooldownUntil, until > Date() {
                 Text("pausiert bis \(Format.time(until))").type(11, .medium).foregroundStyle(Palette.caution).help(s.lastError ?? "")
             } else if s.successCount > 0 {
-                Text("\(s.successCount) Abrufe ok" + (s.failureCount > 0 ? ", \(s.failureCount) Fehler" : "")).type(11).foregroundStyle(Palette.inkSoft).help(s.lastError ?? "")
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text("\(s.successCount) Abrufe ok" + (s.failureCount > 0 ? ", \(s.failureCount) Fehler" : "")).type(11).foregroundStyle(Palette.inkSoft)
+                    if let t = s.lastSuccess { Text("zuletzt \(Format.time(t))").type(11).foregroundStyle(Palette.inkFaint) }
+                }
+                .help(s.lastError ?? "")
             } else if s.failureCount > 0 {
                 Text("\(s.failureCount) Fehler").type(11, .medium).foregroundStyle(Palette.down).help(s.lastError ?? "")
             }

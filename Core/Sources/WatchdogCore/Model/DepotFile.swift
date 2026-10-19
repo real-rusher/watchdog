@@ -59,13 +59,21 @@ public struct NotificationSettings: Codable, Hashable, Sendable {
     public var ntfyTopic: String
     /// Optional access token for protected ntfy servers.
     public var ntfyToken: String?
+    /// Warn when prices stop arriving.
+    public var dataAlerts: Bool
+    /// Optional heartbeat URL (healthchecks.io, Uptime Kuma push, Better Stack heartbeat).
+    /// Watchdog calls it while it runs and is online; the service alerts when the calls stop
+    /// (Mac off or asleep, app quit, no internet).
+    public var heartbeatURL: String?
 
-    public init(macEnabled: Bool = true, ntfyEnabled: Bool = false, ntfyServer: String = "https://ntfy.sh", ntfyTopic: String = NotificationSettings.randomTopic(), ntfyToken: String? = nil) {
+    public init(macEnabled: Bool = true, ntfyEnabled: Bool = false, ntfyServer: String = "https://ntfy.sh", ntfyTopic: String = NotificationSettings.randomTopic(), ntfyToken: String? = nil, dataAlerts: Bool = true, heartbeatURL: String? = nil) {
         self.macEnabled = macEnabled
         self.ntfyEnabled = ntfyEnabled
         self.ntfyServer = ntfyServer
         self.ntfyTopic = ntfyTopic
         self.ntfyToken = ntfyToken
+        self.dataAlerts = dataAlerts
+        self.heartbeatURL = heartbeatURL
     }
 
     /// Hard to guess topic name; on ntfy.sh the topic name is the only protection.
@@ -82,6 +90,15 @@ public struct NotificationSettings: Codable, Hashable, Sendable {
         ntfyServer = c.value(.ntfyServer, "https://ntfy.sh")
         ntfyTopic = c.value(.ntfyTopic, NotificationSettings.randomTopic())
         ntfyToken = c.value(.ntfyToken, nil as String?)
+        dataAlerts = c.value(.dataAlerts, true)
+        heartbeatURL = c.value(.heartbeatURL, nil as String?)
+    }
+
+    /// Valid heartbeat URL, if one is configured.
+    public var heartbeat: URL? {
+        guard let s = heartbeatURL?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty,
+              let u = URL(string: s), u.scheme == "https" || u.scheme == "http", u.host != nil else { return nil }
+        return u
     }
 
     public var subscribeURL: URL? {

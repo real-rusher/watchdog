@@ -24,8 +24,49 @@ public struct SignalState: Codable, Sendable {
     /// First day a position was evaluated; events before it are history, not news.
     public var firstSeen: [String: DayKey] = [:]
     public var log: [SignalEvent] = []
+    /// Since when at least one value has had no current data (nil = all fine).
+    public var quietSince: Date?
+    /// Day of the last "data missing" message (at most one per day).
+    public var dataAlertDay: DayKey?
 
     public init() {}
+
+    enum CodingKeys: String, CodingKey { case notified, active, firstSeen, log, quietSince, dataAlertDay }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        notified = c.value(.notified, [])
+        active = c.value(.active, [])
+        firstSeen = c.value(.firstSeen, [:])
+        log = c.value(.log, [])
+        quietSince = c.value(.quietSince, nil as Date?)
+        dataAlertDay = c.value(.dataAlertDay, nil as DayKey?)
+    }
+
+    public static let dataAlertID = UUID(uuidString: "0B5E0C1A-2000-4000-8000-0000000000DA")!
+
+    /// One message when values have gone without data for 20 minutes, at most once per day.
+    public mutating func processOutage(_ quiet: [(name: String, headline: String)], enabled: Bool,
+                                       now: Date = Date(), minimum: TimeInterval = 20 * 60) -> SignalEvent? {
+        guard !quiet.isEmpty else {
+            quietSince = nil
+            return nil
+        }
+        if quietSince == nil { quietSince = now }
+        let today = DayKey(date: now, timeZone: .berlin)
+        guard enabled, let since = quietSince, now.timeIntervalSince(since) >= minimum, dataAlertDay != today else { return nil }
+        dataAlertDay = today
+        let names = quiet.prefix(4).map { "\($0.name) (\($0.headline))" }.joined(separator: ", ")
+        let more = quiet.count > 4 ? " und \(quiet.count - 4) weitere" : ""
+        let count = quiet.count == 1 ? "1 Wert" : "\(quiet.count) Werte"
+        let e = SignalEvent(id: "data|\(today.value)", positionID: Self.dataAlertID, positionName: "Datenquellen", exchangeName: "",
+                            ruleName: "Kurse bleiben aus", severity: .warning, day: today,
+                            title: "Watchdog: Kurse bleiben aus",
+                            body: "Keine aktuellen Daten für \(count): \(names)\(more). Ampel und Signale dieser Werte sind bis dahin nicht aktuell.",
+                            createdAt: now)
+        log = Array(([e] + log).prefix(300))
+        return e
+    }
 
     /// Compares rule hits with the remembered state and returns new events.
     public mutating func process(metrics: PositionMetrics, position: Position, exchange: Exchange, rules: RuleSet, today: DayKey = DayKey.today(in: .berlin)) -> [SignalEvent] {

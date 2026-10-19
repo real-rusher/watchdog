@@ -73,6 +73,10 @@ public struct PositionMetrics: Sendable {
     public var hits: [RuleHit]
     public var historyCount: Int
     public var lastBarDay: DayKey?
+    /// The live price is a large jump that no second source confirmed.
+    public var quoteSuspect = false
+    /// A second source confirmed a large jump.
+    public var quoteConfirmedBy: ProviderID?
 
     public var hasData: Bool { priceLocal != nil }
 
@@ -119,6 +123,10 @@ public enum Evaluator {
         m.priceLocal = price
         m.quoteTime = quote?.time ?? lastDay.date
         m.quoteSource = quote?.source
+        if series.lastIsLive {
+            m.quoteSuspect = quote?.suspect ?? false
+            m.quoteConfirmedBy = quote?.confirmedBy
+        }
         let rateNow = eurRate(lastDay)
         if let r = rateNow { m.priceEUR = price * r }
 
@@ -169,7 +177,9 @@ public enum Evaluator {
         lines[.price] = closes.map { $0 }
 
         // Closes-only variant for confirmed crossings.
-        let confirmedCount = series.lastIsLive && rules.confirmOnClose ? n - 1 : n
+        // A suspect live price (big jump nobody confirmed) is shown but does not trigger crossings.
+        let liveUnusable = rules.confirmOnClose || (quote?.suspect ?? false)
+        let confirmedCount = series.lastIsLive && liveUnusable ? n - 1 : n
 
         // Ampel.
         let ampelLine = lines[rules.ampel.line] ?? []

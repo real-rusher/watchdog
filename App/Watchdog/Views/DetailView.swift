@@ -18,6 +18,8 @@ struct DetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     header(p, m, ex)
+                    if let f = model.freshness(p), f.isProblem || f.level == .noTradeToday { dataNotice(f) }
+                    if m?.quoteSuspect == true { suspectNotice(p) }
                     verdict(m)
                     chartBlock(p, m)
                     figures(p, m, ex)
@@ -97,8 +99,49 @@ struct DetailView: View {
     private func sourceLine(_ m: PositionMetrics, _ t: Date, _ ex: Exchange?) -> String {
         var s = "Kurs von \(Format.time(t))"
         if let src = m.quoteSource { s += ", Quelle \(src.displayName)" }
+        if let c = m.quoteConfirmedBy { s += ", bestätigt durch \(c.displayName)" }
         if m.currency != "EUR", let pl = m.priceLocal { s += ", an der Börse \(Format.money(pl, m.currency))" }
         return s
+    }
+
+    /// Data has stopped or the market has not traded: say so above the verdict, because the verdict is then the last known state.
+    private func dataNotice(_ f: Freshness) -> some View {
+        let problem = f.isProblem
+        return HStack(alignment: .top, spacing: 10) {
+            Image(systemName: problem ? "exclamationmark.triangle.fill" : "clock")
+                .foregroundStyle(problem ? Palette.caution : Palette.inkSoft)
+                .padding(.top, 1)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(Self.sentence(f.headline)).type(14, .semibold).foregroundStyle(Palette.ink)
+                Text(f.detail).type(12).foregroundStyle(Palette.inkSoft).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
+                if let ls = f.lastSuccess {
+                    Text("Letzte erfolgreiche Abfrage \(Format.time(ls)).").type(12).foregroundStyle(Palette.inkSoft)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .background(problem ? Palette.cautionWash : Palette.zebra, in: RoundedRectangle(cornerRadius: 6))
+    }
+
+    private func suspectNotice(_ p: Position) -> some View {
+        let note = model.snapshot?.status[p.listing.key]?.plausibilityNote
+            ?? "Großer Kurssprung, den keine zweite Quelle bestätigt. Signale warten auf den Schlusskurs."
+        return HStack(alignment: .top, spacing: 10) {
+            Text("?").type(16, .bold).foregroundStyle(Palette.caution)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Kurs unbestätigt").type(14, .semibold).foregroundStyle(Palette.ink)
+                Text(note).type(12).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .background(Palette.cautionWash, in: RoundedRectangle(cornerRadius: 6))
+    }
+
+    static func sentence(_ s: String) -> String {
+        guard let f = s.first else { return s }
+        return f.uppercased() + s.dropFirst()
     }
 
     /// One sentence that says what to do.
@@ -257,6 +300,9 @@ struct DetailView: View {
         return VStack(alignment: .leading, spacing: 6) {
             Text("Daten").type(15, .semibold).foregroundStyle(Palette.ink)
             Text(dataSummary(st, m)).type(12).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            if let note = st?.plausibilityNote, m?.quoteSuspect != true {
+                Text(note).type(12).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            }
             if let e = st?.lastError {
                 Text(e).type(12).foregroundStyle(Palette.down).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
             }
@@ -275,6 +321,8 @@ struct DetailView: View {
         if let h = st?.historySource { parts.append("Verlauf über \(h.displayName)") }
         if let n = m?.historyCount, n > 0 { parts.append("\(n) Handelstage gespeichert") }
         if let d = m?.lastBarDay { parts.append("letzter Schlusskurs \(Format.day(d))") }
+        if let t = st?.lastQuoteSuccess { parts.append("zuletzt erfolgreich abgefragt \(Format.time(t))") }
+        if let n = st?.quoteFailures, n > 0 { parts.append(n == 1 ? "1 Fehlversuch seitdem" : "\(n) Fehlversuche seitdem") }
         return parts.isEmpty ? "Noch keine Daten geladen." : parts.joined(separator: ", ") + "."
     }
 }

@@ -19,6 +19,9 @@ struct SummaryStrip: View {
                 .padding(.vertical, 7)
                 .background(Palette.signalWash)
             }
+            if !t.stale.isEmpty {
+                OutageBanner(totals: t, total: model.depot.positions.count)
+            }
             ViewThatFits(in: .horizontal) {
                 HStack(alignment: .center, spacing: 28) {
                     figures(t)
@@ -138,5 +141,52 @@ struct SignalBar: View {
         case .green: return "über"
         case .unknown: return "ohne Daten"
         }
+    }
+}
+
+/// Shown as soon as values have no current data: names them, says what that means, filters on click.
+struct OutageBanner: View {
+    @Environment(AppModel.self) private var model
+    var totals: Totals
+    var total: Int
+
+    var body: some View {
+        let n = totals.stale.count
+        let filtered = model.filter == .stale
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Palette.caution)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title(n)).type(13, .semibold).foregroundStyle(Palette.ink)
+                Text(detail(n)).type(12).foregroundStyle(Palette.inkSoft)
+                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            Button(filtered ? "Alle zeigen" : (n == 1 ? "Zeigen" : "Nur diese zeigen")) {
+                model.filter = filtered ? nil : .stale
+            }
+            .buttonStyle(.borderless).type(13, .semibold)
+            Button { model.refresh(force: true) } label: { Image(systemName: "arrow.clockwise") }
+                .buttonStyle(.borderless)
+                .disabled(model.isRefreshing)
+                .help("Jetzt neu versuchen")
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.vertical, 8)
+        .background(Palette.cautionWash)
+        .overlay(alignment: .leading) { Rectangle().fill(Palette.caution).frame(width: 4) }
+    }
+
+    private func title(_ n: Int) -> String {
+        if n == total && n >= 2 { return "Für keinen Wert kommen aktuelle Kurse an." }
+        return n == 1 ? "1 Wert bekommt keine aktuellen Kurse." : "\(n) Werte bekommen keine aktuellen Kurse."
+    }
+
+    private func detail(_ n: Int) -> String {
+        if n == total && n >= 2 {
+            return "Vermutlich fehlt die Internetverbindung oder die Datenquellen sind gestört. Ampel und Signale zeigen den letzten bekannten Stand."
+        }
+        let names = totals.stale.prefix(3).map { "\($0.name) (\($0.headline))" }.joined(separator: ", ")
+        let more = n > 3 ? " und \(n - 3) weitere" : ""
+        return names + more + ". Ampel und Signale dieser Werte zeigen den letzten bekannten Stand."
     }
 }

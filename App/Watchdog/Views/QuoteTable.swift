@@ -278,6 +278,13 @@ struct MiniCounts: View {
                     }
                 }
             }
+            if !totals.stale.isEmpty {
+                HStack(spacing: 3) {
+                    Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 9)).foregroundStyle(Palette.caution)
+                    Text("\(totals.stale.count)").type(12, .medium).foregroundStyle(Palette.inkSoft)
+                }
+                .help(totals.stale.count == 1 ? "1 Wert ohne aktuelle Kurse" : "\(totals.stale.count) Werte ohne aktuelle Kurse")
+            }
         }
     }
 }
@@ -335,7 +342,12 @@ struct QuoteRow: View {
     private var helpText: String {
         var parts: [String] = []
         if let m = row.metrics, m.currency != "EUR", let pl = m.priceLocal { parts.append("Kurs an der Börse: \(Format.money(pl, m.currency))") }
-        if let e = row.status?.lastError { parts.append(e) }
+        if let f = row.freshness, f.level != .ok, f.level != .pending, !f.detail.isEmpty {
+            parts.append(f.detail)
+        } else if let e = row.status?.lastError {
+            parts.append(e)
+        }
+        if let note = row.status?.plausibilityNote { parts.append(note) }
         return parts.joined(separator: "\n")
     }
 
@@ -347,6 +359,7 @@ struct QuoteRow: View {
         case .name:
             NameCell(row: row)
         case .gauge:
+            // Without current data the reading is the last known one: shown faded, not as a live signal.
             HStack(spacing: 8) {
                 LineGauge(metrics: m, rules: model.depot.rules)
                     .frame(width: 78 * scale, height: 16 * scale)
@@ -355,11 +368,24 @@ struct QuoteRow: View {
                     .foregroundStyle(m.map { Palette.ampel($0.ampel.state) } ?? Palette.inkFaint)
                     .lineLimit(1)
             }
+            .opacity(row.isStale ? 0.38 : 1)
         case .price:
             VStack(alignment: .trailing, spacing: 1) {
-                Text(m?.priceEUR.map { Format.eur($0) } ?? Placeholder.missing).type(14, .medium).foregroundStyle(Palette.ink)
-                Text(m?.quoteTime.map { Format.time($0) } ?? (row.status?.isLoading == true ? "lädt" : " "))
-                    .type(11).foregroundStyle(Palette.inkFaint)
+                HStack(spacing: 2) {
+                    Text(m?.priceEUR.map { Format.eur($0) } ?? Placeholder.missing).type(14, .medium).foregroundStyle(Palette.ink)
+                    if m?.quoteSuspect == true {
+                        Text("?").type(13, .bold).foregroundStyle(Palette.caution)
+                            .help("Großer Kurssprung, von keiner zweiten Quelle bestätigt")
+                    }
+                }
+                HStack(spacing: 3) {
+                    if row.isStale {
+                        Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 9 * scale))
+                    }
+                    Text(m?.quoteTime.map { Format.time($0) } ?? (row.status?.isLoading == true ? "lädt" : " "))
+                        .type(11, row.isStale ? .semibold : .regular)
+                }
+                .foregroundStyle(row.isStale ? Palette.caution : Palette.inkFaint)
             }
         case .day:
             pct(m?.dayChangePercent)
@@ -402,20 +428,21 @@ struct NameCell: View {
     var body: some View {
         let m = row.metrics
         HStack(spacing: 10) {
-            AmpelDot(state: m?.ampel.state ?? .unknown, fresh: m?.ampel.isFresh == true)
+            AmpelDot(state: m?.ampel.state ?? .unknown, fresh: m?.ampel.isFresh == true, dimmed: row.isStale)
             VStack(alignment: .leading, spacing: 1) {
                 Text(row.position.name).type(14, .medium).foregroundStyle(Palette.ink).lineLimit(1)
-                // The crossing chip is dropped when the column is too narrow; the ring on the dot still shows it.
+                // Chips are dropped when the column is too narrow; the ring on the dot and the warning in the price column remain.
                 ViewThatFits(in: .horizontal) {
-                    subline(withChip: true)
-                    subline(withChip: false)
+                    subline(withChip: true, withStale: true)
+                    subline(withChip: false, withStale: true)
+                    subline(withChip: false, withStale: false)
                 }
             }
         }
     }
 
     @ViewBuilder
-    private func subline(withChip: Bool) -> some View {
+    private func subline(withChip: Bool, withStale: Bool) -> some View {
         let m = row.metrics
         HStack(spacing: 6) {
             Text(row.position.listing.ticker).type(11).foregroundStyle(Palette.inkSoft).lineLimit(1)
@@ -433,7 +460,16 @@ struct NameCell: View {
                     .fixedSize()
                     .help(cr.direction == .down ? "Am \(Format.day(cr.day)) unter die Linie gefallen" : "Am \(Format.day(cr.day)) über die Linie gestiegen")
             }
-            if m?.hasData != true, row.status?.lastError != nil, row.status?.isLoading != true {
+            if withStale, row.isStale, let f = row.freshness {
+                HStack(spacing: 3) {
+                    Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 9 * scale))
+                    Text(f.headline).type(11, .semibold).lineLimit(1)
+                }
+                .foregroundStyle(Palette.caution)
+                .padding(.horizontal, 5).padding(.vertical, 0.5)
+                .overlay(RoundedRectangle(cornerRadius: 3).stroke(Palette.caution.opacity(0.7)))
+                .fixedSize()
+            } else if row.isStale || (m?.hasData != true && row.status?.lastError != nil && row.status?.isLoading != true) {
                 Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10 * scale)).foregroundStyle(Palette.caution)
             }
         }
@@ -444,15 +480,22 @@ struct AmpelDot: View {
     @Environment(\.uiScale) private var scale
     var state: AmpelState
     var fresh: Bool
+    /// Last known state while data is missing: faded with a dashed outline.
+    var dimmed = false
 
     var body: some View {
         ZStack {
             if fresh {
                 Circle().stroke(Palette.signal, lineWidth: 2.5 * scale).frame(width: 17 * scale, height: 17 * scale)
+                    .opacity(dimmed ? 0.4 : 1)
             }
-            Circle().fill(Palette.ampel(state)).frame(width: 11 * scale, height: 11 * scale)
+            Circle().fill(Palette.ampel(state).opacity(dimmed ? 0.3 : 1)).frame(width: 11 * scale, height: 11 * scale)
+            if dimmed {
+                Circle().stroke(Palette.ampel(state), style: StrokeStyle(lineWidth: 1.2 * scale, dash: [2 * scale, 1.5 * scale]))
+                    .frame(width: 11 * scale, height: 11 * scale)
+            }
         }
         .frame(width: 18 * scale, height: 18 * scale)
-        .accessibilityLabel(state.label)
+        .accessibilityLabel(dimmed ? state.label + ", nicht aktuell" : state.label)
     }
 }
