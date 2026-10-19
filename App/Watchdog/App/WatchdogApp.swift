@@ -18,6 +18,9 @@ struct WatchdogApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @State private var model = AppModel()
 
+    /// German dates and numbers everywhere, independent of the system language.
+    static let german = Locale(identifier: "de_DE")
+
     init() {
         Typo.registerFonts()
     }
@@ -27,6 +30,7 @@ struct WatchdogApp: App {
             MainView()
                 .environment(model)
                 .environment(\.uiScale, CGFloat(model.local.fontScale))
+                .environment(\.locale, Self.german)
                 .frame(minWidth: 560, minHeight: 420)
                 .onAppear { model.start() }
         }
@@ -37,12 +41,14 @@ struct WatchdogApp: App {
             SettingsView()
                 .environment(model)
                 .environment(\.uiScale, CGFloat(model.local.fontScale))
+                .environment(\.locale, Self.german)
         }
 
         MenuBarExtra {
             MenuBarContent()
                 .environment(model)
                 .environment(\.uiScale, 1)
+                .environment(\.locale, Self.german)
         } label: {
             MenuBarLabel(model: model)
         }

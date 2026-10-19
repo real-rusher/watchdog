@@ -93,9 +93,9 @@ struct QuoteTable: View {
                             Section {
                                 if !model.local.collapsedSections.contains(s.id) {
                                     ForEach(Array(s.rows.enumerated()), id: \.element.id) { i, r in
+                                        // The id includes the column layout so rows are rebuilt when columns appear or disappear.
                                         QuoteRow(row: r, columns: cols, zebra: i % 2 == 1)
-                                            .id(layoutKey)
-                                            .id(r.id)
+                                            .id(Self.rowID(r.id, layoutKey))
                                     }
                                 }
                             } header: {
@@ -116,8 +116,8 @@ struct QuoteTable: View {
                 .focusable()
                 .focused($focused)
                 .focusEffectDisabled()
-                .onKeyPress(.downArrow) { move(1, sections, proxy); return .handled }
-                .onKeyPress(.upArrow) { move(-1, sections, proxy); return .handled }
+                .onKeyPress(.downArrow) { move(1, sections, proxy, layoutKey); return .handled }
+                .onKeyPress(.upArrow) { move(-1, sections, proxy, layoutKey); return .handled }
                 .onKeyPress(.escape) { model.selection = nil; return .handled }
                 .onKeyPress(.return) {
                     if let id = model.selection { model.editor = .edit(id) }
@@ -128,13 +128,15 @@ struct QuoteTable: View {
         .onAppear { focused = true }
     }
 
-    private func move(_ delta: Int, _ sections: [TableSection], _ proxy: ScrollViewProxy) {
+    static func rowID(_ id: UUID, _ layout: String) -> String { "\(id.uuidString)|\(layout)" }
+
+    private func move(_ delta: Int, _ sections: [TableSection], _ proxy: ScrollViewProxy, _ layout: String) {
         let ids = sections.filter { !model.local.collapsedSections.contains($0.id) }.flatMap { $0.rows.map(\.id) }
         guard !ids.isEmpty else { return }
         let i = model.selection.flatMap { ids.firstIndex(of: $0) }
         let next = i.map { max(0, min(ids.count - 1, $0 + delta)) } ?? 0
         model.selection = ids[next]
-        withAnimation(.easeOut(duration: 0.12)) { proxy.scrollTo(ids[next]) }
+        withAnimation(.easeOut(duration: 0.12)) { proxy.scrollTo(Self.rowID(ids[next], layout)) }
     }
 }
 

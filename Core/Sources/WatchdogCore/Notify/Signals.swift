@@ -99,13 +99,14 @@ public struct NtfyNotifier: Sendable {
     }
 
     public func send(title: String, body: String, severity: Severity) async throws {
-        guard let url = settings.subscribeURL else { throw ProviderError.parse("ntfy URL") }
-        var headers: [String: String] = [
-            // HTTP headers must be ASCII; ntfy accepts RFC 2047 encoded words for UTF-8.
-            "Title": Self.rfc2047(title),
-            "Priority": severity == .alarm ? "high" : severity == .warning ? "default" : "low",
-            "Tags": severity == .alarm ? "red_circle,chart_with_downwards_trend" : severity == .warning ? "yellow_circle" : "green_circle,chart_with_upwards_trend",
-        ]
+        guard let base = settings.subscribeURL else { throw ProviderError.parse("ntfy URL") }
+        // Title, priority and tags as query parameters: UTF-8 safe (umlauts), unlike raw HTTP headers.
+        let url = URL.make(base.absoluteString, [
+            ("title", title),
+            ("priority", severity == .alarm ? "high" : severity == .warning ? "default" : "low"),
+            ("tags", severity == .alarm ? "red_circle,chart_with_downwards_trend" : severity == .warning ? "yellow_circle" : "green_circle,chart_with_upwards_trend"),
+        ])
+        var headers: [String: String] = [:]
         if let t = settings.ntfyToken, !t.isEmpty { headers["Authorization"] = "Bearer \(t)" }
         let (data, resp) = try await http.post(url, body: Data(body.utf8), contentType: "text/plain; charset=utf-8", headers: headers)
         try HTTPClient.check(resp, data)

@@ -129,11 +129,28 @@ func depot() async {
     print("Health:", snap.health.map { "\($0.key.rawValue): ok \($0.value.successCount) / err \($0.value.failureCount)" }.sorted().joined(separator: ", "))
 }
 
+/// Sends a message with umlauts to a throw-away ntfy topic and reads it back.
+func ntfy() async {
+    var s = NotificationSettings()
+    s.ntfyEnabled = true
+    let n = NtfyNotifier(settings: s, http: http)
+    do {
+        try await n.send(title: "Öl & Gas · Tradegate", body: "Durchbruch der 200-Tage-Linie nach unten am 16.10. · Kurs 72,54 €", severity: .alarm)
+        let (data, _) = try await http.get(URL(string: "https://ntfy.sh/\(s.ntfyTopic)/json?poll=1")!)
+        print("ntfy topic \(s.ntfyTopic):")
+        print(String(data: data, encoding: .utf8) ?? "")
+    } catch {
+        print("ntfy FEHLER \(error)")
+    }
+}
+
 switch mode {
 case "search":
     for q in args.dropFirst() { await search(q) }
 case "depot":
     await depot()
+case "ntfy":
+    await ntfy()
 default:
     await probe()
 }

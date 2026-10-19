@@ -24,7 +24,8 @@ struct SummaryStrip: View {
                     figures(t)
                     Spacer(minLength: 12)
                     SignalBar(totals: t)
-                        .frame(width: 330)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .frame(minWidth: 330)
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     figures(t)
@@ -89,6 +90,7 @@ struct SignalBar: View {
                                 Text("\(n)").type(15, .semibold).foregroundStyle(Palette.ink)
                                 Text(shortLabel(s)).type(12).foregroundStyle(Palette.inkSoft)
                             }
+                            .fixedSize()
                             .padding(.vertical, 2)
                             .padding(.horizontal, 5)
                             .background(model.filter == .state(s) ? Palette.signalWash : .clear, in: RoundedRectangle(cornerRadius: 4))
