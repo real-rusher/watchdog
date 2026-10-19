@@ -73,7 +73,12 @@ jobs:
           # A new version number in .github/release-version publishes a versioned release once.
           if [[ -z "$TAG" && -f .github/release-version ]]; then
             V="$(tr -d '[:space:]' < .github/release-version)"
-            if [[ -n "$V" ]] && ! gh release view "$V" >/dev/null 2>&1; then TAG="$V"; fi
+            if [[ -n "$V" ]] && ! gh release view "$V" >/dev/null 2>&1; then
+              TAG="$V"
+            elif [[ -n "$V" ]]; then
+              # Same version number: refresh its download with the latest fixes.
+              gh release upload "$V" out/Watchdog.dmg out/Watchdog.zip --clobber
+            fi
           fi
           if [[ -n "$TAG" ]]; then
             gh release create "$TAG" out/Watchdog.dmg out/Watchdog.zip --target "$GITHUB_SHA" --title "Watchdog ${TAG#v}" --notes-file .github/release-notes.md --latest || gh release upload "$TAG" out/Watchdog.dmg out/Watchdog.zip --clobber

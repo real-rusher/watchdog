@@ -405,25 +405,36 @@ struct NameCell: View {
             AmpelDot(state: m?.ampel.state ?? .unknown, fresh: m?.ampel.isFresh == true)
             VStack(alignment: .leading, spacing: 1) {
                 Text(row.position.name).type(14, .medium).foregroundStyle(Palette.ink).lineLimit(1)
-                HStack(spacing: 6) {
-                    Text(row.position.listing.ticker).type(11).foregroundStyle(Palette.inkSoft).lineLimit(1)
-                    Text(row.exchange?.badge ?? row.position.listing.exchangeID).type(11, .medium).foregroundStyle(Palette.inkSoft)
-                        .padding(.horizontal, 4).padding(.vertical, 0.5)
-                        .overlay(RoundedRectangle(cornerRadius: 3).stroke(Palette.rule))
-                    if let cr = m?.ampel.lastCrossing, m?.ampel.isFresh == true {
-                        Text((cr.direction == .down ? "\u{2193} seit " : "\u{2191} seit ") + Format.dayShort(cr.day))
-                            .type(11, .semibold)
-                            .foregroundStyle(Color.black.opacity(0.85))
-                            .padding(.horizontal, 5).padding(.vertical, 0.5)
-                            .background(Palette.signal, in: RoundedRectangle(cornerRadius: 3))
-                            .lineLimit(1)
-                            .fixedSize()
-                            .help(cr.direction == .down ? "Am \(Format.day(cr.day)) unter die Linie gefallen" : "Am \(Format.day(cr.day)) über die Linie gestiegen")
-                    }
-                    if row.metrics?.hasData != true, row.status?.lastError != nil, row.status?.isLoading != true {
-                        Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10 * scale)).foregroundStyle(Palette.caution)
-                    }
+                // The crossing chip is dropped when the column is too narrow; the ring on the dot still shows it.
+                ViewThatFits(in: .horizontal) {
+                    subline(withChip: true)
+                    subline(withChip: false)
                 }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func subline(withChip: Bool) -> some View {
+        let m = row.metrics
+        HStack(spacing: 6) {
+            Text(row.position.listing.ticker).type(11).foregroundStyle(Palette.inkSoft).lineLimit(1)
+            Text(row.exchange?.badge ?? row.position.listing.exchangeID).type(11, .medium).foregroundStyle(Palette.inkSoft)
+                .padding(.horizontal, 4).padding(.vertical, 0.5)
+                .overlay(RoundedRectangle(cornerRadius: 3).stroke(Palette.rule))
+                .fixedSize()
+            if withChip, let cr = m?.ampel.lastCrossing, m?.ampel.isFresh == true {
+                Text((cr.direction == .down ? "\u{2193} seit " : "\u{2191} seit ") + Format.dayShort(cr.day))
+                    .type(11, .semibold)
+                    .foregroundStyle(Color.black.opacity(0.85))
+                    .padding(.horizontal, 5).padding(.vertical, 0.5)
+                    .background(Palette.signal, in: RoundedRectangle(cornerRadius: 3))
+                    .lineLimit(1)
+                    .fixedSize()
+                    .help(cr.direction == .down ? "Am \(Format.day(cr.day)) unter die Linie gefallen" : "Am \(Format.day(cr.day)) über die Linie gestiegen")
+            }
+            if m?.hasData != true, row.status?.lastError != nil, row.status?.isLoading != true {
+                Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10 * scale)).foregroundStyle(Palette.caution)
             }
         }
     }

@@ -183,7 +183,8 @@ struct PriceChart: View {
 
     private var xFormat: Date.FormatStyle {
         let span = points.count
-        return span > 400 ? .dateTime.year() : .dateTime.month(.abbreviated).day()
+        let de = Locale(identifier: "de_DE")
+        return span > 400 ? Date.FormatStyle.dateTime.year().locale(de) : Date.FormatStyle.dateTime.month(.abbreviated).day().locale(de)
     }
 
     private func nearest(_ date: Date) -> Int? {
