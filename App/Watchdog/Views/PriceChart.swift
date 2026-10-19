@@ -92,6 +92,7 @@ struct PriceChart: View {
             }
         }
         .chartYScale(domain: yDomain)
+        .chartXScale(domain: xDomain)
         .chartLegend(.hidden)
         .chartXAxis {
             AxisMarks(values: .automatic(desiredCount: 6)) { _ in
@@ -173,6 +174,12 @@ struct PriceChart: View {
     }
 
     private func inRange(_ v: Double) -> Bool { yDomain.contains(v) }
+
+    /// A little room on the right so the last axis label is not cut off.
+    private var xDomain: ClosedRange<Date> {
+        guard let a = points.first?.day.date, let b = points.last?.day.date, b > a else { return Date().addingTimeInterval(-86400)...Date() }
+        return a...b.addingTimeInterval(b.timeIntervalSince(a) * 0.035)
+    }
 
     private var xFormat: Date.FormatStyle {
         let span = points.count

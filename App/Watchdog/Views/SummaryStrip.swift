@@ -103,6 +103,8 @@ struct SignalBar: View {
                     } label: {
                         Text("\(totals.fresh) frisch gekreuzt")
                             .type(12, .semibold)
+                            .lineLimit(1)
+                            .fixedSize()
                             .foregroundStyle(Color.black.opacity(0.85))
                             .padding(.horizontal, 7).padding(.vertical, 2)
                             .background(Palette.signal, in: RoundedRectangle(cornerRadius: 4))

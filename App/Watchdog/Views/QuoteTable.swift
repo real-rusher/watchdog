@@ -82,6 +82,7 @@ struct QuoteTable: View {
 
     var body: some View {
         let cols = Column.visible(width: availableWidth, scale: scale, hidden: model.local.hiddenColumns)
+        let layoutKey = cols.map(\.rawValue).joined(separator: ",") + "|\(scale)"
         let sections = model.sections
         VStack(spacing: 0) {
             HeaderRow(columns: cols)
@@ -93,11 +94,13 @@ struct QuoteTable: View {
                                 if !model.local.collapsedSections.contains(s.id) {
                                     ForEach(Array(s.rows.enumerated()), id: \.element.id) { i, r in
                                         QuoteRow(row: r, columns: cols, zebra: i % 2 == 1)
+                                            .id(layoutKey)
                                             .id(r.id)
                                     }
                                 }
                             } header: {
                                 SectionHeaderRow(section: s, columns: cols)
+                                    .id(layoutKey + s.id)
                             }
                         }
                         if sections.isEmpty {
@@ -146,26 +149,27 @@ struct HeaderRow: View {
         HStack(spacing: 0) {
             ForEach(columns) { c in
                 let active = c.sortKey != nil && model.local.sort == c.sortKey
-                Button {
-                    if let k = c.sortKey { model.toggleSort(k) }
-                } label: {
-                    HStack(spacing: 3) {
-                        if c.trailing { Spacer(minLength: 0) }
-                        Text(c.title(model.depot.rules)).type(12, active ? .semibold : .regular)
-                            .foregroundStyle(active ? Palette.ink : Palette.inkSoft)
-                            .lineLimit(1)
-                        if active {
-                            Image(systemName: model.local.sortAscending ? "chevron.up" : "chevron.down")
-                                .font(.system(size: 8 * scale, weight: .bold))
-                                .foregroundStyle(Palette.ink)
-                        }
-                        if !c.trailing { Spacer(minLength: 0) }
+                let label = HStack(spacing: 3) {
+                    if c.trailing { Spacer(minLength: 0) }
+                    Text(c.title(model.depot.rules)).type(12, active ? .semibold : .regular)
+                        .foregroundStyle(active ? Palette.ink : Palette.inkSoft)
+                        .lineLimit(1)
+                    if active {
+                        Image(systemName: model.local.sortAscending ? "chevron.up" : "chevron.down")
+                            .font(.system(size: 8 * scale, weight: .bold))
+                            .foregroundStyle(Palette.ink)
                     }
-                    .contentShape(Rectangle())
+                    if !c.trailing { Spacer(minLength: 0) }
                 }
-                .buttonStyle(.plain)
-                .disabled(c.sortKey == nil)
-                .help(c.sortKey == nil ? "" : "Nach \(c.title(model.depot.rules)) sortieren")
+                ZStack {
+                    if let k = c.sortKey {
+                        Button { model.toggleSort(k) } label: { label.contentShape(Rectangle()) }
+                            .buttonStyle(.plain)
+                            .help("Nach \(c.title(model.depot.rules)) sortieren")
+                    } else {
+                        label
+                    }
+                }
                 .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
                 .frame(maxWidth: c == .name ? .infinity : nil, alignment: .leading)
                 .padding(.trailing, c.trailing ? 10 * scale : 0)
@@ -206,7 +210,9 @@ struct SectionHeaderRow: View {
         let collapsed = model.local.collapsedSections.contains(section.id)
         HStack(spacing: 0) {
             ForEach(columns) { c in
-                Group {
+                // ZStack with a clear base: every column keeps its width even when it shows nothing.
+                ZStack(alignment: c.trailing ? .trailing : .leading) {
+                    Color.clear.frame(height: 1)
                     switch c {
                     case .name:
                         HStack(spacing: 8) {
@@ -231,7 +237,7 @@ struct SectionHeaderRow: View {
                             Text(Format.pct(p, signed: true)).type(13, .semibold).foregroundStyle(Palette.change(p))
                         }
                     default:
-                        EmptyView()
+                        Color.clear.frame(height: 1)
                     }
                 }
                 .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
@@ -403,12 +409,14 @@ struct NameCell: View {
                         .padding(.horizontal, 4).padding(.vertical, 0.5)
                         .overlay(RoundedRectangle(cornerRadius: 3).stroke(Palette.rule))
                     if let cr = m?.ampel.lastCrossing, m?.ampel.isFresh == true {
-                        Text(cr.direction == .down ? "unter Linie seit \(Format.dayShort(cr.day))" : "über Linie seit \(Format.dayShort(cr.day))")
+                        Text((cr.direction == .down ? "\u{2193} seit " : "\u{2191} seit ") + Format.dayShort(cr.day))
                             .type(11, .semibold)
                             .foregroundStyle(Color.black.opacity(0.85))
                             .padding(.horizontal, 5).padding(.vertical, 0.5)
                             .background(Palette.signal, in: RoundedRectangle(cornerRadius: 3))
                             .lineLimit(1)
+                            .fixedSize()
+                            .help(cr.direction == .down ? "Am \(Format.day(cr.day)) unter die Linie gefallen" : "Am \(Format.day(cr.day)) über die Linie gestiegen")
                     }
                     if row.metrics?.hasData != true, row.status?.lastError != nil, row.status?.isLoading != true {
                         Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10 * scale)).foregroundStyle(Palette.caution)

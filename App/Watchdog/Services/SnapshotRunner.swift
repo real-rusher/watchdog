@@ -75,13 +75,19 @@ enum SnapshotRunner {
             }
         }
 
-        // Menu bar panel rendered offscreen.
-        let menu = MenuBarContent().environment(model).environment(\.uiScale, 1)
-        let r = ImageRenderer(content: menu.frame(width: 340, height: 520))
-        r.scale = 2
-        if let img = r.nsImage, let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff), let png = rep.representation(using: .png, properties: [:]) {
-            try? png.write(to: dir.appendingPathComponent("7-menubar.png"))
-        }
+        // Import dialog with a sample list.
+        model.importPrefill = """
+        Bezeichnung;ISIN;Stück;Kaufkurs;Kaufdatum;Börse;Depot;Thema
+        Cameco Corp.;CA13321L1085;120;14,50;15.03.2021;Tradegate;Comdirect;Uran
+        Toyota Motor;JP3633400001;100;11,50;17.05.2019;Tokio;Sparkasse;Technologie
+        Equinor ASA;NO0010096985;80;11,50;02.11.2020;Oslo;Comdirect;Öl & Gas
+        Kazatomprom;US63253R2013;;;;London;;Uran
+        """
+        if let main = NSApp.windows.first(where: { $0.identifier?.rawValue.contains("main") == true }) { main.makeKeyAndOrderFront(nil) }
+        model.showImport = true
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
+        if let sheet = window.attachedSheet { capture(sheet, dir, "8-import-light", note) } else { note("no sheet for import") }
+        model.showImport = false
         note("done")
         try? await Task.sleep(nanoseconds: 500_000_000)
         NSApp.terminate(nil)

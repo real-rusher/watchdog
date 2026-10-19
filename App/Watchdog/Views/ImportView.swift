@@ -55,7 +55,14 @@ struct ImportView: View {
         .fileImporter(isPresented: $showFile, allowedContentTypes: [.commaSeparatedText, .tabSeparatedText, .plainText, .text]) { result in
             if case .success(let url) = result { openFile(url) }
         }
-        .onAppear { defaultExchange = model.local.defaultImportExchange }
+        .onAppear {
+            defaultExchange = model.local.defaultImportExchange
+            if let t = model.importPrefill {
+                model.importPrefill = nil
+                text = t
+                parse(t)
+            }
+        }
     }
 
     private var intro: some View {

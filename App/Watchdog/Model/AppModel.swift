@@ -86,6 +86,8 @@ final class AppModel {
     var isExampleDepot = false
     /// Incremented to ask the main view to open the settings window (used by the screenshot run).
     var settingsRequest = 0
+    /// Text handed to the import dialog when it opens (pasted list or file content).
+    var importPrefill: String?
 
     let engine: MarketEngine
     private(set) var store: DepotStore

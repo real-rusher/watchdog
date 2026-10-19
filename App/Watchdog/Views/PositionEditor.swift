@@ -38,14 +38,15 @@ struct ListingOption: Identifiable, Hashable {
             if groups[k] == nil { groups[k] = [:]; order.append(k) }
             let exKey = c.exchangeID ?? "\(c.provider.rawValue):\(c.exchangeLabel)"
             if var o = groups[k]![exKey] {
+                // Ticker preference: Yahoo, FT, Twelve Data, then the rest (compared before adding this hit).
+                let tickerOrder: [ProviderID] = [.yahoo, .ft, .twelvedata, .finnhub, .eodhd, .onvista, .lstc, .bitfinex]
+                let rank: (ProviderID) -> Int = { tickerOrder.firstIndex(of: $0) ?? 9 }
+                let best = o.candidates.map { rank($0.provider) }.min() ?? 9
+                if rank(c.provider) < best || o.ticker.isEmpty { o.ticker = c.ticker }
                 o.candidates.append(c)
                 if o.isin == nil { o.isin = c.isin ?? (Lenient.isISIN(k) ? k : nil) }
                 if o.wkn == nil { o.wkn = c.wkn }
                 if o.lastPrice == nil { o.lastPrice = c.lastPrice }
-                // Ticker preference: Yahoo, FT, Twelve Data, then the rest.
-                let tickerOrder: [ProviderID] = [.yahoo, .ft, .twelvedata, .finnhub, .eodhd, .onvista, .lstc, .bitfinex]
-                let rank: (ProviderID) -> Int = { tickerOrder.firstIndex(of: $0) ?? 9 }
-                if rank(c.provider) < (o.candidates.map { rank($0.provider) }.min() ?? 9) || o.ticker.isEmpty { o.ticker = c.ticker }
                 if c.provider == .onvista { o.name = c.name }
                 groups[k]![exKey] = o
             } else {
