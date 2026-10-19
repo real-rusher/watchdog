@@ -1,6 +1,8 @@
 name: mac-app
 on:
   push:
+    branches: ['**']
+    tags: ['v*']
     paths: [App/**, Core/Sources/**, Core/Package.swift, .github/workflows/mac.yml]
   workflow_dispatch:
 permissions:
@@ -61,8 +63,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view nightly >/dev/null 2>&1 || gh release create nightly --prerelease --title "Watchdog Testversion" --notes "Automatisch gebaut aus dem aktuellen Stand."
-          gh release upload nightly out/Watchdog.dmg out/Watchdog.zip --clobber
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            gh release create "$TAG" out/Watchdog.dmg out/Watchdog.zip --title "Watchdog ${TAG#v}" --notes-file .github/release-notes.md || gh release upload "$TAG" out/Watchdog.dmg out/Watchdog.zip --clobber
+          else
+            gh release view nightly >/dev/null 2>&1 || gh release create nightly --prerelease --title "Watchdog Testversion" --notes "Automatisch gebaut aus dem aktuellen Stand."
+            gh release upload nightly out/Watchdog.dmg out/Watchdog.zip --clobber
+          fi
       - name: Publish results
         if: always()
         run: |
