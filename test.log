@@ -1,0 +1,219 @@
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1 / 183]
+[Planning deferred tasks]
+[43 / 70] WatchdogCore
+[53 / 79] WatchdogCoreTests-product
+[55 / 80] WatchdogCoreTests-product
+[58 / 80] watchdog-cli-product
+[62 / 80] watchdog-cli-product
+[65 / 80]
+[66 / 80] WatchdogCoreTests-product
+[70 / 81] WatchdogCoreTests-product
+[77 / 85] watchdog-cli-product
+[78 / 85] watchdog-cli-product
+[78 / 85] WatchdogCoreTests-test-runner
+[82 / 85] WatchdogCoreTests-test-runner
+[86 / 86] WatchdogCoreTests-test-runner
+Build complete! (17.58 secs)
+Test Suite 'All tests' started at 2026-10-20 20:39:13.550
+Test Suite 'Debug-linux-x86_64.xctest' started at 2026-10-20 20:39:13.626
+Test Suite 'CatalogTests' started at 2026-10-20 20:39:13.626
+Test Case 'CatalogTests.testMarketHours' started at 2026-10-20 20:39:13.626
+Test Case 'CatalogTests.testMarketHours' passed (0.006 seconds)
+Test Case 'CatalogTests.testOtherMappings' started at 2026-10-20 20:39:13.633
+Test Case 'CatalogTests.testOtherMappings' passed (0.006 seconds)
+Test Case 'CatalogTests.testYahooMapping' started at 2026-10-20 20:39:13.638
+Test Case 'CatalogTests.testYahooMapping' passed (0.001 seconds)
+Test Suite 'CatalogTests' passed at 2026-10-20 20:39:13.639
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.013 (0.013) seconds
+Test Suite 'CostTests' started at 2026-10-20 20:39:13.639
+Test Case 'CostTests.testPurchaseWithoutPriceIsNotProfit' started at 2026-10-20 20:39:13.639
+Test Case 'CostTests.testPurchaseWithoutPriceIsNotProfit' passed (0.002 seconds)
+Test Suite 'CostTests' passed at 2026-10-20 20:39:13.641
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'DemoDataTests' started at 2026-10-20 20:39:13.641
+Test Case 'DemoDataTests.testStressDepotShapes' started at 2026-10-20 20:39:13.641
+Test Case 'DemoDataTests.testStressDepotShapes' passed (3.403 seconds)
+Test Suite 'DemoDataTests' passed at 2026-10-20 20:39:17.044
+	 Executed 1 test, with 0 failures (0 unexpected) in 3.403 (3.403) seconds
+Test Suite 'EvaluationTests' started at 2026-10-20 20:39:17.044
+Test Case 'EvaluationTests.testFXConversionKeepsCrossings' started at 2026-10-20 20:39:17.044
+Test Case 'EvaluationTests.testFXConversionKeepsCrossings' passed (0.002 seconds)
+Test Case 'EvaluationTests.testGreenWhenAbove' started at 2026-10-20 20:39:17.046
+Test Case 'EvaluationTests.testGreenWhenAbove' passed (0.002 seconds)
+Test Case 'EvaluationTests.testLiveQuoteFoldsIn' started at 2026-10-20 20:39:17.049
+Test Case 'EvaluationTests.testLiveQuoteFoldsIn' passed (0.001 seconds)
+Test Case 'EvaluationTests.testRedAndCrossingEvent' started at 2026-10-20 20:39:17.050
+Test Case 'EvaluationTests.testRedAndCrossingEvent' passed (0.001 seconds)
+Test Case 'EvaluationTests.testSignalStateSuppressesHistoryAndFiresNew' started at 2026-10-20 20:39:17.051
+Test Case 'EvaluationTests.testSignalStateSuppressesHistoryAndFiresNew' passed (0.009 seconds)
+Test Case 'EvaluationTests.testWatchOnlyHasNoValue' started at 2026-10-20 20:39:17.061
+Test Case 'EvaluationTests.testWatchOnlyHasNoValue' passed (0.002 seconds)
+Test Case 'EvaluationTests.testYellowBand' started at 2026-10-20 20:39:17.062
+Test Case 'EvaluationTests.testYellowBand' passed (0.002 seconds)
+Test Suite 'EvaluationTests' passed at 2026-10-20 20:39:17.064
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.019 (0.019) seconds
+Test Suite 'FXTests' started at 2026-10-20 20:39:17.064
+Test Case 'FXTests.testECBParse' started at 2026-10-20 20:39:17.064
+Test Case 'FXTests.testECBParse' passed (0.0 seconds)
+Test Case 'FXTests.testLookupUsesPreviousDay' started at 2026-10-20 20:39:17.064
+Test Case 'FXTests.testLookupUsesPreviousDay' passed (0.0 seconds)
+Test Suite 'FXTests' passed at 2026-10-20 20:39:17.064
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'FXUsageTests' started at 2026-10-20 20:39:17.064
+Test Case 'FXUsageTests.testEachDayUsesItsOwnRateAndTodayTheLiveRate' started at 2026-10-20 20:39:17.064
+Test Case 'FXUsageTests.testEachDayUsesItsOwnRateAndTodayTheLiveRate' passed (0.002 seconds)
+Test Suite 'FXUsageTests' passed at 2026-10-20 20:39:17.066
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'FileTests' started at 2026-10-20 20:39:17.066
+Test Case 'FileTests.testDepotRoundTrip' started at 2026-10-20 20:39:17.066
+Test Case 'FileTests.testDepotRoundTrip' passed (0.005 seconds)
+Test Case 'FileTests.testTolerantDecoding' started at 2026-10-20 20:39:17.071
+Test Case 'FileTests.testTolerantDecoding' passed (0.0 seconds)
+Test Suite 'FileTests' passed at 2026-10-20 20:39:17.071
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+Test Suite 'FreshnessTests' started at 2026-10-20 20:39:17.071
+Test Case 'FreshnessTests.testClosingPriceCapturedIsOK' started at 2026-10-20 20:39:17.071
+Test Case 'FreshnessTests.testClosingPriceCapturedIsOK' passed (0.003 seconds)
+Test Case 'FreshnessTests.testClosingPriceMissingIsStale' started at 2026-10-20 20:39:17.074
+Test Case 'FreshnessTests.testClosingPriceMissingIsStale' passed (0.0 seconds)
+Test Case 'FreshnessTests.testHistoryGapIsStale' started at 2026-10-20 20:39:17.074
+Test Case 'FreshnessTests.testHistoryGapIsStale' passed (0.1 seconds)
+Test Case 'FreshnessTests.testJustOpenedGetsGracePeriod' started at 2026-10-20 20:39:17.175
+Test Case 'FreshnessTests.testJustOpenedGetsGracePeriod' passed (0.0 seconds)
+Test Case 'FreshnessTests.testMissingExchangeRateIsStale' started at 2026-10-20 20:39:17.175
+Test Case 'FreshnessTests.testMissingExchangeRateIsStale' passed (0.0 seconds)
+Test Case 'FreshnessTests.testNoTradeButSourceAnswersIsNotAProblem' started at 2026-10-20 20:39:17.175
+Test Case 'FreshnessTests.testNoTradeButSourceAnswersIsNotAProblem' passed (0.0 seconds)
+Test Case 'FreshnessTests.testNothingLoadedYet' started at 2026-10-20 20:39:17.175
+Test Case 'FreshnessTests.testNothingLoadedYet' passed (0.0 seconds)
+Test Case 'FreshnessTests.testOnlyYesterdaysPriceWhileOpenIsNoTradeToday' started at 2026-10-20 20:39:17.176
+Test Case 'FreshnessTests.testOnlyYesterdaysPriceWhileOpenIsNoTradeToday' passed (0.001 seconds)
+Test Case 'FreshnessTests.testOpenMarketFreshQuoteIsOK' started at 2026-10-20 20:39:17.177
+Test Case 'FreshnessTests.testOpenMarketFreshQuoteIsOK' passed (0.0 seconds)
+Test Case 'FreshnessTests.testOpenMarketWithoutUpdatesIsStale' started at 2026-10-20 20:39:17.177
+Test Case 'FreshnessTests.testOpenMarketWithoutUpdatesIsStale' passed (0.0 seconds)
+Test Case 'FreshnessTests.testWeekendIsOK' started at 2026-10-20 20:39:17.177
+Test Case 'FreshnessTests.testWeekendIsOK' passed (0.0 seconds)
+Test Suite 'FreshnessTests' passed at 2026-10-20 20:39:17.177
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.106 (0.106) seconds
+Test Suite 'HeartbeatSettingsTests' started at 2026-10-20 20:39:17.177
+Test Case 'HeartbeatSettingsTests.testOldFilesDecode' started at 2026-10-20 20:39:17.177
+Test Case 'HeartbeatSettingsTests.testOldFilesDecode' passed (0.0 seconds)
+Test Case 'HeartbeatSettingsTests.testURLValidation' started at 2026-10-20 20:39:17.178
+Test Case 'HeartbeatSettingsTests.testURLValidation' passed (0.0 seconds)
+Test Suite 'HeartbeatSettingsTests' passed at 2026-10-20 20:39:17.178
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'ImportTests' started at 2026-10-20 20:39:17.178
+Test Case 'ImportTests.testComdirectTransactions' started at 2026-10-20 20:39:17.178
+Test Case 'ImportTests.testComdirectTransactions' passed (0.037 seconds)
+Test Case 'ImportTests.testCurrentPriceColumnIsNotPurchasePrice' started at 2026-10-20 20:39:17.215
+Test Case 'ImportTests.testCurrentPriceColumnIsNotPurchasePrice' passed (0.016 seconds)
+Test Case 'ImportTests.testDates' started at 2026-10-20 20:39:17.230
+Test Case 'ImportTests.testDates' passed (0.003 seconds)
+Test Case 'ImportTests.testEnglishBroker' started at 2026-10-20 20:39:17.233
+Test Case 'ImportTests.testEnglishBroker' passed (0.011 seconds)
+Test Case 'ImportTests.testExcelUnicodeText' started at 2026-10-20 20:39:17.244
+Test Case 'ImportTests.testExcelUnicodeText' passed (0.01 seconds)
+Test Case 'ImportTests.testGermanCSV' started at 2026-10-20 20:39:17.254
+Test Case 'ImportTests.testGermanCSV' passed (0.018 seconds)
+Test Case 'ImportTests.testISINList' started at 2026-10-20 20:39:17.272
+Test Case 'ImportTests.testISINList' passed (0.002 seconds)
+Test Case 'ImportTests.testInflateMatchesStoredData' started at 2026-10-20 20:39:17.275
+Test Case 'ImportTests.testInflateMatchesStoredData' passed (0.0 seconds)
+Test Case 'ImportTests.testMacRoman' started at 2026-10-20 20:39:17.275
+Test Case 'ImportTests.testMacRoman' passed (0.011 seconds)
+Test Case 'ImportTests.testNameList' started at 2026-10-20 20:39:17.286
+Test Case 'ImportTests.testNameList' passed (0.018 seconds)
+Test Case 'ImportTests.testODS' started at 2026-10-20 20:39:17.305
+Test Case 'ImportTests.testODS' passed (0.046 seconds)
+Test Case 'ImportTests.testOldExcelAndNumbersExplainThemselves' started at 2026-10-20 20:39:17.351
+Test Case 'ImportTests.testOldExcelAndNumbersExplainThemselves' passed (0.0 seconds)
+Test Case 'ImportTests.testPastedFromNumbersWithCurrencySigns' started at 2026-10-20 20:39:17.351
+Test Case 'ImportTests.testPastedFromNumbersWithCurrencySigns' passed (0.01 seconds)
+Test Case 'ImportTests.testPenceAreConverted' started at 2026-10-20 20:39:17.361
+Test Case 'ImportTests.testPenceAreConverted' passed (0.007 seconds)
+Test Case 'ImportTests.testSoldOutIsExcluded' started at 2026-10-20 20:39:17.368
+Test Case 'ImportTests.testSoldOutIsExcluded' passed (0.01 seconds)
+Test Case 'ImportTests.testWithoutPurchasePrice' started at 2026-10-20 20:39:17.378
+Test Case 'ImportTests.testWithoutPurchasePrice' passed (0.004 seconds)
+Test Case 'ImportTests.testXLSXFromLibreOffice' started at 2026-10-20 20:39:17.382
+Test Case 'ImportTests.testXLSXFromLibreOffice' passed (0.048 seconds)
+Test Case 'ImportTests.testXLSXFromOpenpyxl' started at 2026-10-20 20:39:17.430
+Test Case 'ImportTests.testXLSXFromOpenpyxl' passed (0.046 seconds)
+Test Suite 'ImportTests' passed at 2026-10-20 20:39:17.476
+	 Executed 18 tests, with 0 failures (0 unexpected) in 0.298 (0.298) seconds
+Test Suite 'IndicatorTests' started at 2026-10-20 20:39:17.476
+Test Case 'IndicatorTests.testCrossings' started at 2026-10-20 20:39:17.476
+Test Case 'IndicatorTests.testCrossings' passed (0.0 seconds)
+Test Case 'IndicatorTests.testEMA' started at 2026-10-20 20:39:17.476
+Test Case 'IndicatorTests.testEMA' passed (0.0 seconds)
+Test Case 'IndicatorTests.testSMA' started at 2026-10-20 20:39:17.477
+Test Case 'IndicatorTests.testSMA' passed (0.0 seconds)
+Test Suite 'IndicatorTests' passed at 2026-10-20 20:39:17.477
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'OutageTests' started at 2026-10-20 20:39:17.477
+Test Case 'OutageTests.testDisabled' started at 2026-10-20 20:39:17.477
+Test Case 'OutageTests.testDisabled' passed (0.0 seconds)
+Test Case 'OutageTests.testOneMessagePerDayAfterTwentyMinutes' started at 2026-10-20 20:39:17.477
+Test Case 'OutageTests.testOneMessagePerDayAfterTwentyMinutes' passed (0.0 seconds)
+Test Suite 'OutageTests' passed at 2026-10-20 20:39:17.477
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'ParsingTests' started at 2026-10-20 20:39:17.477
+Test Case 'ParsingTests.testCurrencyNormalizer' started at 2026-10-20 20:39:17.477
+Test Case 'ParsingTests.testCurrencyNormalizer' passed (0.0 seconds)
+Test Case 'ParsingTests.testDayKeyMath' started at 2026-10-20 20:39:17.477
+Test Case 'ParsingTests.testDayKeyMath' passed (0.0 seconds)
+Test Case 'ParsingTests.testDays' started at 2026-10-20 20:39:17.477
+Test Case 'ParsingTests.testDays' passed (0.001 seconds)
+Test Case 'ParsingTests.testISIN' started at 2026-10-20 20:39:17.478
+Test Case 'ParsingTests.testISIN' passed (0.0 seconds)
+Test Case 'ParsingTests.testNumbers' started at 2026-10-20 20:39:17.478
+Test Case 'ParsingTests.testNumbers' passed (0.0 seconds)
+Test Suite 'ParsingTests' passed at 2026-10-20 20:39:17.479
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'PlausibilityTests' started at 2026-10-20 20:39:17.479
+Test Case 'PlausibilityTests.testConfirmedJump' started at 2026-10-20 20:39:17.479
+Test Case 'PlausibilityTests.testConfirmedJump' passed (0.005 seconds)
+Test Case 'PlausibilityTests.testNormalMoveNeedsNoConfirmation' started at 2026-10-20 20:39:17.484
+Test Case 'PlausibilityTests.testNormalMoveNeedsNoConfirmation' passed (0.005 seconds)
+Test Case 'PlausibilityTests.testSuspectQuoteDoesNotFireCrossing' started at 2026-10-20 20:39:17.489
+Test Case 'PlausibilityTests.testSuspectQuoteDoesNotFireCrossing' passed (0.001 seconds)
+Test Case 'PlausibilityTests.testUnconfirmedJumpIsSuspect' started at 2026-10-20 20:39:17.490
+Test Case 'PlausibilityTests.testUnconfirmedJumpIsSuspect' passed (0.005 seconds)
+Test Case 'PlausibilityTests.testWrongTickIsReplaced' started at 2026-10-20 20:39:17.495
+Test Case 'PlausibilityTests.testWrongTickIsReplaced' passed (0.005 seconds)
+Test Suite 'PlausibilityTests' passed at 2026-10-20 20:39:17.500
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.021 (0.021) seconds
+Test Suite 'ResolverCurrencyTests' started at 2026-10-20 20:39:17.500
+Test Case 'ResolverCurrencyTests.testUSDPurchasePrefersHomeVenue' started at 2026-10-20 20:39:17.500
+Test Case 'ResolverCurrencyTests.testUSDPurchasePrefersHomeVenue' passed (0.0 seconds)
+Test Suite 'ResolverCurrencyTests' passed at 2026-10-20 20:39:17.501
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'ResolverTests' started at 2026-10-20 20:39:17.501
+Test Case 'ResolverTests.testExactVenue' started at 2026-10-20 20:39:17.501
+Test Case 'ResolverTests.testExactVenue' passed (0.0 seconds)
+Test Case 'ResolverTests.testFallsBackToGermanVenue' started at 2026-10-20 20:39:17.501
+Test Case 'ResolverTests.testFallsBackToGermanVenue' passed (0.0 seconds)
+Test Case 'ResolverTests.testISINMismatchIsRejected' started at 2026-10-20 20:39:17.501
+Test Case 'ResolverTests.testISINMismatchIsRejected' passed (0.0 seconds)
+Test Case 'ResolverTests.testNameSearchDoesNotTakeAnotherCompany' started at 2026-10-20 20:39:17.501
+Test Case 'ResolverTests.testNameSearchDoesNotTakeAnotherCompany' passed (0.0 seconds)
+Test Suite 'ResolverTests' passed at 2026-10-20 20:39:17.502
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'TickerMergeTests' started at 2026-10-20 20:39:17.502
+Test Case 'TickerMergeTests.testSplitNamesAreMergedForTicker' started at 2026-10-20 20:39:17.502
+Test Case 'TickerMergeTests.testSplitNamesAreMergedForTicker' passed (0.0 seconds)
+Test Case 'TickerMergeTests.testTinyPricesKeepDigits' started at 2026-10-20 20:39:17.502
+Test Case 'TickerMergeTests.testTinyPricesKeepDigits' passed (0.0 seconds)
+Test Suite 'TickerMergeTests' passed at 2026-10-20 20:39:17.502
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'Debug-linux-x86_64.xctest' passed at 2026-10-20 20:39:17.502
+	 Executed 70 tests, with 0 failures (0 unexpected) in 3.874 (3.874) seconds
+Test Suite 'All tests' passed at 2026-10-20 20:39:17.502
+	 Executed 70 tests, with 0 failures (0 unexpected) in 3.874 (3.874) seconds
+◇ Test run started.
+↳ Testing Library Version: 6.4 (efd8d65801f569d)
+↳ Target Platform: x86_64-unknown-linux-gnu
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
