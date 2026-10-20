@@ -47,8 +47,9 @@ struct SummaryStrip: View {
             Figure(label: "Depotwert", value: t.holdings > 0 ? Format.eur(t.value, decimals: 0) : Placeholder.missing, color: Palette.ink, large: true)
             Figure(label: "Heute", value: t.holdings > 0 ? Format.signedEUR(t.dayChange) : Placeholder.missing,
                    sub: t.dayPercent.map { Format.pct($0, signed: true) }, color: Palette.change(t.dayChange))
-            Figure(label: "Seit Kauf", value: t.holdings > 0 ? Format.signedEUR(t.sincePurchase) : Placeholder.missing,
-                   sub: t.sincePurchasePercent.map { Format.pct($0, signed: true) }, color: Palette.change(t.sincePurchase))
+            Figure(label: t.withoutCost > 0 ? "Seit Kauf (\(t.withoutCost) ohne Kaufpreis)" : "Seit Kauf",
+                   value: t.cost > 0 ? Format.signedEUR(t.sincePurchase) : Placeholder.missing,
+                   sub: t.sincePurchasePercent.map { Format.pct($0, signed: true) }, color: Palette.change(t.cost > 0 ? t.sincePurchase : nil))
         }
     }
 }

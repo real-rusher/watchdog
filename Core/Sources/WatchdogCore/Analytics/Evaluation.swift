@@ -114,7 +114,7 @@ public enum Evaluator {
                                 lineValues: [:], ampel: AmpelReading(state: .unknown, lineValue: nil, distancePercent: nil, lastCrossing: nil, isFresh: false),
                                 hits: [], historyCount: history.count, lastBarDay: history.last?.day)
         if !position.isWatchOnly {
-            m.costEUR = position.totalCostEUR
+            m.costEUR = position.hasCost ? position.totalCostEUR : nil
             m.averagePriceEUR = position.averagePriceEUR
         }
         guard n > 0, let lastDay = series.days.last else { return m }
@@ -151,9 +151,10 @@ public enum Evaluator {
         if !position.isWatchOnly, let pe = m.priceEUR {
             let value = pe * position.quantity
             m.valueEUR = value
-            let cost = position.totalCostEUR
-            m.sincePurchaseEUR = value - cost
-            if cost > 0 { m.sincePurchasePercent = (value / cost - 1) * 100 }
+            if let cost = m.costEUR, cost > 0 {
+                m.sincePurchaseEUR = value - cost
+                m.sincePurchasePercent = (value / cost - 1) * 100
+            }
         }
 
         // Reference values for YTD and 30 days, in EUR.

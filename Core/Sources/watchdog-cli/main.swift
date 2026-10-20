@@ -145,7 +145,116 @@ func ntfy() async {
     }
 }
 
+/// Cross-checks every source against the others: same price, quote time inside the trading hours of the venue,
+/// same reference closes for "seit 1.1." and "30 Tage".
+func verify() async {
+    print("# Werteprüfung (\(Date()))\n")
+    var problems: [String] = []
+    let today = DayKey.today(in: .berlin)
+    let ytdBase = DayKey(year: today.year - 1, month: 12, day: 31)
+    for c in cases where c.only == nil {
+        guard let ex = catalog[c.exchange] else { continue }
+        let ref = SecurityRef(name: c.name, isin: c.isin, wkn: nil, listing: Listing(exchangeID: c.exchange, ticker: c.ticker, symbols: c.symbols), assetType: .stock)
+        print("## \(c.name) @ \(ex.name)")
+        struct Row { var p: ProviderID; var price: Double; var time: Date; var cur: String; var ytd: Double?; var d30: Double?; var last: DayKey? }
+        var rows: [Row] = []
+        for pid in ProviderID.defaultOrder where !pid.requiresKey {
+            guard let p = registry[pid], p.supports(ex), p.capabilities.contains(.quote) else { continue }
+            do {
+                let sym = try await p.resolveSymbol(ref, exchange: ex, env: env)
+                let q = try await p.quote(symbol: sym, exchange: ex, env: env)
+                var r = Row(p: pid, price: q.price, time: q.time, cur: q.currency)
+                if p.capabilities.contains(.history), let h = try? await p.history(symbol: sym, exchange: ex, from: ytdBase.adding(days: -20), env: env) {
+                    r.ytd = h.bars.last { $0.day <= ytdBase }?.close
+                    r.d30 = h.bars.last { $0.day <= today.adding(days: -30) }?.close
+                    r.last = h.bars.last?.day
+                }
+                rows.append(r)
+            } catch {
+                print("  \(pad(pid.displayName, 16)) nicht verfügbar: \(String(describing: error).prefix(90))")
+            }
+        }
+        guard !rows.isEmpty else { problems.append("\(c.name) @ \(ex.name): keine Quelle"); continue }
+        // Reference: the newest quote; compare only quotes of the same trading day.
+        let newestDay = rows.map { DayKey(date: $0.time, timeZone: ex.tz) }.max()!
+        let sameDay = rows.filter { DayKey(date: $0.time, timeZone: ex.tz) == newestDay }
+        let med = sameDay.map(\.price).sorted()[sameDay.count / 2]
+        for r in rows {
+            let dev = (r.price / med - 1) * 100
+            let local = DayKey(date: r.time, timeZone: ex.tz)
+            // A quote must carry a time inside the venue's trading hours (20 minutes tolerance for the closing auction).
+            let inHours = ex.kind == .crypto || ex.isOpen(at: r.time) || ex.isOpen(at: r.time.addingTimeInterval(-20 * 60)) || ex.isOpen(at: r.time.addingTimeInterval(20 * 60))
+            var line = "  \(pad(r.p.displayName, 16)) \(pad(String(format: "%.4f %@", r.price, r.cur), 18)) \(pad(Format.time(r.time, tz: ex.tz), 10))"
+            line += local == newestDay ? " Abw. \(String(format: "%+.2f", dev)) %" : " (Vortag)"
+            line += " | 31.12.: \(r.ytd.map { String(format: "%.4f", $0) } ?? "-") | vor 30 T: \(r.d30.map { String(format: "%.4f", $0) } ?? "-") | Verlauf bis \(r.last?.iso ?? "-")"
+            if local == newestDay && abs(dev) > 1.5 { line += "  << ABWEICHUNG"; problems.append("\(c.name) @ \(ex.name): \(r.p.displayName) weicht \(String(format: "%+.1f", dev)) % ab") }
+            if !inHours { line += "  << ZEIT AUSSERHALB DER HANDELSZEIT"; problems.append("\(c.name) @ \(ex.name): \(r.p.displayName) Kurszeit \(Format.time(r.time, tz: ex.tz)) außerhalb der Handelszeit (falscher Handelsplatz?)") }
+            print(line)
+        }
+        let ytds = rows.compactMap(\.ytd)
+        if let lo = ytds.min(), let hi = ytds.max(), lo > 0, (hi / lo - 1) * 100 > 1.5 {
+            problems.append("\(c.name) @ \(ex.name): Schlusskurs 31.12. unterschiedlich (\(String(format: "%.3f..%.3f", lo, hi)))")
+        }
+        print("")
+    }
+    print("# Ergebnis: \(problems.isEmpty ? "keine Auffälligkeiten" : "\(problems.count) Auffälligkeiten")")
+    for p in problems { print("  - \(p)") }
+}
+
+/// watchdog-cli import FILE [--resolve] : reads a file like the import dialog and optionally finds every listing live.
+func importFile() async {
+    guard args.count >= 2 else { print("usage: import FILE [--resolve]"); return }
+    let url = URL(fileURLWithPath: args[1])
+    do {
+        let data = try Data(contentsOf: url)
+        let started = Date()
+        let sheets = try ImportFile.sheets(data: data, filename: url.lastPathComponent)
+        let t = CSVImport.bestTable(sheets)
+        let map = CSVImport.guessMapping(t.headers, rows: t.rows)
+        let drafts = CSVImport.drafts(t, mapping: map, catalog: catalog)
+        print("# Import \(url.lastPathComponent): Blatt \(t.sheetName ?? "-"), \(t.rows.count) Zeilen, \(drafts.count) Werte, gelesen in \(Int(Date().timeIntervalSince(started) * 1000)) ms")
+        for (h, f) in zip(t.headers, map) { print("  \(pad(h, 28)) -> \(f.label)") }
+        let engine = MarketEngine(cacheDir: nil)
+        let depot = DepotFile()
+        var found = 0
+        for d in drafts {
+            let qty = d.quantity.map { Format.qty($0) } ?? "-"
+            let cost = d.totalCost.map { Format.money($0, d.costCurrency) } ?? "-"
+            var line = "  \(pad(d.name, 30)) \(pad(d.isin ?? d.wkn ?? d.ticker ?? "", 13)) \(pad(qty, 9)) \(pad(cost, 14)) lots \(d.lots.count)"
+            if !d.include { line += " [aus]" }
+            if args.contains("--resolve") && d.include {
+                let outcome = await ImportResolver.resolve(d, target: "TGAT", catalog: catalog) { q in
+                    await engine.search(q, depot: depot, keys: keys)
+                }
+                switch outcome {
+                case .found(let c):
+                    found += 1
+                    line += "  => \(c.option.exchangeLabel) \(c.option.ticker) (\(c.option.providers.map(\.shortName).joined(separator: "+")))"
+                    if let n = c.note { line += " [\(n)]" }
+                case .notFound(let m):
+                    line += "  => NICHT GEFUNDEN: \(m)"
+                }
+            }
+            print(line)
+            for i in d.issues { print("      ! \(i)") }
+            for n in d.notes { print("      i \(n)") }
+        }
+        if args.contains("--resolve") { print("  gefunden: \(found) von \(drafts.filter(\.include).count)") }
+    } catch {
+        print("FEHLER: \((error as? LocalizedError)?.errorDescription ?? "\(error)")")
+    }
+}
+
 switch mode {
+case "venues":
+    for q in args.dropFirst() {
+        print("# OnVista \(q)")
+        do { for l in try await OnVistaProvider().debugVenues(q, env: env) { print(l) } } catch { print("FEHLER \(error)") }
+    }
+case "verify":
+    await verify()
+case "import":
+    await importFile()
 case "search":
     for q in args.dropFirst() { await search(q) }
 case "depot":

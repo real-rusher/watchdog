@@ -80,17 +80,25 @@ struct QuoteTable: View {
     var availableWidth: CGFloat
     @FocusState private var focused: Bool
 
+    /// Width a classic (always visible) scroll bar takes from the content, e.g. with a mouse attached.
+    static var scrollerWidth: CGFloat {
+        NSScroller.preferredScrollerStyle == .legacy ? NSScroller.scrollerWidth(for: .regular, scrollerStyle: .legacy) : 0
+    }
+
     var body: some View {
-        let cols = Column.visible(width: availableWidth, scale: scale, hidden: model.local.hiddenColumns)
+        let cols = Column.visible(width: availableWidth - Self.scrollerWidth, scale: scale, hidden: model.local.hiddenColumns)
         let layoutKey = cols.map(\.rawValue).joined(separator: ",") + "|\(scale)"
         let sections = model.sections
         VStack(spacing: 0) {
-            HeaderRow(columns: cols)
             ScrollViewReader { proxy in
                 ScrollView {
+                    // The column header sits inside the scroll area (pinned), so it always has exactly the width of the rows,
+                    // with or without a visible scroll bar.
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                        ForEach(sections) { s in
-                            Section {
+                        Section {
+                            ForEach(sections) { s in
+                                SectionHeaderRow(section: s, columns: cols)
+                                    .id(layoutKey + s.id)
                                 if !model.local.collapsedSections.contains(s.id) {
                                     ForEach(Array(s.rows.enumerated()), id: \.element.id) { i, r in
                                         // The id includes the column layout so rows are rebuilt when columns appear or disappear.
@@ -98,17 +106,16 @@ struct QuoteTable: View {
                                             .id(Self.rowID(r.id, layoutKey))
                                     }
                                 }
-                            } header: {
-                                SectionHeaderRow(section: s, columns: cols)
-                                    .id(layoutKey + s.id)
                             }
+                            if sections.isEmpty {
+                                Text(model.filter != nil || !model.searchText.isEmpty ? "Keine Werte passen zum Filter." : "Keine Werte.")
+                                    .type(14).foregroundStyle(Palette.inkSoft)
+                                    .padding(30)
+                            }
+                            Color.clear.frame(height: 24)
+                        } header: {
+                            HeaderRow(columns: cols)
                         }
-                        if sections.isEmpty {
-                            Text(model.filter != nil || !model.searchText.isEmpty ? "Keine Werte passen zum Filter." : "Keine Werte.")
-                                .type(14).foregroundStyle(Palette.inkSoft)
-                                .padding(30)
-                        }
-                        Color.clear.frame(height: 24)
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -172,6 +179,8 @@ struct HeaderRow: View {
                         label
                     }
                 }
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
                 .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
                 .frame(maxWidth: c == .name ? .infinity : nil, alignment: .leading)
                 .padding(.trailing, c.trailing ? 10 * scale : 0)
@@ -227,11 +236,15 @@ struct SectionHeaderRow: View {
                             Spacer(minLength: 0)
                         }
                     case .gauge:
-                        MiniCounts(totals: t)
+                        ViewThatFits(in: .horizontal) {
+                            MiniCounts(totals: t, spacing: 8)
+                            MiniCounts(totals: t, spacing: 4)
+                            MiniCounts(totals: t, spacing: 4, onlyAttention: true)
+                        }
                     case .value:
                         if t.holdings > 0 { Text(Format.eur(t.value, decimals: 0)).type(14, .semibold).foregroundStyle(Palette.ink) }
                     case .sincePurchase:
-                        if t.holdings > 0, let p = t.sincePurchasePercent {
+                        if t.cost > 0, let p = t.sincePurchasePercent {
                             Text(Format.pct(p, signed: true)).type(13, .semibold).foregroundStyle(Palette.change(p))
                         }
                     case .day:
@@ -242,6 +255,8 @@ struct SectionHeaderRow: View {
                         Color.clear.frame(height: 1)
                     }
                 }
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
                 .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
                 .frame(maxWidth: c == .name ? .infinity : nil, alignment: .leading)
                 .padding(.trailing, c.trailing ? 10 * scale : 0)
@@ -267,14 +282,17 @@ struct SectionHeaderRow: View {
 
 struct MiniCounts: View {
     var totals: Totals
+    var spacing: CGFloat = 8
+    /// Narrow columns: only red, yellow and missing data.
+    var onlyAttention = false
     var body: some View {
-        HStack(spacing: 8) {
-            ForEach([AmpelState.red, .yellow, .green], id: \.self) { s in
+        HStack(spacing: spacing) {
+            ForEach(onlyAttention ? [AmpelState.red, .yellow] : [AmpelState.red, .yellow, .green], id: \.self) { s in
                 let n = totals.counts[s] ?? 0
                 if n > 0 {
                     HStack(spacing: 3) {
                         Circle().fill(Palette.ampel(s)).frame(width: 7, height: 7)
-                        Text("\(n)").type(12, .medium).foregroundStyle(Palette.inkSoft)
+                        Text("\(n)").type(12, .medium).foregroundStyle(Palette.inkSoft).fixedSize()
                     }
                 }
             }
@@ -303,7 +321,10 @@ struct QuoteRow: View {
         let selected = model.selection == row.id
         HStack(spacing: 0) {
             ForEach(columns) { c in
+                // One line per value; long numbers shrink a little instead of wrapping into the next row.
                 cell(c)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                     .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
                     .frame(maxWidth: c == .name ? .infinity : nil, alignment: .leading)
                     .padding(.trailing, c.trailing ? 10 * scale : 0)
@@ -312,6 +333,7 @@ struct QuoteRow: View {
         }
         .padding(.horizontal, Metrics.gutter)
         .frame(height: Metrics.rowHeight * scale)
+        .clipped()
         .background(rowBackground(selected: selected))
         .overlay(alignment: .leading) {
             if selected { Rectangle().fill(Palette.signal).frame(width: 4) }

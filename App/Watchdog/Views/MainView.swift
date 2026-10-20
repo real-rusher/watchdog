@@ -47,8 +47,8 @@ struct MainView: View {
                 .environment(model)
                 .environment(\.uiScale, scale)
         }
-        .sheet(isPresented: $model.showImport) {
-            ImportView()
+        .sheet(item: $model.importSession) { session in
+            ImportView(session: session)
                 .environment(model)
                 .environment(\.uiScale, scale)
         }
@@ -84,7 +84,7 @@ struct MainToolbar: ToolbarContent {
             RefreshButton()
             SourceMenu()
             Button {
-                model.showImport = true
+                model.openImport()
             } label: {
                 Label("Importieren", systemImage: "square.and.arrow.down")
             }
@@ -192,7 +192,7 @@ struct EmptyDepotView: View {
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                 Button {
-                    model.showImport = true
+                    model.openImport()
                 } label: { Text("Liste importieren").type(14).padding(.horizontal, 6) }
                     .controlSize(.large)
                 Button {

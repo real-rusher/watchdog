@@ -139,6 +139,19 @@ public final class OnVistaProvider: MarketDataProvider, @unchecked Sendable {
         return f.date(from: s)
     }
 
+    /// Diagnostics for CI: every venue OnVista lists for a security (code, name, notation, last price, time).
+    public func debugVenues(_ query: String, env: ProviderEnvironment) async throws -> [String] {
+        var out: [String] = []
+        for inst in try await findInstruments(query, env: env).prefix(2) {
+            out.append("\(inst.name) \(inst.type) \(inst.value) \(inst.isin ?? "")")
+            for v in try await snapshot(inst, env: env) {
+                let t = v.time.map { ISO8601DateFormatter().string(from: $0) } ?? "-"
+                out.append("   \(v.codeMarket)  \(v.marketName)  \(v.idNotation)  \(v.last.map { String($0) } ?? "-") \(v.currency ?? "")  \(t)")
+            }
+        }
+        return out
+    }
+
     // MARK: Symbols
 
     public func resolveSymbol(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String {

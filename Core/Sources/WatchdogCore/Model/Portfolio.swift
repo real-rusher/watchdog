@@ -58,6 +58,8 @@ public struct Lot: Codable, Hashable, Identifiable, Sendable {
     }
 
     public var pricePerUnitEUR: Double { quantity > 0 ? totalCostEUR / quantity : 0 }
+    /// False when the purchase was entered without a price.
+    public var hasCost: Bool { totalCostEUR > 0 }
 }
 
 public struct Bank: Codable, Hashable, Identifiable, Sendable {
@@ -117,7 +119,10 @@ public struct Position: Codable, Hashable, Identifiable, Sendable {
     public var isWatchOnly: Bool { lots.isEmpty || quantity <= 0 }
     public var quantity: Double { lots.reduce(0) { $0 + $1.quantity } }
     public var totalCostEUR: Double { lots.reduce(0) { $0 + $1.totalCostEUR } }
-    public var averagePriceEUR: Double? { quantity > 0 ? totalCostEUR / quantity : nil }
+    /// Every purchase has a price. A purchase entered without a price (0) makes "since purchase" unknown
+    /// instead of counting the whole value as profit.
+    public var hasCost: Bool { !lots.isEmpty && lots.allSatisfy { $0.hasCost } }
+    public var averagePriceEUR: Double? { quantity > 0 && hasCost ? totalCostEUR / quantity : nil }
     public var firstPurchase: DayKey? { lots.map(\.day).min() }
 }
 

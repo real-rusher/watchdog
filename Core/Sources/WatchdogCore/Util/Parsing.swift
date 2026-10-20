@@ -61,20 +61,53 @@ public enum Lenient {
         }
     }
 
-    private static let dateFormats = ["dd.MM.yyyy", "d.M.yyyy", "dd.MM.yy", "d.M.yy", "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd", "dd-MM-yyyy"]
+    private static let dateFormats = ["dd.MM.yyyy", "d.M.yyyy", "dd.MM.yy", "d.M.yy", "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd",
+                                      "dd-MM-yyyy", "d/M/yyyy", "d/M/yy", "yyyyMMdd"]
+    private static let wordFormats = ["d. MMMM yyyy", "d. MMM yyyy", "d MMMM yyyy", "d MMM yyyy", "MMMM d, yyyy", "MMM d, yyyy", "d-MMM-yyyy", "d-MMM-yy"]
+
+    /// Dates like 04/03/2024: `monthFirst` true reads them the US way (3 April), false the European way (4 March).
+    public static func day(_ raw: String?, monthFirst: Bool) -> DayKey? {
+        guard let s = raw?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
+        let head = String(s.split(separator: " ").first ?? Substring(s))
+        let parts = head.split(separator: "/")
+        if parts.count == 3, let a = Int(parts[0]), let b = Int(parts[1]), var y = Int(parts[2]) {
+            if parts[2].count == 2 { y += y < 70 ? 2000 : 1900 }
+            let (m, d) = monthFirst ? (a, b) : (b, a)
+            guard (1...12).contains(m), (1...31).contains(d), y > 1900 else { return nil }
+            return DayKey(year: y, month: m, day: d)
+        }
+        return day(s)
+    }
 
     public static func day(_ raw: String?) -> DayKey? {
-        guard let s = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return nil }
+        guard var s = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return nil }
+        // "2021-03-15T10:22:00Z" and "2021-03-15 10:22"
+        if s.count >= 10, s.prefix(4).allSatisfy(\.isNumber), s.dropFirst(4).first == "-" { s = String(s.prefix(10)) }
+        // Spreadsheet serial day (e.g. 44270 = 15.03.2021) when a date column arrives as a plain number.
+        if s.allSatisfy(\.isNumber), s.count == 5, let n = Int(s), (20_000...80_000).contains(n) {
+            return DayKey(year: 1899, month: 12, day: 30).adding(days: n)
+        }
         let head = String(s.split(separator: " ").first ?? Substring(s))
         if let d = DayKey(iso: head), d.year > 1900 { return d }
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = .utc
+        f.isLenient = false
         for fmt in dateFormats {
             f.dateFormat = fmt
             if let date = f.date(from: head) {
                 let d = DayKey(date: date, timeZone: .utc)
                 if d.year > 1900 && d.year < 2200 { return d }
+            }
+        }
+        for loc in ["de_DE", "en_US_POSIX"] {
+            f.locale = Locale(identifier: loc)
+            for fmt in wordFormats {
+                f.dateFormat = fmt
+                if let date = f.date(from: s) {
+                    let d = DayKey(date: date, timeZone: .utc)
+                    if d.year > 1900 && d.year < 2200 { return d }
+                }
             }
         }
         return nil
@@ -96,8 +129,10 @@ public enum Lenient {
     /// Normalized key for fuzzy name matching ("Cameco Corp." -> "cameco").
     public static func nameKey(_ name: String) -> String {
         let stop: Set<String> = ["inc", "corp", "corporation", "ltd", "limited", "plc", "se", "ag", "sa", "asa", "nv", "co", "company", "the", "group", "holding", "holdings", "shs", "reg", "registered", "class", "cl", "a", "b", "ord", "adr", "kgaa", "spa", "ab", "oyj", "as", "bhd", "tbk", "pcl", "et", "de"]
+        // "S.p.A." and "Corp." lose their dots first so abbreviations stay one word.
         let folded = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "de_DE")).lowercased()
-        let words = folded.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).map(String.init)
+            .replacingOccurrences(of: ".", with: "")
+        let words = folded.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).map(String.init).filter { $0.count > 1 || $0.first?.isNumber == true }
         let kept = words.filter { !stop.contains($0) }
         return (kept.isEmpty ? words : kept).prefix(2).joined(separator: " ")
     }

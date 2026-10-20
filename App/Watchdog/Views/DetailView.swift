@@ -59,11 +59,10 @@ struct DetailView: View {
                     .padding(.top, 6)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(p.name).type(24, .semibold).foregroundStyle(Palette.ink).lineLimit(2)
-                    HStack(spacing: 8) {
-                        Tag(text: ex?.name ?? p.listing.exchangeID)
-                        Text(p.listing.ticker).type(12).foregroundStyle(Palette.inkSoft)
-                        if let isin = p.isin { Text(isin).type(12).foregroundStyle(Palette.inkSoft).textSelection(.enabled) }
-                        if p.isWatchOnly { Tag(text: "Beobachtung") }
+                    // Drops the ISIN before anything wraps when the panel is narrow.
+                    ViewThatFits(in: .horizontal) {
+                        tags(p, ex, isin: true)
+                        tags(p, ex, isin: false)
                     }
                 }
                 Spacer(minLength: 8)
@@ -94,6 +93,17 @@ struct DetailView: View {
                 Text(sourceLine(m, t, ex)).type(12).foregroundStyle(Palette.inkFaint)
             }
         }
+    }
+
+    private func tags(_ p: Position, _ ex: Exchange?, isin: Bool) -> some View {
+        HStack(spacing: 8) {
+            Tag(text: ex?.name ?? p.listing.exchangeID)
+            Text(p.listing.ticker).type(12).foregroundStyle(Palette.inkSoft)
+            if isin, let i = p.isin { Text(i).type(12).foregroundStyle(Palette.inkSoft).textSelection(.enabled) }
+            if p.isWatchOnly { Tag(text: "Beobachtung") }
+        }
+        .lineLimit(1)
+        .fixedSize()
     }
 
     private func sourceLine(_ m: PositionMetrics, _ t: Date, _ ex: Exchange?) -> String {
@@ -269,7 +279,7 @@ struct DetailView: View {
     private func lotsBlock(_ p: Position, _ m: PositionMetrics?) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(p.lots.count == 1 ? "Kauf" : "Käufe").type(15, .semibold).foregroundStyle(Palette.ink)
-            Grid(alignment: .trailing, horizontalSpacing: 14, verticalSpacing: 6) {
+            Grid(alignment: .trailing, horizontalSpacing: 12, verticalSpacing: 6) {
                 GridRow {
                     Text("Datum").gridColumnAlignment(.leading)
                     Text("Stück")
@@ -280,17 +290,19 @@ struct DetailView: View {
                 .type(11).foregroundStyle(Palette.inkSoft)
                 ForEach(p.lots.sorted { $0.day < $1.day }) { lot in
                     let now = m?.priceEUR.map { $0 * lot.quantity }
-                    let res = now.map { $0 - lot.totalCostEUR }
+                    let res = lot.hasCost ? now.map { $0 - lot.totalCostEUR } : nil
                     GridRow {
                         Text(Format.day(lot.day)).gridColumnAlignment(.leading)
                         Text(Format.qty(lot.quantity))
-                        Text(Format.eur(lot.pricePerUnitEUR))
-                        Text(Format.eur(lot.totalCostEUR))
+                        Text(lot.hasCost ? Format.eur(lot.pricePerUnitEUR) : "ohne Preis")
+                        Text(lot.hasCost ? Format.eur(lot.totalCostEUR) : Placeholder.missing)
                         Text(res.map { Format.signedEUR($0) } ?? Placeholder.missing).foregroundStyle(Palette.change(res))
                     }
                     .type(13).foregroundStyle(Palette.ink)
                 }
             }
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
         }
     }
 

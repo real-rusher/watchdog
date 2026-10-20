@@ -84,7 +84,7 @@ struct WatchdogCommands: Commands {
             .keyboardShortcut("n")
             Button("Importieren …") {
                 openWindow(id: "main")
-                model.showImport = true
+                model.openImport()
             }
             .keyboardShortcut("i")
         }

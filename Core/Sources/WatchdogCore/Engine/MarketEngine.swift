@@ -474,6 +474,13 @@ public actor MarketEngine {
         try await NtfyNotifier(settings: settings, http: http).send(title: "Watchdog", body: "Test: Mitteilungen von Watchdog kommen an.", severity: .info)
     }
 
+    /// Euro per unit of `currency` on `day` (ECB reference rate, previous business day if needed).
+    public func eurRate(_ currency: String, on day: DayKey) async -> Double? {
+        if currency == "EUR" { return 1 }
+        _ = await fx.ensure([currency], from: day.adding(days: -14))
+        return await fx.current().eurPerUnit(currency, day)
+    }
+
     /// Calls the heartbeat URL. Returns nil on success or a short error text.
     public func heartbeat(_ url: URL) async -> String? {
         do {

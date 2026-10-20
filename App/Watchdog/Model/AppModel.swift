@@ -16,16 +16,20 @@ struct TableRow: Identifiable {
 
 struct Totals {
     var value = 0.0
+    /// Purchase cost and current value of the holdings whose purchase price is known.
     var cost = 0.0
+    var costedValue = 0.0
     var dayChange = 0.0
     var holdings = 0
+    /// Holdings entered without a purchase price (left out of "since purchase").
+    var withoutCost = 0
     var counts: [AmpelState: Int] = [:]
     var fresh = 0
     /// Values without current data, with the short reason.
     var stale: [(name: String, headline: String)] = []
 
-    var sincePurchase: Double { value - cost }
-    var sincePurchasePercent: Double? { cost > 0 ? (value / cost - 1) * 100 : nil }
+    var sincePurchase: Double { costedValue - cost }
+    var sincePurchasePercent: Double? { cost > 0 ? (costedValue / cost - 1) * 100 : nil }
     var dayPercent: Double? { value - dayChange > 0 ? (dayChange / (value - dayChange)) * 100 : nil }
 
     mutating func add(_ r: TableRow) {
@@ -35,7 +39,12 @@ struct Totals {
             if m.ampel.isFresh { fresh += 1 }
             if !r.position.isWatchOnly, let v = m.valueEUR {
                 value += v
-                cost += m.costEUR ?? 0
+                if let c = m.costEUR {
+                    cost += c
+                    costedValue += v
+                } else {
+                    withoutCost += 1
+                }
                 dayChange += m.dayChangeEUR ?? 0
                 holdings += 1
             }
@@ -88,14 +97,14 @@ final class AppModel {
     var searchText = ""
     var filter: AmpelFilter?
     var editor: EditorRequest?
-    var showImport = false
+    /// The open import dialog (nil = closed).
+    var importSession: ImportSession?
+    var showImport: Bool { importSession != nil }
     var notice: String?
     var lastSummary: RefreshSummary?
     var isExampleDepot = false
     /// Incremented to ask the main view to open the settings window (used by the screenshot run).
     var settingsRequest = 0
-    /// Text handed to the import dialog when it opens (pasted list or file content).
-    var importPrefill: String?
     /// Last heartbeat call: time and error text (nil = ok).
     var heartbeatResult: (date: Date, error: String?)?
     /// Screenshot run only: pretend these listings have gone quiet, to show what an outage looks like.
@@ -120,12 +129,19 @@ final class AppModel {
             snapshotDir = dir
             let tmp = FileManager.default.temporaryDirectory.appendingPathComponent("watchdog-snapshot-\(UUID().uuidString)")
             store = DepotStore(url: tmp.appendingPathComponent("Watchdog.json"))
-            engine = MarketEngine(cacheDir: tmp.appendingPathComponent("cache"))
-            depot = DepotFile.example()
+            if args.contains("--stress") {
+                // Layout test with made-up extreme values.
+                let (d, provider) = DemoData.stress()
+                engine = MarketEngine(cacheDir: tmp.appendingPathComponent("cache"), router: DataRouter(registry: ProviderRegistry([provider])))
+                depot = d
+            } else {
+                engine = MarketEngine(cacheDir: tmp.appendingPathComponent("cache"))
+                depot = DepotFile.example()
+            }
             var l = LocalSettings()
             l.hasCompletedSetup = true
             local = l
-            isExampleDepot = true
+            isExampleDepot = !args.contains("--stress")
             return
         }
         snapshotDir = nil
@@ -351,6 +367,10 @@ final class AppModel {
         isExampleDepot = false
         scheduleSave()
         scheduleRecompute()
+    }
+
+    func openImport() {
+        if importSession == nil { importSession = ImportSession(model: self) }
     }
 
     // MARK: Storage

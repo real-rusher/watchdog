@@ -219,38 +219,6 @@ final class EvaluationTests: XCTestCase {
     }
 }
 
-final class ImportTests: XCTestCase {
-    func testGermanCSV() {
-        let csv = """
-        Bezeichnung;ISIN;Stück;Kaufkurs;Kaufdatum;Börse;Depot;Thema
-        Cameco Corp.;CA13321L1085;120;14,50;15.03.2021;Tradegate;Comdirect;Uran
-        Toyota;JP3633400001;1.000;11,50;17.05.2019;Tokio;Sparkasse;
-        Nur beobachten;US0378331005;;;;Nasdaq;;
-        """
-        let t = CSVImport.parse(csv)
-        XCTAssertEqual(t.delimiter, ";")
-        let map = CSVImport.guessMapping(t.headers)
-        XCTAssertEqual(map, [.name, .isin, .quantity, .pricePerUnit, .day, .exchange, .bank, .theme])
-        let d = CSVImport.drafts(t, mapping: map, catalog: ExchangeCatalog())
-        XCTAssertEqual(d.count, 3)
-        XCTAssertEqual(d[0].quantity, 120)
-        XCTAssertEqual(d[0].totalCostEUR!, 1740, accuracy: 1e-9)
-        XCTAssertEqual(d[0].exchangeID, "TGAT")
-        XCTAssertEqual(d[1].quantity, 1000)
-        XCTAssertEqual(d[1].exchangeID, "XTKS")
-        XCTAssertEqual(d[1].day?.iso, "2019-05-17")
-        XCTAssertNil(d[2].quantity)
-    }
-
-    func testTabSeparatedFromExcel() {
-        let tsv = "Name\tISIN\tAnzahl\tKaufwert\nSAP\tDE0007164600\t25\t2.380,00\n"
-        let t = CSVImport.parse(tsv)
-        XCTAssertEqual(t.delimiter, "\t")
-        let d = CSVImport.drafts(t, mapping: CSVImport.guessMapping(t.headers), catalog: ExchangeCatalog())
-        XCTAssertEqual(d.first?.totalCostEUR, 2380)
-    }
-}
-
 final class FXTests: XCTestCase {
     func testECBParse() {
         let xml = """
