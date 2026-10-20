@@ -6,7 +6,7 @@ Reine Ansicht: kein Handel, keine Nachrichten, keine Verbindung zu Banken. Alles
 
 ## Installation
 
-1. Unter [Releases](../../releases/tag/nightly) die Datei `Watchdog.dmg` laden und öffnen.
+1. Unter [Releases](../../releases/latest) die Datei `Watchdog.dmg` laden und öffnen.
 2. Watchdog in den Ordner „Programme“ ziehen.
 3. Watchdog per Doppelklick starten. macOS meldet beim ersten Mal, dass die App nicht geprüft werden kann (sie ist noch nicht bei Apple signiert). Dann:
    **Systemeinstellungen > Datenschutz & Sicherheit**, ganz unten bei „Watchdog wurde blockiert“ auf **Dennoch öffnen** klicken und bestätigen. Das ist nur einmal nötig.
@@ -18,8 +18,19 @@ Voraussetzung: macOS 14 Sonoma oder neuer, Apple-Silicon- oder Intel-Mac.
 
 - **Beispieldepot ansehen**: zeigt die App mit echten Kursen, ohne etwas einzutragen.
 - **Wertpapier hinzufügen** (⌘N): ISIN, WKN, Name oder Kürzel eintippen, Börse aus der Trefferliste wählen, Käufe mit Datum, Stück und Preis in Euro eintragen. Ohne Kauf wird der Wert nur beobachtet.
-- **Importieren** (⌘I): CSV-Datei öffnen oder eine Tabelle aus Excel/Numbers kopieren und einfügen. Spalten wie Name, ISIN, Stück, Kaufkurs, Kaufdatum, Börse, Bank und Thema werden automatisch erkannt.
+- **Importieren** (⌘I): Datei in das Fenster ziehen oder öffnen, oder eine Tabelle aus Excel/Numbers kopieren und einfügen. Mehr dazu unter „Import“.
 - Oben links umschalten zwischen **Banken**, **Themen** (z. B. Uran, Öl, Gold) und **Liste**.
+
+## Import
+
+Watchdog liest Excel-Dateien (.xlsx), LibreOffice-Dateien (.ods), CSV und Text, auch Exporte von Banken (zum Beispiel die Depotumsätze von comdirect). Zeichensätze (UTF-8, UTF-16, Windows, Mac) und Zahlenformate (1.234,56 oder 1,234.56) werden erkannt, ebenso Kopfzeilen, die nicht in der ersten Zeile stehen.
+
+- Spalten wie Name, ISIN, WKN, Kürzel, Stück, Kaufkurs, Kaufwert, Kaufdatum, Kauf/Verkauf, Börse, Bank, Thema und Währung werden automatisch zugeordnet und lassen sich oben im Dialog ändern.
+- Mehrere Zeilen desselben Werts werden zu einer Position mit mehreren Käufen; Verkäufe ziehen Stücke von den ältesten Käufen ab. Komplett verkaufte Werte sind abgewählt.
+- Kaufpreise in Fremdwährung werden zum EZB-Kurs vom Kaufdatum in Euro umgerechnet.
+- Die Suche nach dem Handelsplatz startet sofort. Wird ein Wert an der gewünschten Börse nicht gehandelt, nimmt Watchdog einen deutschen Handelsplatz (bei Kauf in Fremdwährung die Heimatbörse) und schreibt das dazu; je Zeile lässt sich der Handelsplatz wechseln.
+- Schon vorhandene Werte werden nicht doppelt angelegt, neue Käufe werden ergänzt.
+- Numbers-Dateien und alte Excel-Dateien (.xls) bitte als .xlsx oder CSV speichern oder die Tabelle kopieren und einfügen.
 
 ## Die Ampel
 

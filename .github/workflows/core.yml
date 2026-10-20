@@ -24,7 +24,7 @@ jobs:
           swift build -c release --product watchdog-cli
           BIN=$(swift build -c release --show-bin-path)/watchdog-cli
           timeout 600 $BIN probe > ../out/probe.txt 2>&1 || true
-          timeout 300 $BIN search DE0007164600 Cameco Toyota "Yellow Cake" Bitcoin "ERIC B" > ../out/search.txt 2>&1 || true
+          timeout 300 $BIN search DE0007164600 Cameco Toyota "Yellow Cake" Bitcoin "ERIC B" CCJ > ../out/search.txt 2>&1 || true
           timeout 600 $BIN depot > ../out/depot.txt 2>&1 || true
           timeout 60 $BIN ntfy > ../out/ntfy.txt 2>&1 || true
           timeout 600 $BIN verify > ../out/verify.txt 2>&1 || true

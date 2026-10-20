@@ -136,7 +136,22 @@ public enum ImportResolver {
             return nil
         }
         if let t = d.ticker?.uppercased() {
-            if let g = groups.first(where: { $0.contains { $0.ticker.uppercased() == t } }) { return g }
+            // The same company can arrive under slightly different names per venue ("Cameco Corp", "CAMECO CORP. REG. SHARES"):
+            // groups with the ticker are merged when the first word of the name matches.
+            let withTicker = groups.filter { $0.contains { $0.ticker.uppercased() == t } }
+            if let first = withTicker.first {
+                let word = { (s: String) in Lenient.nameKey(s).split(separator: " ").first.map(String.init) ?? "" }
+                let key = word(d.name.isEmpty ? first[0].name : d.name)
+                var seen = Set<String>()
+                var merged: [ListingOption] = []
+                for g in withTicker where g.contains(where: { word($0.name) == key && !key.isEmpty }) || g.map(\.id) == first.map(\.id) {
+                    for o in g where !seen.contains(o.exchangeID ?? o.id) {
+                        seen.insert(o.exchangeID ?? o.id)
+                        merged.append(o)
+                    }
+                }
+                return merged
+            }
         }
         // Name only: accept the best group only if the names really match.
         let want = Lenient.nameKey(d.name)

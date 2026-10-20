@@ -177,11 +177,17 @@ public enum Format {
     private static let f4 = nf(2, 4)
     private static let fQty = nf(0, 6)
 
-    /// Prices: small values get more decimals (penny stocks, crypto fractions).
+    /// Prices: small values get more decimals (penny stocks, crypto fractions), always three significant digits.
     public static func number(_ v: Double, decimals: Int? = nil) -> String {
         if let d = decimals { return nf(d, d).string(from: NSNumber(value: v)) ?? "\(v)" }
         let a = abs(v)
-        let f = a >= 1000 ? f2 : a >= 1 ? f2 : f4
+        if a > 0 && a < 0.01 {
+            let digits = min(8, Int((-log10(a)).rounded(.down)) + 3)
+            var t = String(format: "%.\(digits)f", v)
+            while t.hasSuffix("0"), let dot = t.firstIndex(of: "."), t.distance(from: dot, to: t.endIndex) > 3 { t.removeLast() }
+            return t.replacingOccurrences(of: ".", with: ",")
+        }
+        let f = a >= 1 ? f2 : f4
         return f.string(from: NSNumber(value: v)) ?? "\(v)"
     }
 

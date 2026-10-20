@@ -15,7 +15,11 @@ struct LineGauge: View {
             let w = size.width, h = size.height
             let mid = w / 2
             let cy = h / 2
-            func x(_ pct: Double) -> CGFloat { mid + CGFloat(max(-range, min(range, pct)) / range) * (w / 2 - 5) }
+            // Dot and ring stay inside the drawing area at every font size.
+            let ringR = min(8.5, h / 2 - 1.3)
+            let r: CGFloat = min(h / 2 - 1, 5.5, ringR - 2.6)
+            let margin = ringR + 1.3
+            func x(_ pct: Double) -> CGFloat { mid + CGFloat(max(-range, min(range, pct)) / range) * (w / 2 - margin) }
 
             // Zones
             let track = CGRect(x: 0, y: cy - 2, width: w, height: 4)
@@ -35,9 +39,8 @@ struct LineGauge: View {
                 return
             }
             let px = x(d)
-            let r: CGFloat = min(h / 2 - 1, 5.5)
             if m.ampel.isFresh {
-                let ring = CGRect(x: px - r - 3, y: cy - r - 3, width: (r + 3) * 2, height: (r + 3) * 2)
+                let ring = CGRect(x: px - ringR, y: cy - ringR, width: ringR * 2, height: ringR * 2)
                 ctx.stroke(Path(ellipseIn: ring), with: .color(Palette.signal), lineWidth: 2.2)
             }
             let dot = CGRect(x: px - r, y: cy - r, width: r * 2, height: r * 2)

@@ -252,6 +252,16 @@ enum SnapshotRunner {
         capture(window, "s-list-by-value")
         model.updateLocal { $0.grouping = .bank; $0.sort = .signal; $0.sortAscending = true }
 
+        // Editing a position with several purchases.
+        await size(window, 1180)
+        if let id = model.depot.positions.first(where: { $0.name.hasPrefix("Mehrfachkauf") })?.id {
+            model.editor = .edit(id)
+            await sleep(2)
+            if let sheet = window.attachedSheet { capture(sheet, "s-editor") } else { note("no editor sheet") }
+            model.editor = nil
+            await sleep(1)
+        }
+
         // Narrow window: detail opens as a sheet.
         await size(window, 760)
         model.selection = model.depot.positions.first { $0.name.hasPrefix("Berkshire") }?.id

@@ -52,7 +52,7 @@ jobs:
         working-directory: Core
         run: |
           swift build -c release --product watchdog-cli > /dev/null 2>&1
-          timeout 600 "$(swift build -c release --show-bin-path)/watchdog-cli" verify > ../out/verify-mac.txt 2>&1 || true
+          "$(swift build -c release --show-bin-path)/watchdog-cli" verify > ../out/verify-mac.txt 2>&1 || true
       - name: Screenshots with live data and import test
         continue-on-error: true
         run: |

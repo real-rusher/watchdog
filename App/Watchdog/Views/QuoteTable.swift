@@ -256,7 +256,7 @@ struct SectionHeaderRow: View {
                     }
                 }
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(c == .name ? 1 : 0.7)
                 .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
                 .frame(maxWidth: c == .name ? .infinity : nil, alignment: .leading)
                 .padding(.trailing, c.trailing ? 10 * scale : 0)
@@ -324,7 +324,8 @@ struct QuoteRow: View {
                 // One line per value; long numbers shrink a little instead of wrapping into the next row.
                 cell(c)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(c == .name ? 1 : 0.7)
+                    .truncationMode(.tail)
                     .frame(width: c == .name ? nil : c.width * scale, alignment: c.trailing ? .trailing : .leading)
                     .frame(maxWidth: c == .name ? .infinity : nil, alignment: .leading)
                     .padding(.trailing, c.trailing ? 10 * scale : 0)

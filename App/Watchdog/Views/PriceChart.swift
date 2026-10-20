@@ -104,7 +104,7 @@ struct PriceChart: View {
             AxisMarks(position: .trailing, values: .automatic(desiredCount: 5)) { v in
                 AxisGridLine().foregroundStyle(Palette.rule.opacity(0.6))
                 AxisValueLabel {
-                    if let d = v.as(Double.self) { Text(Format.number(d)).font(Typo.font(11)) }
+                    if let d = v.as(Double.self) { Text(Format.number(d, decimals: abs(d) >= 1000 ? 0 : nil)).font(Typo.font(11)) }
                 }
             }
         }

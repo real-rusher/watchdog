@@ -306,11 +306,18 @@ private struct DraftRow: View {
                     }
                 }
             } label: {
-                Text("\(c.option.exchangeLabel) \u{00B7} \(c.option.ticker)").type(13)
+                HStack(spacing: 4) {
+                    Text("\(c.option.exchangeLabel) \u{00B7} \(c.option.ticker)").type(13).lineLimit(1)
+                    if c.alternatives.count > 1 {
+                        Image(systemName: "chevron.up.chevron.down").font(.system(size: 9, weight: .semibold)).foregroundStyle(Palette.inkSoft)
+                    }
+                }
             }
             .menuStyle(.borderlessButton)
-            .fixedSize(horizontal: false, vertical: true)
-            .help("Handelsplatz wechseln")
+            .menuIndicator(.hidden)
+            .fixedSize()
+            .disabled(c.alternatives.count < 2)
+            .help(c.alternatives.count > 1 ? "Handelsplatz wechseln (\(c.alternatives.count) zur Auswahl)" : "Nur an diesem Handelsplatz gefunden")
         case .notFound:
             Text("nicht gefunden").type(13).foregroundStyle(Palette.down)
         default:

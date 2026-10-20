@@ -306,3 +306,25 @@ final class ResolverCurrencyTests: XCTestCase {
         XCTAssertEqual(ImportResolver.choose(d, group: g, target: "TGAT", catalog: catalog)?.option.exchangeID, "XFRA")
     }
 }
+
+final class TickerMergeTests: XCTestCase {
+    func testSplitNamesAreMergedForTicker() {
+        let catalog = ExchangeCatalog()
+        let groups = ListingOption.build([
+            SearchCandidate(provider: .twelvedata, name: "CAMECO CORP. REG. SHARES", ticker: "CCJ", symbol: "CCJ|XHAN", exchangeID: "XHAN", exchangeLabel: "Hannover"),
+            SearchCandidate(provider: .yahoo, name: "Cameco Corporation", ticker: "CCJ", symbol: "CCJ", exchangeID: "XNYS", exchangeLabel: "NYSE"),
+            SearchCandidate(provider: .yahoo, name: "Royal Gold", ticker: "RGLD", symbol: "RGLD", exchangeID: "XNAS", exchangeLabel: "Nasdaq"),
+        ], query: "CCJ", catalog: catalog)
+        let d = CSVImport.Draft(rows: [1], name: "CAMECO CORP", isin: nil, wkn: nil, ticker: "CCJ", exchangeText: nil, exchangeID: nil,
+                                lots: [CSVImport.DraftLot(day: nil, quantity: 10, cost: 100, currency: "USD", row: 1)],
+                                bank: nil, theme: nil, note: "", issues: [], notes: [], soldOut: false, include: true)
+        let g = ImportResolver.instrument(for: d, in: groups, query: "CCJ")!
+        XCTAssertEqual(Set(g.compactMap(\.exchangeID)), ["XHAN", "XNYS"])
+        XCTAssertEqual(ImportResolver.choose(d, group: g, target: "TGAT", catalog: catalog)?.option.exchangeID, "XNYS")
+    }
+
+    func testTinyPricesKeepDigits() {
+        XCTAssertTrue(Format.number(0.000614).hasPrefix("0,000614"))
+        XCTAssertEqual(Format.number(12.5), "12,50")
+    }
+}
