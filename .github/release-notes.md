@@ -1,8 +1,9 @@
-Watchdog 1.0.3 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
+Watchdog 1.0.4 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
-**Neu in 1.0.3**
+**Neu in 1.0.3 und 1.0.4**
 - **Alle Werte entfernen**: im Menü Depot und unter Einstellungen > Allgemein. Leert das Depot, zum Beispiel nach einem Import; Einstellungen, Regeln, Börsen und der Mitteilungskanal fürs iPhone bleiben erhalten. Banken und Themen können bleiben oder mit entfernt werden.
 - **Mehrere Werte auf einmal löschen**: mit ⌘-Klick oder ⇧-Klick auswählen, dann Rückschritttaste oder „Löschen …“ in der Leiste unten. Rechtsklick auf eine Bank oder ein Thema wählt oder löscht die ganze Gruppe.
+- Leeres Depot zeigt nur noch die Startseite, ohne leere Summenzeile.
 - **Rückgängig**: Nach jedem Löschen erscheint für einige Sekunden „Rückgängig“. Vorher legt Watchdog zusätzlich eine Sicherung an (Einstellungen > Allgemein > Sicherung wiederherstellen).
 
 **Aus 1.0.2**

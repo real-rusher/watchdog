@@ -12,8 +12,11 @@ struct MainView: View {
             let wide = geo.size.width >= 1080
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    SummaryStrip()
-                    Divider().overlay(Palette.rule)
+                    // Totals only make sense with values; an empty depot shows just the start page.
+                    if !model.depot.positions.isEmpty {
+                        SummaryStrip()
+                        Divider().overlay(Palette.rule)
+                    }
                     if model.depot.positions.isEmpty {
                         EmptyDepotView()
                     } else {
