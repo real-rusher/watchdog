@@ -1,0 +1,255 @@
+Building for debugging...
+[0/13] Write sources
+[1/13] /Users/runner/work/watchdog/watchdog/Core/.build/arm64-apple-macosx/debug/WatchdogCorePackageTests.derived/runner.swift
+[2/13] Write watchdog-cli-entitlement.plist
+[3/13] Write sources
+[6/13] Copying Fixtures
+[7/13] Write swift-version--79AA4F9932D1E87A.txt
+[9/35] Compiling WatchdogCore Spreadsheet.swift
+[10/35] Compiling WatchdogCore Zip.swift
+[11/35] Compiling WatchdogCore MarketData.swift
+[12/35] Compiling WatchdogCore Currency.swift
+[13/35] Compiling WatchdogCore DepotFile.swift
+[14/35] Compiling WatchdogCore Portfolio.swift
+[15/35] Compiling WatchdogCore ProviderID.swift
+[16/35] Compiling WatchdogCore Rules.swift
+[17/35] Compiling WatchdogCore Signals.swift
+[18/35] Compiling WatchdogCore FTProvider.swift
+[19/45] Emitting module WatchdogCore
+[20/45] Compiling WatchdogCore Evaluation.swift
+[21/45] Compiling WatchdogCore Freshness.swift
+[22/45] Compiling WatchdogCore Indicators.swift
+[23/45] Compiling WatchdogCore DemoData.swift
+[24/45] Compiling WatchdogCore MarketEngine.swift
+[25/45] Compiling WatchdogCore Exchange.swift
+[26/45] Compiling WatchdogCore ExchangeCatalog.swift
+[27/45] Compiling WatchdogCore FXService.swift
+[28/45] Compiling WatchdogCore CSVImport.swift
+[29/45] Compiling WatchdogCore CodePages.swift
+[30/45] Compiling WatchdogCore ListingOption.swift
+[31/45] Compiling WatchdogCore HTTP.swift
+[32/45] Compiling WatchdogCore KeyedProviders.swift
+[33/45] Compiling WatchdogCore OnVistaProvider.swift
+[34/45] Compiling WatchdogCore Provider.swift
+[35/45] Compiling WatchdogCore Router.swift
+[36/45] Compiling WatchdogCore SmallProviders.swift
+[37/45] Compiling WatchdogCore YahooProvider.swift
+[38/45] Compiling WatchdogCore DepotStore.swift
+[39/45] Compiling WatchdogCore DayKey.swift
+[40/45] Compiling WatchdogCore Parsing.swift
+[41/51] Compiling watchdog_cli main.swift
+[42/51] Emitting module watchdog_cli
+[42/51] Write Objects.LinkFileList
+[43/51] Linking watchdog-cli
+[44/51] Applying watchdog-cli
+[46/51] Compiling WatchdogCoreTests CoreTests.swift
+[47/51] Compiling WatchdogCoreTests DataQualityTests.swift
+[48/51] Emitting module WatchdogCoreTests
+[49/51] Compiling WatchdogCoreTests ImportTests.swift
+[50/52] Compiling WatchdogCoreTests resource_bundle_accessor.swift
+[51/54] Emitting module WatchdogCorePackageTests
+[52/54] Compiling WatchdogCorePackageTests runner.swift
+[52/54] Write Objects.LinkFileList
+[53/54] Linking WatchdogCorePackageTests
+Build complete! (30.30s)
+Test Suite 'All tests' started at 2026-10-20 20:41:48.347.
+Test Suite 'WatchdogCorePackageTests.xctest' started at 2026-10-20 20:41:48.350.
+Test Suite 'CatalogTests' started at 2026-10-20 20:41:48.350.
+Test Case '-[WatchdogCoreTests.CatalogTests testMarketHours]' started.
+Test Case '-[WatchdogCoreTests.CatalogTests testMarketHours]' passed (0.005 seconds).
+Test Case '-[WatchdogCoreTests.CatalogTests testOtherMappings]' started.
+Test Case '-[WatchdogCoreTests.CatalogTests testOtherMappings]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.CatalogTests testYahooMapping]' started.
+Test Case '-[WatchdogCoreTests.CatalogTests testYahooMapping]' passed (0.000 seconds).
+Test Suite 'CatalogTests' passed at 2026-10-20 20:41:48.359.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.008 (0.009) seconds
+Test Suite 'CostTests' started at 2026-10-20 20:41:48.359.
+Test Case '-[WatchdogCoreTests.CostTests testPurchaseWithoutPriceIsNotProfit]' started.
+Test Case '-[WatchdogCoreTests.CostTests testPurchaseWithoutPriceIsNotProfit]' passed (0.003 seconds).
+Test Suite 'CostTests' passed at 2026-10-20 20:41:48.362.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'DemoDataTests' started at 2026-10-20 20:41:48.362.
+Test Case '-[WatchdogCoreTests.DemoDataTests testStressDepotShapes]' started.
+Test Case '-[WatchdogCoreTests.DemoDataTests testStressDepotShapes]' passed (0.600 seconds).
+Test Suite 'DemoDataTests' passed at 2026-10-20 20:41:48.962.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.600 (0.600) seconds
+Test Suite 'EvaluationTests' started at 2026-10-20 20:41:48.962.
+Test Case '-[WatchdogCoreTests.EvaluationTests testFXConversionKeepsCrossings]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testFXConversionKeepsCrossings]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.EvaluationTests testGreenWhenAbove]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testGreenWhenAbove]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.EvaluationTests testLiveQuoteFoldsIn]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testLiveQuoteFoldsIn]' passed (0.001 seconds).
+Test Case '-[WatchdogCoreTests.EvaluationTests testRedAndCrossingEvent]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testRedAndCrossingEvent]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.EvaluationTests testSignalStateSuppressesHistoryAndFiresNew]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testSignalStateSuppressesHistoryAndFiresNew]' passed (0.004 seconds).
+Test Case '-[WatchdogCoreTests.EvaluationTests testWatchOnlyHasNoValue]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testWatchOnlyHasNoValue]' passed (0.001 seconds).
+Test Case '-[WatchdogCoreTests.EvaluationTests testYellowBand]' started.
+Test Case '-[WatchdogCoreTests.EvaluationTests testYellowBand]' passed (0.002 seconds).
+Test Suite 'EvaluationTests' passed at 2026-10-20 20:41:48.977.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.015 (0.015) seconds
+Test Suite 'FXTests' started at 2026-10-20 20:41:48.977.
+Test Case '-[WatchdogCoreTests.FXTests testECBParse]' started.
+Test Case '-[WatchdogCoreTests.FXTests testECBParse]' passed (0.001 seconds).
+Test Case '-[WatchdogCoreTests.FXTests testLookupUsesPreviousDay]' started.
+Test Case '-[WatchdogCoreTests.FXTests testLookupUsesPreviousDay]' passed (0.000 seconds).
+Test Suite 'FXTests' passed at 2026-10-20 20:41:48.979.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'FXUsageTests' started at 2026-10-20 20:41:48.979.
+Test Case '-[WatchdogCoreTests.FXUsageTests testEachDayUsesItsOwnRateAndTodayTheLiveRate]' started.
+Test Case '-[WatchdogCoreTests.FXUsageTests testEachDayUsesItsOwnRateAndTodayTheLiveRate]' passed (0.003 seconds).
+Test Suite 'FXUsageTests' passed at 2026-10-20 20:41:48.981.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'FileTests' started at 2026-10-20 20:41:48.981.
+Test Case '-[WatchdogCoreTests.FileTests testDepotRoundTrip]' started.
+Test Case '-[WatchdogCoreTests.FileTests testDepotRoundTrip]' passed (0.008 seconds).
+Test Case '-[WatchdogCoreTests.FileTests testTolerantDecoding]' started.
+Test Case '-[WatchdogCoreTests.FileTests testTolerantDecoding]' passed (0.000 seconds).
+Test Suite 'FileTests' passed at 2026-10-20 20:41:48.990.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.009 (0.009) seconds
+Test Suite 'FreshnessTests' started at 2026-10-20 20:41:48.990.
+Test Case '-[WatchdogCoreTests.FreshnessTests testClosingPriceCapturedIsOK]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testClosingPriceCapturedIsOK]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testClosingPriceMissingIsStale]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testClosingPriceMissingIsStale]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testHistoryGapIsStale]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testHistoryGapIsStale]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testJustOpenedGetsGracePeriod]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testJustOpenedGetsGracePeriod]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testMissingExchangeRateIsStale]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testMissingExchangeRateIsStale]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testNothingLoadedYet]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testNothingLoadedYet]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testNoTradeButSourceAnswersIsNotAProblem]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testNoTradeButSourceAnswersIsNotAProblem]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testOnlyYesterdaysPriceWhileOpenIsNoTradeToday]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testOnlyYesterdaysPriceWhileOpenIsNoTradeToday]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testOpenMarketFreshQuoteIsOK]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testOpenMarketFreshQuoteIsOK]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testOpenMarketWithoutUpdatesIsStale]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testOpenMarketWithoutUpdatesIsStale]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.FreshnessTests testWeekendIsOK]' started.
+Test Case '-[WatchdogCoreTests.FreshnessTests testWeekendIsOK]' passed (0.000 seconds).
+Test Suite 'FreshnessTests' passed at 2026-10-20 20:41:48.992.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'HeartbeatSettingsTests' started at 2026-10-20 20:41:48.992.
+Test Case '-[WatchdogCoreTests.HeartbeatSettingsTests testOldFilesDecode]' started.
+Test Case '-[WatchdogCoreTests.HeartbeatSettingsTests testOldFilesDecode]' passed (0.001 seconds).
+Test Case '-[WatchdogCoreTests.HeartbeatSettingsTests testURLValidation]' started.
+Test Case '-[WatchdogCoreTests.HeartbeatSettingsTests testURLValidation]' passed (0.000 seconds).
+Test Suite 'HeartbeatSettingsTests' passed at 2026-10-20 20:41:48.994.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ImportTests' started at 2026-10-20 20:41:48.994.
+Test Case '-[WatchdogCoreTests.ImportTests testComdirectTransactions]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testComdirectTransactions]' passed (0.027 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testCurrentPriceColumnIsNotPurchasePrice]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testCurrentPriceColumnIsNotPurchasePrice]' passed (0.007 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testDates]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testDates]' passed (0.001 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testEnglishBroker]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testEnglishBroker]' passed (0.008 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testExcelUnicodeText]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testExcelUnicodeText]' passed (0.009 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testGermanCSV]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testGermanCSV]' passed (0.015 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testInflateMatchesStoredData]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testInflateMatchesStoredData]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testISINList]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testISINList]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testMacRoman]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testMacRoman]' passed (0.010 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testNameList]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testNameList]' passed (0.006 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testODS]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testODS]' passed (0.046 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testOldExcelAndNumbersExplainThemselves]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testOldExcelAndNumbersExplainThemselves]' passed (0.001 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testPastedFromNumbersWithCurrencySigns]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testPastedFromNumbersWithCurrencySigns]' passed (0.007 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testPenceAreConverted]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testPenceAreConverted]' passed (0.005 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testSoldOutIsExcluded]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testSoldOutIsExcluded]' passed (0.008 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testWithoutPurchasePrice]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testWithoutPurchasePrice]' passed (0.003 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testXLSXFromLibreOffice]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testXLSXFromLibreOffice]' passed (0.044 seconds).
+Test Case '-[WatchdogCoreTests.ImportTests testXLSXFromOpenpyxl]' started.
+Test Case '-[WatchdogCoreTests.ImportTests testXLSXFromOpenpyxl]' passed (0.034 seconds).
+Test Suite 'ImportTests' passed at 2026-10-20 20:41:49.229.
+	 Executed 18 tests, with 0 failures (0 unexpected) in 0.235 (0.236) seconds
+Test Suite 'IndicatorTests' started at 2026-10-20 20:41:49.229.
+Test Case '-[WatchdogCoreTests.IndicatorTests testCrossings]' started.
+Test Case '-[WatchdogCoreTests.IndicatorTests testCrossings]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.IndicatorTests testEMA]' started.
+Test Case '-[WatchdogCoreTests.IndicatorTests testEMA]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.IndicatorTests testSMA]' started.
+Test Case '-[WatchdogCoreTests.IndicatorTests testSMA]' passed (0.000 seconds).
+Test Suite 'IndicatorTests' passed at 2026-10-20 20:41:49.230.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'OutageTests' started at 2026-10-20 20:41:49.230.
+Test Case '-[WatchdogCoreTests.OutageTests testDisabled]' started.
+Test Case '-[WatchdogCoreTests.OutageTests testDisabled]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.OutageTests testOneMessagePerDayAfterTwentyMinutes]' started.
+Test Case '-[WatchdogCoreTests.OutageTests testOneMessagePerDayAfterTwentyMinutes]' passed (0.001 seconds).
+Test Suite 'OutageTests' passed at 2026-10-20 20:41:49.231.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ParsingTests' started at 2026-10-20 20:41:49.231.
+Test Case '-[WatchdogCoreTests.ParsingTests testCurrencyNormalizer]' started.
+Test Case '-[WatchdogCoreTests.ParsingTests testCurrencyNormalizer]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ParsingTests testDayKeyMath]' started.
+Test Case '-[WatchdogCoreTests.ParsingTests testDayKeyMath]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ParsingTests testDays]' started.
+Test Case '-[WatchdogCoreTests.ParsingTests testDays]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ParsingTests testISIN]' started.
+Test Case '-[WatchdogCoreTests.ParsingTests testISIN]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ParsingTests testNumbers]' started.
+Test Case '-[WatchdogCoreTests.ParsingTests testNumbers]' passed (0.000 seconds).
+Test Suite 'ParsingTests' passed at 2026-10-20 20:41:49.232.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'PlausibilityTests' started at 2026-10-20 20:41:49.232.
+Test Case '-[WatchdogCoreTests.PlausibilityTests testConfirmedJump]' started.
+Test Case '-[WatchdogCoreTests.PlausibilityTests testConfirmedJump]' passed (0.005 seconds).
+Test Case '-[WatchdogCoreTests.PlausibilityTests testNormalMoveNeedsNoConfirmation]' started.
+Test Case '-[WatchdogCoreTests.PlausibilityTests testNormalMoveNeedsNoConfirmation]' passed (0.005 seconds).
+Test Case '-[WatchdogCoreTests.PlausibilityTests testSuspectQuoteDoesNotFireCrossing]' started.
+Test Case '-[WatchdogCoreTests.PlausibilityTests testSuspectQuoteDoesNotFireCrossing]' passed (0.002 seconds).
+Test Case '-[WatchdogCoreTests.PlausibilityTests testUnconfirmedJumpIsSuspect]' started.
+Test Case '-[WatchdogCoreTests.PlausibilityTests testUnconfirmedJumpIsSuspect]' passed (0.005 seconds).
+Test Case '-[WatchdogCoreTests.PlausibilityTests testWrongTickIsReplaced]' started.
+Test Case '-[WatchdogCoreTests.PlausibilityTests testWrongTickIsReplaced]' passed (0.005 seconds).
+Test Suite 'PlausibilityTests' passed at 2026-10-20 20:41:49.255.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.023 (0.023) seconds
+Test Suite 'ResolverCurrencyTests' started at 2026-10-20 20:41:49.255.
+Test Case '-[WatchdogCoreTests.ResolverCurrencyTests testUSDPurchasePrefersHomeVenue]' started.
+Test Case '-[WatchdogCoreTests.ResolverCurrencyTests testUSDPurchasePrefersHomeVenue]' passed (0.000 seconds).
+Test Suite 'ResolverCurrencyTests' passed at 2026-10-20 20:41:49.255.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'ResolverTests' started at 2026-10-20 20:41:49.255.
+Test Case '-[WatchdogCoreTests.ResolverTests testExactVenue]' started.
+Test Case '-[WatchdogCoreTests.ResolverTests testExactVenue]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ResolverTests testFallsBackToGermanVenue]' started.
+Test Case '-[WatchdogCoreTests.ResolverTests testFallsBackToGermanVenue]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ResolverTests testISINMismatchIsRejected]' started.
+Test Case '-[WatchdogCoreTests.ResolverTests testISINMismatchIsRejected]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.ResolverTests testNameSearchDoesNotTakeAnotherCompany]' started.
+Test Case '-[WatchdogCoreTests.ResolverTests testNameSearchDoesNotTakeAnotherCompany]' passed (0.001 seconds).
+Test Suite 'ResolverTests' passed at 2026-10-20 20:41:49.257.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'TickerMergeTests' started at 2026-10-20 20:41:49.257.
+Test Case '-[WatchdogCoreTests.TickerMergeTests testSplitNamesAreMergedForTicker]' started.
+Test Case '-[WatchdogCoreTests.TickerMergeTests testSplitNamesAreMergedForTicker]' passed (0.000 seconds).
+Test Case '-[WatchdogCoreTests.TickerMergeTests testTinyPricesKeepDigits]' started.
+Test Case '-[WatchdogCoreTests.TickerMergeTests testTinyPricesKeepDigits]' passed (0.000 seconds).
+Test Suite 'TickerMergeTests' passed at 2026-10-20 20:41:49.258.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'WatchdogCorePackageTests.xctest' passed at 2026-10-20 20:41:49.258.
+	 Executed 70 tests, with 0 failures (0 unexpected) in 0.904 (0.908) seconds
+Test Suite 'All tests' passed at 2026-10-20 20:41:49.258.
+	 Executed 70 tests, with 0 failures (0 unexpected) in 0.904 (0.911) seconds
+◇ Test run started.
+↳ Testing Library Version: 124.4
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests passed after 0.001 seconds.

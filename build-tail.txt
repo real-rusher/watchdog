@@ -1,0 +1,30 @@
+    cd /Users/runner/work/watchdog/watchdog/App
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app/Contents/MacOS/Watchdog -o /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app.dSYM
+
+CodeSign /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app (in target 'Watchdog' from project 'Watchdog')
+    cd /Users/runner/work/watchdog/watchdog/App
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --entitlements /Users/runner/work/watchdog/watchdog/build/dd/Build/Intermediates.noindex/Watchdog.build/Release/Watchdog.build/Watchdog.app.xcent --timestamp\=none --generate-entitlement-der /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app
+
+RegisterExecutionPolicyException /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app (in target 'Watchdog' from project 'Watchdog')
+    cd /Users/runner/work/watchdog/watchdog/App
+    builtin-RegisterExecutionPolicyException /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app
+
+Validate /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app (in target 'Watchdog' from project 'Watchdog')
+    cd /Users/runner/work/watchdog/watchdog/App
+    builtin-validationUtility /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+Touch /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app (in target 'Watchdog' from project 'Watchdog')
+    cd /Users/runner/work/watchdog/watchdog/App
+    /usr/bin/touch -c /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app
+
+RegisterWithLaunchServices /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app (in target 'Watchdog' from project 'Watchdog')
+    cd /Users/runner/work/watchdog/watchdog/App
+    /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /Users/runner/work/watchdog/watchdog/build/dd/Build/Products/Release/Watchdog.app
+
+note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-Owholemodule, expected -Onone (in target 'WatchdogCore' from project 'WatchdogCore')
+note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'Watchdog' from project 'Watchdog')
+** BUILD SUCCEEDED **
+

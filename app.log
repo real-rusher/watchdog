@@ -1,0 +1,23 @@
+total 6264
+drwxr-xr-x  22 runner  staff     704 Oct 20 20:44 .
+drwxr-xr-x  11 runner  staff     352 Oct 20 20:43 ..
+-rw-r--r--   1 runner  staff  210600 Oct 20 20:43 1-main-dark.png
+-rw-r--r--   1 runner  staff  208401 Oct 20 20:43 1-main-light.png
+-rw-r--r--   1 runner  staff  278118 Oct 20 20:43 2-detail-dark.png
+-rw-r--r--   1 runner  staff  275855 Oct 20 20:43 2-detail-light.png
+-rw-r--r--   1 runner  staff  278684 Oct 20 20:44 2b-toyota-euro.png
+-rw-r--r--   1 runner  staff  279212 Oct 20 20:44 2c-toyota-yen.png
+-rw-r--r--   1 runner  staff  199159 Oct 20 20:44 3-themes-dark.png
+-rw-r--r--   1 runner  staff  136769 Oct 20 20:44 4-narrow-light.png
+-rw-r--r--   1 runner  staff   84629 Oct 20 20:44 5-add-light.png
+-rw-r--r--   1 runner  staff  133389 Oct 20 20:44 6-settings-exchanges.png
+-rw-r--r--   1 runner  staff   83615 Oct 20 20:44 6-settings-notifications.png
+-rw-r--r--   1 runner  staff   79734 Oct 20 20:44 6-settings-signals.png
+-rw-r--r--   1 runner  staff  112631 Oct 20 20:44 6-settings-sources.png
+-rw-r--r--   1 runner  staff  283846 Oct 20 20:44 7-outage-light.png
+-rw-r--r--   1 runner  staff  204564 Oct 20 20:44 8-after-import.png
+-rw-r--r--   1 runner  staff   56300 Oct 20 20:44 8-import-empty.png
+-rw-r--r--   1 runner  staff   39695 Oct 20 20:44 8-import-result.png
+-rw-r--r--   1 runner  staff  110818 Oct 20 20:44 8-import-xlsx-dark.png
+-rw-r--r--   1 runner  staff  106397 Oct 20 20:44 8-import-xlsx.png
+-rw-r--r--@  1 runner  staff    6850 Oct 20 20:44 snapshot-log.txt

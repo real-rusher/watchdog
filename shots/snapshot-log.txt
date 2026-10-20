@@ -1,0 +1,85 @@
+snapshot start 2026-10-20 20:43:37 +0000 stress=false
+refresh done: Optional(13) quotes, failures Optional(0)
+Cameco | Kurs 71,68 € | Wert 8.601,60 € | heute -0,6 % | seit Kauf +394 % | 1.1. -9,5 % | 30T -10,1 % | Ampel red
+Paladin Energy | Kurs 4,50 € | (7,22 AUD) | Wert 1.800,16 € | heute -0,8 % | seit Kauf +11,1 % | 1.1. -17,5 % | 30T -26,3 % | Ampel red
+NexGen Energy | Kurs 7,535 € | (11,90 CAD) | Wert 3.390,74 € | heute -0,7 % | seit Kauf +54,8 % | 1.1. -4,0 % | 30T -7,5 % | Ampel red
+Yellow Cake | Kurs 6,205 € | (5,21 £) | Wert 1.551,15 € | heute -0,5 % | seit Kauf -12,9 % | 1.1. -8,5 % | 30T -5,4 % | Ampel red
+Skyharbour Resources | Kurs 0,214 € | (0,338 CAD) | Wert - | heute -3,4 % | seit Kauf - | 1.1. -16,0 % | 30T -18,2 % | Ampel red
+Equinor | Kurs 40,44 € | (427,30 NOK) | Wert 3.235,59 € | heute -1,9 % | seit Kauf +252 % | 1.1. +102 % | 30T +4,3 % | Ampel green
+TotalEnergies | Kurs 79,94 € | Wert 3.197,60 € | heute -0,7 % | seit Kauf +56,0 % | 1.1. +43,8 % | 30T +0,8 % | Ampel green
+Eni | Kurs 25,94 € | Wert 3.891,75 € | heute -0,7 % | seit Kauf +99,6 % | 1.1. +60,7 % | 30T +8,3 % | Ampel green
+Newmont | Kurs 103,94 € | (116,81 $) | Wert 10.394,20 € | heute -1,1 % | seit Kauf +566 % | 1.1. +22,3 % | 30T -3,5 % | Ampel green frisch
+Toyota Motor | Kurs 17,45 € | (3.102,00 ¥) | Wert 1.745,42 € | heute -0,1 % | seit Kauf +51,8 % | 1.1. -4,6 % | 30T +4,4 % | Ampel red
+SAP | Kurs 201,55 € | Wert 5.038,75 € | heute +0,9 % | seit Kauf +112 % | 1.1. -3,3 % | 30T +10,1 % | Ampel green
+Nestlé | Kurs 89,70 € | (83,11 CHF) | Wert - | heute +0,6 % | seit Kauf - | 1.1. +5,9 % | 30T +11,3 % | Ampel green frisch
+Bitcoin | Kurs 73.649,23 € | (82.767,00 $) | Wert 11.047,38 € | heute +0,8 % | seit Kauf +360 % | 1.1. -1,3 % | 30T +4,0 % | Ampel green
+screen (0.0, 59.0, 1024.0, 684.0), scroller legacy=true
+captured 1-main-light 1500x684
+captured 2-detail-light 1500x684
+captured 1-main-dark 1500x684
+captured 2-detail-dark 1500x684
+captured 2b-toyota-euro 1500x684
+captured 2c-toyota-yen 1500x684
+TOYOTA Kurs 3.102,00 ¥ = 17,45 €, Kurs 1 € = 177.7220 JPY, live true
+LIVEFX AUD 1 € = 1.6043 (2026-10-20 20:43:45 +0000)
+LIVEFX CAD 1 € = 1.5793 (2026-10-20 20:43:46 +0000)
+LIVEFX CHF 1 € = 0.9265 (2026-10-20 20:43:46 +0000)
+LIVEFX GBP 1 € = 0.8397 (2026-10-20 20:43:46 +0000)
+LIVEFX JPY 1 € = 177.7220 (2026-10-20 20:43:47 +0000)
+LIVEFX NOK 1 € = 10.5650 (2026-10-20 20:43:47 +0000)
+LIVEFX USD 1 € = 1.1238 (2026-10-20 20:43:25 +0000)
+captured 7-outage-light 1500x684
+captured 3-themes-dark 1500x684
+captured 4-narrow-light 760x684
+captured 5-add-light 620x644
+captured 6-settings-sources 760x680
+captured 6-settings-signals 760x680
+captured 6-settings-notifications 760x680
+captured 6-settings-exchanges 760x680
+IMPORT depot_openpyxl.xlsx: Blatt Depot, Spalten Wertpapier=Name, ISIN=ISIN, WKN=WKN, Stück=Stück, Kaufkurs in EUR=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Börse=Börse, Depot=Bank/Depot, Thema=Thema, Notiz=Notiz
+   Cameco Corp. [CA13321L1085] 150 Stk, 2.976,00 € => Tradegate CJ6
+   Toyota Motor Corp. [JP3633400001] 100 Stk, 1.150,00 € => Tokio 7203
+   Equinor ASA [NO0010096985] 12,145 Stk, 287,84 € => Euronext Oslo EQNR
+   Kazatomprom GDR [US63253R2013] - Stk, ohne Preis => London KAP.IL
+IMPORT depot_libreoffice.xlsx: Blatt Depot, Spalten Wertpapier=Name, ISIN=ISIN, WKN=WKN, Stück=Stück, Kaufkurs in EUR=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Börse=Börse, Depot=Bank/Depot, Thema=Thema, Notiz=Notiz
+   Cameco Corp. [CA13321L1085] 150 Stk, 2.976,00 € => Tradegate CJ6
+   Toyota Motor Corp. [JP3633400001] 100 Stk, 1.150,00 € => Tokio 7203
+   Equinor ASA [NO0010096985] 12,145 Stk, 287,84 € => Euronext Oslo EQNR
+   Kazatomprom GDR [US63253R2013] - Stk, ohne Preis => London KAP.IL
+IMPORT depot.ods: Blatt Depot, Spalten Wertpapier=Name, ISIN=ISIN, WKN=WKN, Stück=Stück, Kaufkurs in EUR=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Börse=Börse, Depot=Bank/Depot, Thema=Thema, Notiz=Notiz
+   Cameco Corp. [CA13321L1085] 150 Stk, 2.976,00 € => Tradegate CJ6
+   Toyota Motor Corp. [JP3633400001] 100 Stk, 1.150,00 € => Tokio 7203
+   Equinor ASA [NO0010096985] 12,145 Stk, 287,84 € => Euronext Oslo EQNR
+   Kazatomprom GDR [US63253R2013] - Stk, ohne Preis => London KAP.IL
+IMPORT comdirect_umsaetze.csv: Blatt comdirect_umsaetze.csv, Spalten Buchungstag=Nicht verwenden, Geschäftstag=Kaufdatum, Stück / Nom.=Stück, Bezeichnung=Name, WKN=WKN, Währung=Währung, Ausführungskurs=Kaufkurs pro Stück, Umsatz in EUR=Kaufwert gesamt
+   UBS-ETF-MSCI WLD.S.R.DLAD [A1JA1R] 2,5 Stk, 249,96 € => Tradegate UIMM
+   UBS-ETF-MSCI E.MA.S.R.ADL [A110QD] 12,145 Stk, 150,00 € => Tradegate UEF5
+   CAMECO CORP. [882017] 100 Stk, 2.251,00 € => Tradegate CJ6
+   Müller Hdl. AG [A0LDTA] 10 Stk, 10.205,00 € => NICHT GEFUNDEN: Kein eindeutiger Treffer, bitte von Hand hinzufügen
+IMPORT excel_unicode.txt: Blatt excel_unicode.txt, Spalten Name=Name, ISIN=ISIN, Anzahl=Stück, Kaufwert=Kaufwert gesamt, Kaufdatum=Kaufdatum
+   SAP SE [DE0007164600] 25 Stk, 2.380,00 € => Tradegate SAP
+   Nestlé S.A. [CH0038863350] 10 Stk, 1.050,00 € => Tradegate NESR
+IMPORT mac_roman.csv: Blatt mac_roman.csv, Spalten Bezeichnung=Name, ISIN=ISIN, Stück=Stück, Kaufkurs=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Thema=Thema
+   Nestlé [CH0038863350] 10 Stk, 1.050,00 € => Tradegate NESR
+   Österreichische Post [AT0000APOST4] 40 Stk, 1.260,00 € => Tradegate O3P
+IMPORT english_broker.csv: Blatt english_broker.csv, Spalten Symbol=Kürzel, Description=Name, Quantity=Stück, Cost Basis=Kaufwert gesamt, Date Acquired=Kaufdatum, Currency=Währung
+   NEWMONT CORP [NEM] 100 Stk, 1.712,40 $ => Tradegate NEM
+   CAMECO CORP [CCJ] 1.200 Stk, 17.880,00 $ => Tradegate CJ6
+IMPORT isin_liste.txt: Blatt isin_liste.txt, Spalten Spalte 1=ISIN
+   CA13321L1085 [CA13321L1085] - Stk, ohne Preis => Tradegate CJ6
+   JP3633400001 [JP3633400001] - Stk, ohne Preis => Tradegate TOM
+   NO0010096985 [NO0010096985] - Stk, ohne Preis => Tradegate DNQ
+IMPORT namen_liste.txt: Blatt namen_liste.txt, Spalten Spalte 1=Name
+   Cameco [] - Stk, ohne Preis => Tradegate CJ6
+   Paladin Energy [] - Stk, ohne Preis => Tradegate PUR
+   NexGen Energy [] - Stk, ohne Preis => Tradegate 6NE
+IMPORT depot_alt.xls: Hinweis: Das ist eine alte Excel-Datei (.xls). Bitte in Excel über Datei > Speichern unter als Excel-Arbeitsmappe (.xlsx) oder CSV speichern.
+IMPORT gesamt: 27 von 28 gefunden
+captured 8-import-xlsx 880x644
+captured 8-import-xlsx-dark 880x644
+captured 8-import-result 880x644
+IMPORT übernommen: 1 neue Positionen, ergänzt: ["Cameco Corp.", "Toyota Motor Corp.", "Equinor ASA"], nicht gefunden: []
+NEU Kazatomprom GDR XLON KAP.IL: Kurs 54,45 €, Wert -, seit Kauf -, Käufe 0
+captured 8-after-import 1500x684
+captured 8-import-empty 880x644
+done
