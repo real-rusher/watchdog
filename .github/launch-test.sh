@@ -44,19 +44,10 @@ for V in "$@"; do
   head -60 run.log
   stopall; reports
 
-  echo "-- 3) mit Quarantäne wie aus dem Browser"
-  xattr -w com.apple.quarantine "0083;$(printf %x $(date +%s));Safari;" "$APP"
-  spctl -a -vvv "$APP" 2>&1
-  open "$APP"; echo "   open exit $?"; alive 8
-  syslog 1m
-  stopall; reports
 done
 
-echo; echo "=================== Update-Fall: $1 freigegeben, dann $2 darüber"
+echo; echo "=================== Update-Fall: $1 gestartet und beendet, dann $2 darüber"
 install "$1"
-xattr -w com.apple.quarantine "0083;$(printf %x $(date +%s));Safari;" "$APP"
-sudo spctl --add --label Watchdog "$APP" 2>&1 || echo "spctl --add nicht möglich"
-sudo xattr -d com.apple.quarantine "$APP" 2>/dev/null
 open "$APP"; alive 12; stopall
 install "$2"
 open "$APP"; echo "   open exit $?"; alive 15

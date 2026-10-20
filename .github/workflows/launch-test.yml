@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: [macos-15, macos-26]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Realistic depot in the default location
@@ -25,7 +25,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p out
-          bash .github/launch-test.sh v1.0.4 v1.0.5 > out/launch.txt 2>&1 || true
+          bash .github/launch-test.sh v1.0.5 v1.0.4 > out/launch.txt 2>&1 || true
+          bash .github/launch-test.sh v1.0.4 v1.0.5 > out/launch-update.txt 2>&1 || true
           cp run.log out/ 2>/dev/null || true
       - name: Publish results
         if: always()
