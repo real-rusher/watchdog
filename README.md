@@ -9,7 +9,8 @@ Reine Ansicht: kein Handel, keine Nachrichten, keine Verbindung zu Banken. Alles
 1. Unter [Releases](../../releases/latest) die Datei `Watchdog.dmg` laden und öffnen.
 2. Watchdog in den Ordner „Programme“ ziehen.
 3. Watchdog per Doppelklick starten. macOS meldet beim ersten Mal, dass die App nicht geprüft werden kann (sie ist noch nicht bei Apple signiert). Dann:
-   **Systemeinstellungen > Datenschutz & Sicherheit**, ganz unten bei „Watchdog wurde blockiert“ auf **Dennoch öffnen** klicken und bestätigen. Das ist nur einmal nötig.
+   **Systemeinstellungen > Datenschutz & Sicherheit**, ganz unten bei „Watchdog wurde blockiert“ auf **Dennoch öffnen** klicken und bestätigen. Das ist nach jeder neuen Version noch einmal nötig, weil jede Version neu signiert ist; der Knopf erscheint nur in der ersten Stunde nach dem Öffnungsversuch.
+   Vor dem Ersetzen einer alten Version Watchdog beenden (Menüleiste > Watchdog-Symbol > Ausschalt-Knopf), denn Watchdog läuft auch bei geschlossenem Fenster in der Menüleiste weiter.
 4. Beim ersten Start fragt macOS, ob Watchdog Mitteilungen senden und auf iCloud Drive zugreifen darf. Beides erlauben.
 
 Voraussetzung: macOS 14 Sonoma oder neuer, Apple-Silicon- oder Intel-Mac.
