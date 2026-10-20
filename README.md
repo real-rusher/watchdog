@@ -53,7 +53,14 @@ Die Linie ist der einfache gleitende Durchschnitt der letzten 200 Schlusskurse a
 
 Standard ist Yahoo Finance. Fällt Yahoo aus oder drosselt, nimmt Watchdog automatisch die nächste Quelle: OnVista (Tradegate, gettex, LS Exchange und weitere), Financial Times (Tokio, Australien, Kanada, Skandinavien und weitere), Lang & Schwarz, Tradegate, Bitfinex. Mit eigenem API-Schlüssel zusätzlich EODHD, Twelve Data, Alpha Vantage und Finnhub. Reihenfolge und erste Quelle lassen sich in der Symbolleiste und unter Einstellungen > Datenquellen ändern.
 
-Die Kurse sind echte Börsenkurse, aber keine Echtzeitkurse: je nach Börse und Quelle 15 bis 20 Minuten verzögert, bei der Financial Times nur Schlusskurse. Umgerechnet wird mit dem Referenzkurs der EZB vom jeweiligen Tag; die eigene Bank rechnet mit ihrem Kurs und Aufschlag, daher weichen Euro-Werte leicht ab.
+Die Kurse sind echte Börsenkurse, aber keine Echtzeitkurse: je nach Börse und Quelle 15 bis 20 Minuten verzögert, bei der Financial Times nur Schlusskurse.
+
+### Umrechnung in Euro
+
+- **Heutige Werte** (Kurs, Wert, Depotwert) werden mit dem aktuellen Devisenkurs umgerechnet, so wie Google oder Yahoo. Ist er nicht abrufbar, gilt der EZB-Referenzkurs; welcher Kurs verwendet wurde, steht in der Detailansicht und im Tooltip der Tabelle.
+- **Vergangene Tage** (Chart, „Seit 1.1.“, „30 Tage“, Kaufpreise in Fremdwährung) werden mit dem EZB-Referenzkurs genau dieses Tages umgerechnet.
+- **Chart**: Umschalter „in Euro“ und „in Yen“ (bzw. der jeweiligen Börsenwährung). In Börsenwährung sieht der Chart genau so aus wie an der Börse. Die 200-Tage-Linie wird in der Börsenwährung berechnet; in der Euro-Ansicht wird sie mit demselben Tageskurs umgerechnet wie der Kurs, damit Durchbrüche genau dort liegen, wo sie an der Börse passieren.
+- Die eigene Bank rechnet mit ihrem Kurs und Aufschlag; Euro-Werte können deshalb um wenige Zehntelprozent von der Bank abweichen.
 
 ### Wenn Daten ausbleiben
 

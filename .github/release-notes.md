@@ -1,13 +1,14 @@
-Watchdog 1.0.4 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
+Watchdog 1.0.5 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
-**Neu in 1.0.3 und 1.0.4**
-- **Alle Werte entfernen**: im Menü Depot und unter Einstellungen > Allgemein. Leert das Depot, zum Beispiel nach einem Import; Einstellungen, Regeln, Börsen und der Mitteilungskanal fürs iPhone bleiben erhalten. Banken und Themen können bleiben oder mit entfernt werden.
-- **Mehrere Werte auf einmal löschen**: mit ⌘-Klick oder ⇧-Klick auswählen, dann Rückschritttaste oder „Löschen …“ in der Leiste unten. Rechtsklick auf eine Bank oder ein Thema wählt oder löscht die ganze Gruppe.
-- Leeres Depot zeigt nur noch die Startseite, ohne leere Summenzeile.
-- **Rückgängig**: Nach jedem Löschen erscheint für einige Sekunden „Rückgängig“. Vorher legt Watchdog zusätzlich eine Sicherung an (Einstellungen > Allgemein > Sicherung wiederherstellen).
+**Neu in 1.0.5: Umrechnung in Euro**
+- Heutige Werte (Kurs, Wert, Depotwert) werden mit dem aktuellen Devisenkurs umgerechnet, so wie bei Google oder Yahoo. Bisher galt der EZB-Referenzkurs, der nur einmal am Tag festgelegt wird; der Unterschied lag bei etwa 0,1 bis 0,4 %.
+- Vergangene Tage im Chart, „Seit 1.1.“, „30 Tage“ und Kaufpreise in Fremdwährung werden weiter mit dem EZB-Kurs genau dieses Tages umgerechnet.
+- Chart mit Umschalter „in Euro“ und „in Yen“ (bzw. der jeweiligen Börsenwährung), dazu ein kurzer Hinweis, wie umgerechnet wurde. Im Tooltip des Charts steht der Kurs des Tages.
+- Detailansicht und Tooltip der Tabelle nennen den verwendeten Devisenkurs mit Uhrzeit.
+- Kurse unter 10 € mit drei Nachkommastellen, wie an der Börse notiert (zum Beispiel 6,205 €).
 
-**Aus 1.0.2**
-- Import neu (Excel, LibreOffice, CSV, Bankexporte), Tabelle ohne Verschiebungen und Überlappungen, Käufe ohne Preis zählen nicht mehr als Gewinn.
+**Aus 1.0.3 und 1.0.4**
+- Alle Werte entfernen, Mehrfachauswahl zum Löschen, Rückgängig.
 
 **Installation**
 1. `Watchdog.dmg` laden, öffnen und Watchdog in „Programme“ ziehen (die alte Version ersetzen).
