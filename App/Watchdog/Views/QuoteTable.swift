@@ -123,9 +123,11 @@ struct QuoteTable: View {
                 .focusable()
                 .focused($focused)
                 .focusEffectDisabled()
-                .onKeyPress(.downArrow) { move(1, sections, proxy, layoutKey); return .handled }
-                .onKeyPress(.upArrow) { move(-1, sections, proxy, layoutKey); return .handled }
-                .onKeyPress(.escape) { model.selection = nil; return .handled }
+                .onKeyPress(.downArrow) { model.clearMarks(); move(1, sections, proxy, layoutKey); return .handled }
+                .onKeyPress(.upArrow) { model.clearMarks(); move(-1, sections, proxy, layoutKey); return .handled }
+                .onKeyPress(.escape) { model.selection = nil; model.clearMarks(); return .handled }
+                .onKeyPress(.delete) { model.requestDeleteSelection(); return .handled }
+                .onKeyPress(.deleteForward) { model.requestDeleteSelection(); return .handled }
                 .onKeyPress(.return) {
                     if let id = model.selection { model.editor = .edit(id) }
                     return .handled
@@ -272,6 +274,16 @@ struct SectionHeaderRow: View {
         .overlay(alignment: .bottom) { Rectangle().fill(Palette.rule).frame(height: 1) }
         .contentShape(Rectangle())
         .onTapGesture { withAnimation(.easeOut(duration: 0.15)) { model.toggleSection(section.id) } }
+        .contextMenu {
+            let ids = Set(section.rows.map(\.id))
+            Button("Alle \(section.rows.count) Werte auswählen") {
+                model.selection = nil
+                model.marked = ids
+            }
+            Button(section.rows.count == 1 ? "Diesen Wert löschen …" : "Alle \(section.rows.count) Werte von \u{201E}\(section.title)\u{201C} löschen …", role: .destructive) {
+                model.deleteRequest = .positions(ids)
+            }
+        }
     }
 
     private func countText(_ s: TableSection) -> String {
@@ -318,7 +330,7 @@ struct QuoteRow: View {
     @State private var hover = false
 
     var body: some View {
-        let selected = model.selection == row.id
+        let selected = model.selection == row.id || model.marked.contains(row.id)
         HStack(spacing: 0) {
             ForEach(columns) { c in
                 // One line per value; long numbers shrink a little instead of wrapping into the next row.
@@ -342,16 +354,29 @@ struct QuoteRow: View {
         .overlay(alignment: .bottom) { Rectangle().fill(Palette.rule.opacity(0.6)).frame(height: 0.5) }
         .contentShape(Rectangle())
         .onHover { hover = $0 }
-        .onTapGesture { model.selection = selected ? nil : row.id }
+        .onTapGesture { model.click(row.id) }
         .simultaneousGesture(TapGesture(count: 2).onEnded {
+            model.clearMarks()
             model.selection = row.id
             model.editor = .edit(row.id)
         })
         .contextMenu {
-            Button("Bearbeiten …") { model.editor = .edit(row.id) }
-            Button("Daten neu laden") { model.reloadData(for: row.id) }
-            Divider()
-            Button("Löschen", role: .destructive) { model.delete(row.id) }
+            if model.marked.count > 1 && model.marked.contains(row.id) {
+                Button("\(model.marked.count) ausgewählte Werte löschen …", role: .destructive) { model.deleteRequest = .positions(model.marked) }
+                Button("Auswahl aufheben") { model.clearMarks() }
+            } else {
+                Button("Bearbeiten …") { model.editor = .edit(row.id) }
+                Button("Daten neu laden") { model.reloadData(for: row.id) }
+                Button(model.marked.contains(row.id) ? "Aus der Auswahl nehmen" : "Zur Auswahl hinzufügen (\u{2318}-Klick)") {
+                    if model.marked.contains(row.id) { model.marked.remove(row.id) } else {
+                        if let s = model.selection { model.marked.insert(s) }
+                        model.marked.insert(row.id)
+                        model.selection = nil
+                    }
+                }
+                Divider()
+                Button("Löschen", role: .destructive) { model.delete(row.id) }
+            }
         }
         .help(helpText)
     }

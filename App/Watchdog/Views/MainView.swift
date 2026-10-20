@@ -56,13 +56,54 @@ struct MainView: View {
                 .environment(\.locale, WatchdogApp.german)
         }
         .overlay(alignment: .bottom) {
-            if let n = model.notice {
-                NoticeBanner(text: n) { model.notice = nil }
-                    .padding(.bottom, 18)
+            VStack(spacing: 10) {
+                if !model.marked.isEmpty { SelectionBar() }
+                if let u = model.undoText {
+                    NoticeBanner(text: u, actionTitle: "Rückgängig", action: { model.undoDelete() }, seconds: 15) { model.undoText = nil }
+                }
+                if let n = model.notice {
+                    NoticeBanner(text: n) { model.notice = nil }
+                }
             }
+            .padding(.bottom, 18)
+        }
+        .confirmationDialog(deleteTitle, isPresented: Binding(get: { model.deleteRequest != nil }, set: { if !$0 { model.deleteRequest = nil } }),
+                            titleVisibility: .visible, presenting: model.deleteRequest) { req in
+            switch req {
+            case .positions(let ids):
+                Button(ids.count == 1 ? "Löschen" : "\(ids.count) Werte löschen", role: .destructive) { model.remove(ids) }
+            case .all:
+                Button("Alle Werte entfernen", role: .destructive) { model.removeAll(keepGroups: true) }
+                Button("Werte, Banken und Themen entfernen", role: .destructive) { model.removeAll(keepGroups: false) }
+            }
+            Button("Abbrechen", role: .cancel) {}
+        } message: { req in
+            Text(deleteMessage(req))
         }
         .animation(.easeOut(duration: 0.18), value: model.selection)
         .onChange(of: model.settingsRequest) { _, _ in openSettings() }
+    }
+
+    private var deleteTitle: String {
+        switch model.deleteRequest {
+        case .positions(let ids)?:
+            if ids.count == 1, let p = model.position(ids.first) { return "\(p.name) löschen?" }
+            return "\(ids.count) Werte löschen?"
+        case .all?: return "Alle \(model.depot.positions.count) Werte entfernen?"
+        case nil: return ""
+        }
+    }
+
+    private func deleteMessage(_ req: DeleteRequest) -> String {
+        let undo = "Direkt danach lässt sich das mit \u{201E}Rückgängig\u{201C} zurücknehmen; außerdem legt Watchdog vorher eine Sicherung an (Einstellungen > Allgemein)."
+        switch req {
+        case .positions(let ids):
+            let names = model.depot.positions.filter { ids.contains($0.id) }.map(\.name)
+            let list = names.prefix(6).joined(separator: ", ") + (names.count > 6 ? " und \(names.count - 6) weitere" : "")
+            return "Die Werte und ihre Käufe werden entfernt: \(list). " + undo
+        case .all:
+            return "Das Depot wird leer. Einstellungen, Regeln, Börsen und der Mitteilungskanal fürs iPhone bleiben erhalten. Banken und Themen können bleiben (praktisch zum neu Eintragen) oder mit entfernt werden. " + undo
+        }
     }
 
     private func detailWidth(_ total: CGFloat) -> CGFloat {
@@ -160,12 +201,18 @@ struct SourceMenu: View {
 
 struct NoticeBanner: View {
     var text: String
+    var actionTitle: String? = nil
+    var action: (() -> Void)? = nil
+    var seconds: Double = 7
     var close: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
             Text(text).type(13).foregroundStyle(Palette.ink).lineLimit(3)
-            Button("OK", action: close).buttonStyle(.borderless).type(13, .semibold)
+            if let t = actionTitle, let action {
+                Button(t, action: action).buttonStyle(.borderless).type(13, .semibold)
+            }
+            Button("OK", action: close).buttonStyle(.borderless).type(13, actionTitle == nil ? .semibold : .regular)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -173,8 +220,8 @@ struct NoticeBanner: View {
         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Palette.rule))
         .overlay(alignment: .leading) { Rectangle().fill(Palette.signal).frame(width: 4).clipShape(RoundedRectangle(cornerRadius: 2)).padding(.vertical, 6) }
         .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
-        .task {
-            try? await Task.sleep(nanoseconds: 7_000_000_000)
+        .task(id: text) {
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
             close()
         }
     }
@@ -208,5 +255,36 @@ struct EmptyDepotView: View {
         }
         .padding(48)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+}
+
+/// Shown while several rows are selected (⌘ or ⇧ click).
+struct SelectionBar: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        let n = model.marked.count
+        HStack(spacing: 14) {
+            Text(n == 1 ? "1 Wert ausgewählt" : "\(n) Werte ausgewählt").type(13, .semibold).foregroundStyle(Palette.ink)
+            Button("Alle sichtbaren auswählen") {
+                model.selection = nil
+                model.marked = Set(model.visibleOrder)
+            }
+            .buttonStyle(.borderless).type(13)
+            Button("Auswahl aufheben") { model.clearMarks() }
+                .buttonStyle(.borderless).type(13)
+            Button(role: .destructive) {
+                model.deleteRequest = .positions(model.marked)
+            } label: {
+                Text("Löschen …").type(13, .semibold).foregroundStyle(Palette.down)
+            }
+            .buttonStyle(.borderless)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Palette.rule))
+        .overlay(alignment: .leading) { Rectangle().fill(Palette.signal).frame(width: 4).clipShape(RoundedRectangle(cornerRadius: 2)).padding(.vertical, 6) }
+        .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
     }
 }

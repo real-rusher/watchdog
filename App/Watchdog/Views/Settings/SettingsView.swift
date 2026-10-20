@@ -24,9 +24,31 @@ struct GeneralSettings: View {
     @State private var loginError: String?
     @State private var pickFolder = false
     @State private var pickFile = false
+    @State private var confirmRemoveAll = false
 
     var body: some View {
         Form {
+            Section("Depot") {
+                LabeledContent("Im Depot") {
+                    Text(model.depot.positions.count == 1 ? "1 Wert" : "\(model.depot.positions.count) Werte").foregroundStyle(Palette.inkSoft)
+                }
+                HStack {
+                    Button("Alle Werte entfernen …", role: .destructive) { confirmRemoveAll = true }
+                        .disabled(model.depot.positions.isEmpty)
+                    if model.undoText != nil {
+                        Button("Rückgängig") { model.undoDelete() }
+                    }
+                }
+                Text("Leert das Depot, zum Beispiel nach einem Import, um neu anzufangen. Einstellungen, Regeln, Börsen und der Mitteilungskanal fürs iPhone bleiben erhalten. Einzelne oder mehrere Werte löscht man in der Tabelle: mit \u{2318}-Klick oder \u{21E7}-Klick auswählen, dann die Rückschritttaste.")
+                    .type(12).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            }
+            .confirmationDialog("Alle \(model.depot.positions.count) Werte entfernen?", isPresented: $confirmRemoveAll, titleVisibility: .visible) {
+                Button("Alle Werte entfernen", role: .destructive) { model.removeAll(keepGroups: true) }
+                Button("Werte, Banken und Themen entfernen", role: .destructive) { model.removeAll(keepGroups: false) }
+                Button("Abbrechen", role: .cancel) {}
+            } message: {
+                Text("Das Depot wird leer. Einstellungen, Regeln und der Mitteilungskanal bleiben. Vorher wird eine Sicherung angelegt, und direkt danach geht \u{201E}Rückgängig\u{201C}.")
+            }
             Section("Speicherort") {
                 LabeledContent("Depotdatei") {
                     Text(model.storagePath).type(12).foregroundStyle(Palette.inkSoft).textSelection(.enabled).lineLimit(3)

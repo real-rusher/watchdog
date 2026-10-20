@@ -20,6 +20,7 @@ Voraussetzung: macOS 14 Sonoma oder neuer, Apple-Silicon- oder Intel-Mac.
 - **Wertpapier hinzufügen** (⌘N): ISIN, WKN, Name oder Kürzel eintippen, Börse aus der Trefferliste wählen, Käufe mit Datum, Stück und Preis in Euro eintragen. Ohne Kauf wird der Wert nur beobachtet.
 - **Importieren** (⌘I): Datei in das Fenster ziehen oder öffnen, oder eine Tabelle aus Excel/Numbers kopieren und einfügen. Mehr dazu unter „Import“.
 - Oben links umschalten zwischen **Banken**, **Themen** (z. B. Uran, Öl, Gold) und **Liste**.
+- **Löschen**: Rechtsklick auf einen Wert > Löschen. Mehrere Werte mit ⌘-Klick oder ⇧-Klick auswählen und die Rückschritttaste drücken; Rechtsklick auf eine Bank oder ein Thema löscht die ganze Gruppe. **Alle Werte entfernen** (Menü Depot oder Einstellungen > Allgemein) leert das Depot, Einstellungen und der iPhone-Kanal bleiben. Jedes Löschen lässt sich direkt danach mit **Rückgängig** zurücknehmen, vorher wird eine Sicherung angelegt.
 
 ## Import
 

@@ -69,6 +69,19 @@ enum AmpelFilter: Equatable {
     case stale
 }
 
+/// Asks for confirmation before values are deleted.
+enum DeleteRequest: Identifiable, Equatable {
+    case positions(Set<UUID>)
+    case all
+
+    var id: String {
+        switch self {
+        case .positions(let ids): return ids.map(\.uuidString).sorted().joined()
+        case .all: return "all"
+        }
+    }
+}
+
 enum EditorRequest: Identifiable, Equatable {
     case add(query: String?)
     case edit(UUID)
@@ -101,6 +114,13 @@ final class AppModel {
     var importSession: ImportSession?
     var showImport: Bool { importSession != nil }
     var notice: String?
+    /// Rows picked with ⌘ or ⇧ click, for deleting several values at once.
+    var marked: Set<UUID> = []
+    @ObservationIgnored private var markAnchor: UUID?
+    var deleteRequest: DeleteRequest?
+    /// Text of the "deleted, undo?" banner; the depot before the delete is kept until then.
+    var undoText: String?
+    @ObservationIgnored private var undoDepot: DepotFile?
     var lastSummary: RefreshSummary?
     var isExampleDepot = false
     /// Incremented to ask the main view to open the settings window (used by the screenshot run).
@@ -341,10 +361,84 @@ final class AppModel {
         }
     }
 
-    func delete(_ id: UUID) {
-        mutate { $0.positions.removeAll { $0.id == id } }
-        if selection == id { selection = nil }
-        Task { await engine.forget(position: id) }
+    func delete(_ id: UUID) { remove([id]) }
+
+    // MARK: Selection and deleting
+
+    /// Rows in the order they are shown (collapsed groups left out).
+    var visibleOrder: [UUID] {
+        sections.filter { !local.collapsedSections.contains($0.id) }.flatMap { $0.rows.map(\.id) }
+    }
+
+    /// Click on a row: plain click opens the detail, ⌘ adds or removes a row from the selection, ⇧ selects a range.
+    func click(_ id: UUID) {
+        let flags = NSEvent.modifierFlags
+        if flags.contains(.command) {
+            if marked.isEmpty, let s = selection, s != id { marked.insert(s) }
+            if marked.contains(id) { marked.remove(id) } else { marked.insert(id) }
+            markAnchor = id
+            selection = nil
+        } else if flags.contains(.shift), let anchor = markAnchor ?? selection {
+            let order = visibleOrder
+            if let a = order.firstIndex(of: anchor), let b = order.firstIndex(of: id) {
+                marked.formUnion(order[min(a, b)...max(a, b)])
+                selection = nil
+            }
+        } else {
+            marked = []
+            markAnchor = id
+            selection = selection == id ? nil : id
+        }
+    }
+
+    func clearMarks() {
+        marked = []
+        markAnchor = nil
+    }
+
+    /// Delete key or menu: the marked rows, else the open one.
+    func requestDeleteSelection() {
+        if !marked.isEmpty {
+            deleteRequest = .positions(marked)
+        } else if let s = selection {
+            deleteRequest = .positions([s])
+        }
+    }
+
+    /// Removes values; until the next delete the previous depot can be restored with `undoDelete()`.
+    func remove(_ ids: Set<UUID>, keepGroups: Bool = true) {
+        let existing = ids.filter { id in depot.positions.contains { $0.id == id } }
+        guard !existing.isEmpty || !keepGroups else { return }
+        if snapshotDir == nil { store.backupNow() }
+        undoDepot = depot
+        mutate { d in
+            d.positions.removeAll { existing.contains($0.id) }
+            if !keepGroups {
+                d.banks = []
+                d.themes = []
+            }
+        }
+        if let s = selection, existing.contains(s) { selection = nil }
+        marked.subtract(existing)
+        Task { for id in existing { await engine.forget(position: id) } }
+        let n = existing.count
+        undoText = n == 0 ? "Banken und Themen entfernt." : n == 1 ? "\(depotName(existing.first)) gelöscht." : "\(n) Werte gelöscht."
+    }
+
+    func removeAll(keepGroups: Bool) {
+        remove(Set(depot.positions.map(\.id)), keepGroups: keepGroups)
+    }
+
+    func undoDelete() {
+        guard let d = undoDepot else { return }
+        undoDepot = nil
+        undoText = nil
+        mutate { $0 = d }
+        refresh(force: false)
+    }
+
+    private func depotName(_ id: UUID?) -> String {
+        undoDepot?.positions.first { $0.id == id }?.name ?? "1 Wert"
     }
 
     func reloadData(for id: UUID) {

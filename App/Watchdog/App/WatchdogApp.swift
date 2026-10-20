@@ -92,6 +92,18 @@ struct WatchdogCommands: Commands {
             Button("Kurse aktualisieren") { model.refresh(force: true) }
                 .keyboardShortcut("r")
             Divider()
+            Button("Ausgewählte Werte löschen …") {
+                openWindow(id: "main")
+                model.requestDeleteSelection()
+            }
+            .keyboardShortcut(.delete, modifiers: .command)
+            .disabled(model.marked.isEmpty && model.selection == nil)
+            Button("Alle Werte entfernen …") {
+                openWindow(id: "main")
+                model.deleteRequest = .all
+            }
+            .disabled(model.depot.positions.isEmpty)
+            Divider()
             Picker("Gruppierung", selection: Binding(get: { model.local.grouping }, set: { g in model.updateLocal { $0.grouping = g } })) {
                 ForEach(Grouping.allCases, id: \.self) { Text($0.label).tag($0) }
             }

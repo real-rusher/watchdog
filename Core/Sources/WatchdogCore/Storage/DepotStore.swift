@@ -54,6 +54,12 @@ public final class DepotStore: @unchecked Sendable {
         try data.write(to: url, options: [.atomic])
     }
 
+    /// Immediate backup of the file as it is now (before deleting many values at once).
+    public func backupNow() {
+        lastBackup = nil
+        try? backupIfDue()
+    }
+
     /// One backup per hour, the newest 60 are kept.
     private func backupIfDue() throws {
         guard exists else { return }

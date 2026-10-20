@@ -262,6 +262,47 @@ enum SnapshotRunner {
             await sleep(1)
         }
 
+        // Several rows selected, deleting them with confirmation, undo; then emptying the whole depot and undo.
+        await size(window, 1180)
+        model.selection = nil
+        let picked = Array(model.visibleOrder.prefix(4))
+        model.marked = Set(picked)
+        await sleep(1)
+        capture(window, "s-marked")
+        model.deleteRequest = .positions(Set(picked))
+        await sleep(1.5)
+        if let sheet = window.attachedSheet { capture(sheet, "s-confirm-delete") } else { capture(window, "s-confirm-delete") }
+        model.deleteRequest = nil
+        await sleep(1)
+        let before = model.depot.positions.count
+        model.remove(Set(picked))
+        await sleep(1.2)
+        capture(window, "s-deleted-undo")
+        note("DELETE marked: \(before) -> \(model.depot.positions.count), banner: \(model.undoText ?? "-")")
+        model.undoDelete()
+        await sleep(1)
+        note("UNDO: \(model.depot.positions.count) Werte")
+        model.deleteRequest = .all
+        await sleep(1.5)
+        if let sheet = window.attachedSheet { capture(sheet, "s-confirm-all") } else { capture(window, "s-confirm-all") }
+        model.deleteRequest = nil
+        await sleep(1)
+        model.removeAll(keepGroups: true)
+        await sleep(1.5)
+        capture(window, "s-all-removed")
+        note("ALL removed: \(model.depot.positions.count) Werte, \(model.depot.banks.count) Banken, \(model.depot.themes.count) Themen")
+        model.undoDelete()
+        await sleep(1.5)
+        note("UNDO ALL: \(model.depot.positions.count) Werte, \(model.depot.banks.count) Banken")
+        UserDefaults.standard.set("general", forKey: "settingsTab")
+        model.settingsRequest += 1
+        await sleep(1.8)
+        if let w = NSApp.windows.first(where: { $0.isVisible && $0 !== window && $0.frame.width > 500 && !($0.className.contains("StatusBar")) }) {
+            capture(w, "s-settings-general")
+            w.close()
+        }
+        window.makeKeyAndOrderFront(nil)
+
         // Narrow window: detail opens as a sheet.
         await size(window, 760)
         model.selection = model.depot.positions.first { $0.name.hasPrefix("Berkshire") }?.id

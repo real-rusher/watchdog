@@ -1,19 +1,15 @@
-Watchdog 1.0.2 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
+Watchdog 1.0.3 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
-**Neu in 1.0.2**
-- Import neu gebaut: Excel (.xlsx), LibreOffice (.ods), CSV und Text in allen gängigen Zeichensätzen, Bankexporte mit Vorspann, deutsche und englische Zahlen- und Datumsformate. Datei einfach in das Fenster ziehen.
-- Die Suche nach Handelsplätzen startet automatisch; wird ein Wert an der gewählten Börse nicht gehandelt, wird ein passender anderer Handelsplatz vorgeschlagen und lässt sich je Zeile ändern.
-- Mehrere Kaufzeilen eines Werts werden zu einer Position mit mehreren Käufen, Verkäufe werden abgezogen, Fremdwährung zum EZB-Kurs umgerechnet, vorhandene Werte nicht doppelt angelegt.
-- Tabelle: Spaltenköpfe und Werte stehen jetzt immer exakt untereinander, auch mit dauerhaft sichtbarer Scrollleiste (Maus angeschlossen). Werte bleiben einzeilig und überlappen nicht mehr.
-- Käufe ohne Kaufpreis zählen nicht mehr als Gewinn; „Seit Kauf“ bleibt dort leer.
-- Detailansicht passt sich schmalen Fenstern besser an.
+**Neu in 1.0.3**
+- **Alle Werte entfernen**: im Menü Depot und unter Einstellungen > Allgemein. Leert das Depot, zum Beispiel nach einem Import; Einstellungen, Regeln, Börsen und der Mitteilungskanal fürs iPhone bleiben erhalten. Banken und Themen können bleiben oder mit entfernt werden.
+- **Mehrere Werte auf einmal löschen**: mit ⌘-Klick oder ⇧-Klick auswählen, dann Rückschritttaste oder „Löschen …“ in der Leiste unten. Rechtsklick auf eine Bank oder ein Thema wählt oder löscht die ganze Gruppe.
+- **Rückgängig**: Nach jedem Löschen erscheint für einige Sekunden „Rückgängig“. Vorher legt Watchdog zusätzlich eine Sicherung an (Einstellungen > Allgemein > Sicherung wiederherstellen).
 
-**Aus 1.0.1**
-- Überwachung der Daten: Ausfälle werden markiert und gemeldet, Kurssprünge über 20 % werden bei einer zweiten Quelle gegengeprüft, freiwilliges Lebenszeichen an healthchecks.io.
+**Aus 1.0.2**
+- Import neu (Excel, LibreOffice, CSV, Bankexporte), Tabelle ohne Verschiebungen und Überlappungen, Käufe ohne Preis zählen nicht mehr als Gewinn.
 
 **Installation**
 1. `Watchdog.dmg` laden, öffnen und Watchdog in „Programme“ ziehen (die alte Version ersetzen).
 2. Watchdog starten. Erscheint der Hinweis, dass die App nicht geprüft werden kann: Systemeinstellungen > Datenschutz & Sicherheit > bei „Watchdog wurde blockiert“ auf **Dennoch öffnen** klicken. Nur beim ersten Mal nötig.
-3. Mitteilungen und Zugriff auf iCloud Drive erlauben.
 
 Depot, Einstellungen und Regeln bleiben beim Update erhalten.
