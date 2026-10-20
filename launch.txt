@@ -1,0 +1,26 @@
+ProductName:		macOS
+ProductVersion:		15.7.9
+BuildVersion:		24G830
+== 1) heruntergeladene v1.0.5 öffnen (Quarantäne von der DMG geerbt)
+com.apple.quarantine: 0083;6ad7da82;Safari;
+   => LÄUFT
+Finder, Watchdog
+“Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+2026-10-20 21:18:00.953 Df syspolicyd[254:743] [com.apple.securityd:SecError] Error checking with notarization daemon: 3
+2026-10-20 21:18:00.994 Df syspolicyd[254:743] [com.apple.securityd:SecError] Error checking with notarization daemon: 3
+2026-10-20 21:18:01.024 Df syspolicyd[254:743] [com.apple.securityd:gk] rejecting due to lack of matching active rule
+2026-10-20 21:18:01.581 Df syspolicyd[254:1355] [com.apple.syspolicy.exec:default] Fast Gatekeeper overrides are: inactive
+button 1 of window 1 of application process CoreServicesUIAgent
+== 2) Freigabe wie über Datenschutz & Sicherheit simulieren, dann öffnen
+   => LÄUFT
+== 3) v1.0.5 noch einmal heruntergeladen über die freigegebene Kopie gelegt
+com.apple.quarantine: 0083;6ad7daa1;Safari;
+   => LÄUFT
+“Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+2026-10-20 21:18:00.953 Df syspolicyd[254:743] [com.apple.securityd:SecError] Error checking with notarization daemon: 3
+2026-10-20 21:18:00.994 Df syspolicyd[254:743] [com.apple.securityd:SecError] Error checking with notarization daemon: 3
+2026-10-20 21:18:01.024 Df syspolicyd[254:743] [com.apple.securityd:gk] rejecting due to lack of matching active rule
+2026-10-20 21:18:12.393 Df CoreServicesUIAgent[327:186e] [com.apple.processmanager:front-35286506] LAUNCH: 0x0-0x28028 de.realrusher.watchdog starting stopped process.
+2026-10-20 21:18:28.603 Df syspolicyd[254:18bb] [com.apple.securityd:SecError] Error checking with notarization daemon: 51
+2026-10-20 21:18:28.646 Df syspolicyd[254:18bb] [com.apple.securityd:SecError] Error checking with notarization daemon: 3
+2026-10-20 21:18:28.695 Df syspolicyd[254:18bb] [com.apple.securityd:gk] rejecting due to lack of matching active rule
