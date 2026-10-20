@@ -47,6 +47,7 @@ final class ImportSession: Identifiable {
     @ObservationIgnored private var searchCache: [String: [SearchCandidate]] = [:]
     @ObservationIgnored private var resolveTask: Task<Void, Never>?
     @ObservationIgnored private var generation = 0
+    @ObservationIgnored private var pending: [CSVImport.Draft] = []
 
     init(model: AppModel) {
         self.model = model
@@ -143,38 +144,31 @@ final class ImportSession: Identifiable {
 
     private func resolveAll(generation gen: Int) async {
         guard let model else { return }
-        let list = drafts
+        pending = drafts
         resolving = true
         resolvedCount = 0
         let catalog = model.catalog
         let target = defaultExchange
         // Four rows at a time: fast enough for 100 values without hammering the sources.
-        var index = 0
-        await withTaskGroup(of: (UUID, ImportResolver.Outcome).self) { group in
-            func launch() {
-                guard index < list.count else { return }
-                let d = list[index]
-                index += 1
-                states[d.id] = .searching
-                group.addTask { @MainActor [weak self] in
-                    guard let self else { return (d.id, .notFound("abgebrochen")) }
+        var workers: [Task<Void, Never>] = []
+        for _ in 0..<4 {
+            workers.append(Task { @MainActor [weak self] in
+                while let self, gen == self.generation, !self.pending.isEmpty {
+                    let d = self.pending.removeFirst()
+                    self.states[d.id] = .searching
                     let outcome = await ImportResolver.resolve(d, target: target, catalog: catalog) { q in
                         await self.search(q)
                     }
-                    return (d.id, outcome)
+                    guard gen == self.generation else { return }
+                    switch outcome {
+                    case .found(let c): self.states[d.id] = .found(c)
+                    case .notFound(let m): self.states[d.id] = .notFound(m)
+                    }
+                    self.resolvedCount += 1
                 }
-            }
-            for _ in 0..<4 { launch() }
-            while let (id, outcome) = await group.next() {
-                guard gen == generation else { group.cancelAll(); return }
-                switch outcome {
-                case .found(let c): states[id] = .found(c)
-                case .notFound(let m): states[id] = .notFound(m)
-                }
-                resolvedCount += 1
-                launch()
-            }
+            })
         }
+        for w in workers { await w.value }
         if gen == generation {
             resolving = false
             resolveTask = nil

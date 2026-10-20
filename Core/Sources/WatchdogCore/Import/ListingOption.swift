@@ -157,13 +157,20 @@ public enum ImportResolver {
         if let exact = usable.first(where: { $0.exchangeID == target }) {
             return Choice(option: exact, alternatives: usable, note: nil)
         }
-        // Prefer German venues in euro (where the customer buys), then the active venues, then the rest.
+        // Bought in a foreign currency (e.g. a US broker export): the home venue in that currency fits best.
+        // Otherwise German venues in euro (where the customer buys), then the active venues, then the rest.
         let german = ["TGAT", "XETR", "XFRA", "GETX", "LSEX"]
+        let buyCurrency = d.lots.first(where: { $0.cost != nil })?.currency
+        let wantedTicker = d.ticker?.uppercased()
         func rank(_ o: ListingOption) -> Int {
             let e = catalog[o.exchangeID!]!
-            if let i = german.firstIndex(of: e.id), e.isActive { return i }
-            if e.isActive { return 10 + (catalog.all.firstIndex { $0.id == e.id } ?? 50) }
-            return 100 + (catalog.all.firstIndex { $0.id == e.id } ?? 50)
+            var r: Int
+            if let i = german.firstIndex(of: e.id), e.isActive { r = i } else if e.isActive { r = 10 + (catalog.all.firstIndex { $0.id == e.id } ?? 50) } else { r = 100 + (catalog.all.firstIndex { $0.id == e.id } ?? 50) }
+            if let c = buyCurrency, c != "EUR" {
+                if e.currency == c { r -= 1000 }
+                if let t = wantedTicker, o.ticker.uppercased() == t { r -= 500 }
+            }
+            return r
         }
         let best = usable.min { rank($0) < rank($1) }!
         let wanted = catalog[target]?.name ?? target

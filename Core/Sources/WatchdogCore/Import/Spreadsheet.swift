@@ -26,6 +26,10 @@ public enum ImportFile {
     public struct Sheet: Sendable {
         public var name: String
         public var rows: [[String]]
+        public init(name: String, rows: [[String]]) {
+            self.name = name
+            self.rows = rows
+        }
     }
 
     /// All sheets of the file (one for text files).
@@ -69,8 +73,7 @@ public enum ImportFile {
         let mac: Set<UInt8> = [0x8A, 0x9A, 0x9F, 0x80, 0x85, 0x86, 0xA7, 0xDB]
         let w = b.filter { win.contains($0) }.count
         let m = b.filter { mac.contains($0) }.count
-        if m > w, let s = String(data: data, encoding: .macOSRoman) { return s }
-        return String(data: data, encoding: .windowsCP1252) ?? String(data: data, encoding: .isoLatin1) ?? ""
+        return CodePages.decode(b, table: m > w ? CodePages.macRoman : CodePages.windows1252)
     }
 
     /// German representation of a spreadsheet number: decimal comma, no grouping, no exponent.

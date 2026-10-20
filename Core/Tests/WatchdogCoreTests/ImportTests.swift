@@ -288,3 +288,21 @@ final class DemoDataTests: XCTestCase {
         XCTAssertFalse(m("Keine Daten")?.hasData ?? false)
     }
 }
+
+final class ResolverCurrencyTests: XCTestCase {
+    func testUSDPurchasePrefersHomeVenue() {
+        let catalog = ExchangeCatalog()
+        let groups = ListingOption.build([
+            SearchCandidate(provider: .twelvedata, name: "Cameco Corp", ticker: "CCJ", symbol: "CCJ|XHAN", exchangeID: "XHAN", exchangeLabel: "Hannover"),
+            SearchCandidate(provider: .twelvedata, name: "Cameco Corp", ticker: "CCJ", symbol: "CCJ|XNYS", exchangeID: "XNYS", exchangeLabel: "NYSE"),
+            SearchCandidate(provider: .onvista, name: "Cameco Corp", ticker: "CJ6", symbol: "STOCK|1|2", exchangeID: "XFRA", exchangeLabel: "Frankfurt"),
+        ], query: "CCJ", catalog: catalog)
+        var d = CSVImport.Draft(rows: [1], name: "CAMECO CORP", isin: nil, wkn: nil, ticker: "CCJ", exchangeText: nil, exchangeID: nil,
+                                lots: [CSVImport.DraftLot(day: nil, quantity: 10, cost: 100, currency: "USD", row: 1)],
+                                bank: nil, theme: nil, note: "", issues: [], notes: [], soldOut: false, include: true)
+        let g = ImportResolver.instrument(for: d, in: groups, query: "CCJ")!
+        XCTAssertEqual(ImportResolver.choose(d, group: g, target: "TGAT", catalog: catalog)?.option.exchangeID, "XNYS")
+        d.lots[0].currency = "EUR"
+        XCTAssertEqual(ImportResolver.choose(d, group: g, target: "TGAT", catalog: catalog)?.option.exchangeID, "XFRA")
+    }
+}

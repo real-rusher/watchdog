@@ -141,7 +141,8 @@ enum ProviderUtil {
         let mins = exchange.kind == .crypto ? 0 : exchange.closes
         let comps = DateComponents(year: day.year, month: day.month, day: day.day, hour: min(23, mins / 60), minute: mins % 60)
         let d = cal.date(from: comps) ?? day.date
-        return min(d, Date())
+        // A bar of a session still running has no exact time; free sources lag about 15 minutes.
+        return d > Date() ? Date().addingTimeInterval(-15 * 60) : d
     }
 
     static func unixDate(_ t: Double) -> Date {
