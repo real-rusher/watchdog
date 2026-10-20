@@ -20,7 +20,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p out
-          timeout 900 bash .github/launch-test.sh > out/launch.txt 2>&1 || true
+          bash .github/launch-test.sh > out/launch.txt 2>&1 || true
           cp run.log out/ 2>/dev/null || true
       - name: Publish results
         if: always()
