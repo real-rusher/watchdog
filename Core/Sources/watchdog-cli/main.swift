@@ -298,6 +298,14 @@ case "venues":
         print("# OnVista \(q)")
         do { for l in try await OnVistaProvider().debugVenues(q, env: env) { print(l) } } catch { print("FEHLER \(error)") }
     }
+case "write-example":
+    // Writes a realistic depot file (example depot plus a value without purchase price) for launch tests.
+    var d = DepotFile.example()
+    d.positions.append(Position(name: "Ohne Preis AG", isin: "DE0007164600", listing: Listing(exchangeID: "XETR", ticker: "SAP"),
+                                lots: [Lot(day: DayKey.today(in: .berlin), quantity: 10, totalCostEUR: 0)]))
+    let url = URL(fileURLWithPath: args.count > 1 ? args[1] : "Watchdog.json")
+    try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    do { try DepotStore(url: url).save(d); print("geschrieben: \(url.path)") } catch { print("FEHLER \(error)") }
 case "verify":
     await verify()
 case "fxcheck":
