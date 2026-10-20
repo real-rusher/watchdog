@@ -244,3 +244,40 @@ final class HeartbeatSettingsTests: XCTestCase {
         XCTAssertEqual(back.heartbeatURL, "https://hc-ping.com/x")
     }
 }
+
+final class FXUsageTests: XCTestCase {
+    /// JPY bars with a rate that changes every day: each chart point must use its own day's rate,
+    /// today's value the live market rate.
+    func testEachDayUsesItsOwnRateAndTodayTheLiveRate() {
+        let ex = ExchangeCatalog()["XTKS"]!
+        var bars: [Bar] = []
+        var rates: [DayKey: Double] = [:]
+        var d = DayKey(iso: "2025-01-06")!
+        var i = 0
+        while bars.count < 260 {
+            if d.weekday != 1 && d.weekday != 7 {
+                bars.append(Bar(day: d, close: 3000 + Double(i)))
+                rates[d] = 1 / (150 + Double(i) * 0.1)   // EUR per JPY, different every day
+                i += 1
+            }
+            d = d.adding(days: 1)
+        }
+        let fx: FXLookup = { _, day in rates[day] }
+        let p = Position(name: "T", listing: Listing(exchangeID: "XTKS", ticker: "7203"), lots: [Lot(day: bars[0].day, quantity: 100, totalCostEUR: 1000)])
+        let live = 1 / 180.0
+        let m = Evaluator.evaluate(position: p, exchange: ex, history: bars, quote: nil, currency: "JPY", rules: RuleSet(), fx: fx, liveRate: live)
+        XCTAssertEqual(m.priceEUR!, bars.last!.close * live, accuracy: 1e-9)
+        XCTAssertTrue(m.fxLive)
+        let pts = Evaluator.chart(history: bars, quote: nil, exchange: ex, currency: "JPY", lines: [.sma(38)], from: bars[0].day, fx: fx, liveRate: live)
+        for (k, pt) in pts.enumerated().dropLast() {
+            XCTAssertEqual(pt.priceEUR, bars[k].close * rates[bars[k].day]!, accuracy: 1e-9, "day \(pt.day.iso)")
+            if let l = pt.lines[.sma(38)], let ll = pt.linesLocal[.sma(38)] { XCTAssertEqual(l, ll * rates[bars[k].day]!, accuracy: 1e-9) }
+        }
+        XCTAssertEqual(pts.last!.priceEUR, bars.last!.close * live, accuracy: 1e-9)
+        XCTAssertEqual(pts.last!.priceLocal, bars.last!.close)
+        // Without a live rate the newest ECB rate is used.
+        let m2 = Evaluator.evaluate(position: p, exchange: ex, history: bars, quote: nil, currency: "JPY", rules: RuleSet(), fx: fx)
+        XCTAssertEqual(m2.priceEUR!, bars.last!.close * rates[bars.last!.day]!, accuracy: 1e-9)
+        XCTAssertFalse(m2.fxLive)
+    }
+}

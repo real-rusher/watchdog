@@ -10,6 +10,8 @@ struct DetailView: View {
     @State private var range: ChartRange = .y1
     @State private var points: [Evaluator.ChartPoint] = []
     @State private var confirmDelete = false
+    /// Chart in the currency of the exchange instead of euro.
+    @AppStorage("chartInListingCurrency") private var chartLocal = false
 
     var body: some View {
         if let p = model.position(positionID) {
@@ -115,7 +117,17 @@ struct DetailView: View {
         var s = "Kurs von \(Format.time(t))"
         if let src = m.quoteSource { s += ", Quelle \(src.displayName)" }
         if let c = m.quoteConfirmedBy { s += ", bestätigt durch \(c.displayName)" }
-        if m.currency != "EUR", let pl = m.priceLocal { s += ", an der Börse \(Format.money(pl, m.currency))" }
+        if m.currency != "EUR", let pl = m.priceLocal {
+            s += ", an der Börse \(Format.money(pl, m.currency))"
+            if let r = m.fxRateNow, r > 0 {
+                let units = Format.number(1 / r, decimals: 4)
+                if m.fxLive, let l = model.snapshot?.liveFX[m.currency] {
+                    s += ", umgerechnet mit 1 € = \(units) \(CurrencyNormalizer.symbol(m.currency)) (Devisenkurs \(Format.time(l.time)))"
+                } else {
+                    s += ", umgerechnet mit 1 € = \(units) \(CurrencyNormalizer.symbol(m.currency)) (EZB-Referenzkurs)"
+                }
+            }
+        }
         return s
     }
 
@@ -197,6 +209,8 @@ struct DetailView: View {
     private func chartBlock(_ p: Position, _ m: PositionMetrics?) -> some View {
         let rules = model.depot.rules
         let lines = rules.chartLines.contains(rules.ampel.line) ? rules.chartLines : rules.chartLines + [rules.ampel.line]
+        let cur = m?.currency ?? "EUR"
+        let local = chartLocal && cur != "EUR"
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Picker("Zeitraum", selection: $range) {
@@ -206,11 +220,22 @@ struct DetailView: View {
                 .labelsHidden()
                 .frame(maxWidth: 260)
                 Spacer()
-                Text("in Euro").type(12).foregroundStyle(Palette.inkFaint)
+                if cur != "EUR" {
+                    Picker("Währung", selection: $chartLocal) {
+                        Text("in Euro").tag(false)
+                        Text("in \(Self.currencyName(cur))").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .fixedSize()
+                    .help("Chart in Euro oder in der Währung der Börse zeigen")
+                } else {
+                    Text("in Euro").type(12).foregroundStyle(Palette.inkFaint)
+                }
             }
             if points.count >= 2 {
                 PriceChart(points: points, lines: lines, signalLine: rules.ampel.line,
-                           averagePrice: p.isWatchOnly ? nil : p.averagePriceEUR, lots: p.lots, currency: m?.currency ?? "EUR")
+                           averagePrice: p.isWatchOnly || local ? nil : p.averagePriceEUR, lots: p.lots, currency: cur, inLocal: local)
                     .frame(height: 300 * min(scale, 1.2))
             } else {
                 RoundedRectangle(cornerRadius: 6).fill(Palette.zebra)
@@ -223,9 +248,41 @@ struct DetailView: View {
                 ForEach(Array(lines.enumerated()), id: \.element) { i, s in
                     LegendItem(color: Palette.line(s, index: i), label: s.description, width: s == rules.ampel.line ? 2.4 : 1.5)
                 }
-                if !p.isWatchOnly { LegendItem(color: Palette.inkSoft, label: "Ø Kaufkurs", width: 1, dashed: true) }
+                if !p.isWatchOnly && !local { LegendItem(color: Palette.inkSoft, label: "Ø Kaufkurs", width: 1, dashed: true) }
+            }
+            if cur != "EUR" {
+                Text(chartNote(cur, local: local, exchange: model.catalog[p.listing.exchangeID]))
+                    .type(11).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
         }
+    }
+
+    static func currencyName(_ c: String) -> String {
+        switch c {
+        case "USD": return "US-Dollar"
+        case "JPY": return "Yen"
+        case "GBP": return "Pfund"
+        case "CHF": return "Franken"
+        case "CAD": return "kanad. Dollar"
+        case "AUD": return "austral. Dollar"
+        case "NOK": return "norw. Kronen"
+        case "SEK": return "schwed. Kronen"
+        case "DKK": return "dän. Kronen"
+        default: return c
+        }
+    }
+
+    private func chartNote(_ cur: String, local: Bool, exchange: Exchange?) -> String {
+        let place = exchange.map { " an der Börse \($0.name)" } ?? ""
+        if local {
+            return "Originalkurse in \(Self.currencyName(cur))\(place), genau wie dort gehandelt. Der Kaufkurs ist in Euro erfasst und hier deshalb ausgeblendet."
+        }
+        var s = "Jeder Tag ist mit dem EZB-Referenzkurs genau dieses Tages in Euro umgerechnet"
+        if let l = model.snapshot?.liveFX[cur] {
+            s += ", der heutige Kurs mit dem aktuellen Devisenkurs (1 € = \(Format.number(l.unitsPerEUR, decimals: 4)) \(CurrencyNormalizer.symbol(cur)), \(Format.time(l.time)))"
+        }
+        s += ". Die Linien werden in \(Self.currencyName(cur)) berechnet und ebenso umgerechnet, damit Durchbrüche genau dort liegen, wo sie\(place) passieren."
+        return s
     }
 
     private func figures(_ p: Position, _ m: PositionMetrics?, _ ex: Exchange?) -> some View {

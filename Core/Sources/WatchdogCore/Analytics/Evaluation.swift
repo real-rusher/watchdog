@@ -73,6 +73,9 @@ public struct PositionMetrics: Sendable {
     public var hits: [RuleHit]
     public var historyCount: Int
     public var lastBarDay: DayKey?
+    /// Euro per unit used for the current price, and whether it is a live market rate (else the ECB reference rate).
+    public var fxRateNow: Double?
+    public var fxLive = false
     /// The live price is a large jump that no second source confirmed.
     public var quoteSuspect = false
     /// A second source confirmed a large jump.
@@ -101,6 +104,7 @@ public enum Evaluator {
                                 currency: String,
                                 rules: RuleSet,
                                 fx: FXLookup,
+                                liveRate: Double? = nil,
                                 today: DayKey = DayKey.today(in: .berlin)) -> PositionMetrics {
         let series = LiveSeries(history: history, quote: quote, timeZone: exchange.tz)
         let closes = series.closes
@@ -127,8 +131,13 @@ public enum Evaluator {
             m.quoteSuspect = quote?.suspect ?? false
             m.quoteConfirmedBy = quote?.confirmedBy
         }
-        let rateNow = eurRate(lastDay)
+        // Today's value with the current market rate when there is one (like a bank or Google would convert),
+        // all reference values of past days with the ECB rate of their own day.
+        let live = currency == "EUR" ? nil : liveRate
+        let rateNow = live ?? eurRate(lastDay)
         if let r = rateNow { m.priceEUR = price * r }
+        m.fxRateNow = currency == "EUR" ? nil : rateNow
+        m.fxLive = live != nil
 
         // Day change: against the previous session close, both converted with their own day's rate.
         var prevClose: Double?
@@ -239,11 +248,15 @@ public enum Evaluator {
         public var day: DayKey
         public var priceEUR: Double
         public var priceLocal: Double
+        /// Lines in euro (each day with its own rate) and in the listing currency.
         public var lines: [LineSpec: Double]
+        public var linesLocal: [LineSpec: Double]
+        /// Euro per unit used for this day.
+        public var rate: Double
     }
 
     public static func chart(history: [Bar], quote: Quote?, exchange: Exchange, currency: String, lines specs: [LineSpec],
-                             from: DayKey, fx: FXLookup) -> [ChartPoint] {
+                             from: DayKey, fx: FXLookup, liveRate: Double? = nil) -> [ChartPoint] {
         let series = LiveSeries(history: history, quote: quote, timeZone: exchange.tz)
         let computed = specs.map { ($0, Indicators.line($0, closes: series.closes)) }
         var out: [ChartPoint] = []
@@ -251,12 +264,20 @@ public enum Evaluator {
         var lastRate: Double? = nil
         for i in 0..<series.count where series.days[i] >= from {
             let d = series.days[i]
-            let rate = currency == "EUR" ? 1 : (fx(currency, d) ?? lastRate)
+            // Every day with the ECB rate of that day; the newest point (today's price) with the current market rate.
+            let isLast = i == series.count - 1
+            let rate = currency == "EUR" ? 1 : ((isLast ? liveRate : nil) ?? fx(currency, d) ?? lastRate)
             guard let r = rate else { continue }
             lastRate = r
             var lv: [LineSpec: Double] = [:]
-            for (spec, values) in computed { if let v = values[i] { lv[spec] = v * r } }
-            out.append(ChartPoint(day: d, priceEUR: series.closes[i] * r, priceLocal: series.closes[i], lines: lv))
+            var ll: [LineSpec: Double] = [:]
+            for (spec, values) in computed {
+                if let v = values[i] {
+                    lv[spec] = v * r
+                    ll[spec] = v
+                }
+            }
+            out.append(ChartPoint(day: d, priceEUR: series.closes[i] * r, priceLocal: series.closes[i], lines: lv, linesLocal: ll, rate: r))
         }
         return out
     }

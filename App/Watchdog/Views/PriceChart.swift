@@ -32,6 +32,8 @@ struct PriceChart: View {
     var averagePrice: Double?
     var lots: [Lot]
     var currency: String
+    /// Show the original prices of the exchange instead of euro.
+    var inLocal = false
 
     @State private var hoverIndex: Int?
 
@@ -49,7 +51,7 @@ struct PriceChart: View {
         Chart {
             ForEach(Array(lines.enumerated()), id: \.element) { idx, spec in
                 ForEach(shown, id: \.day) { p in
-                    if let v = p.lines[spec] {
+                    if let v = line(p, spec) {
                         LineMark(x: .value("Tag", p.day.date), y: .value("Wert", v), series: .value("Linie", spec.description))
                             .foregroundStyle(Palette.line(spec, index: idx))
                             .lineStyle(StrokeStyle(lineWidth: spec == signalLine ? 2.4 : 1.5, lineCap: .round, lineJoin: .round))
@@ -58,7 +60,7 @@ struct PriceChart: View {
                 }
             }
             ForEach(shown, id: \.day) { p in
-                LineMark(x: .value("Tag", p.day.date), y: .value("Wert", p.priceEUR), series: .value("Linie", "Kurs"))
+                LineMark(x: .value("Tag", p.day.date), y: .value("Wert", price(p)), series: .value("Linie", "Kurs"))
                     .foregroundStyle(Palette.priceLine)
                     .lineStyle(StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
             }
@@ -86,7 +88,7 @@ struct PriceChart: View {
                 RuleMark(x: .value("Tag", p.day.date))
                     .foregroundStyle(Palette.inkFaint.opacity(0.7))
                     .lineStyle(StrokeStyle(lineWidth: 1))
-                PointMark(x: .value("Tag", p.day.date), y: .value("Wert", p.priceEUR))
+                PointMark(x: .value("Tag", p.day.date), y: .value("Wert", price(p)))
                     .symbolSize(40)
                     .foregroundStyle(Palette.priceLine)
             }
@@ -129,11 +131,14 @@ struct PriceChart: View {
             }
         }
         .overlay(alignment: .topLeading) {
-            if let i = hoverIndex, i < points.count { HoverCard(point: points[i], lines: lines, currency: currency) }
+            if let i = hoverIndex, i < points.count { HoverCard(point: points[i], lines: lines, currency: currency, inLocal: inLocal) }
         }
     }
 
     // MARK: Data helpers
+
+    private func price(_ p: Evaluator.ChartPoint) -> Double { inLocal ? p.priceLocal : p.priceEUR }
+    private func line(_ p: Evaluator.ChartPoint, _ spec: LineSpec) -> Double? { inLocal ? p.linesLocal[spec] : p.lines[spec] }
 
     /// Long ranges are thinned for drawing; crossings are computed on the full data.
     private var thinned: [Evaluator.ChartPoint] {
@@ -145,10 +150,10 @@ struct PriceChart: View {
     }
 
     private var crossingMarkers: [Marker] {
-        let price = points.map { Optional($0.priceEUR) }
-        let line = points.map { $0.lines[signalLine] }
-        return Indicators.crossings(price, line).compactMap { c in
-            guard let v = points[c.index].lines[signalLine] else { return nil }
+        let prices = points.map { Optional(price($0)) }
+        let signal = points.map { line($0, signalLine) }
+        return Indicators.crossings(prices, signal).compactMap { c in
+            guard let v = line(points[c.index], signalLine) else { return nil }
             return Marker(id: c.index, date: points[c.index].day.date, value: v, up: c.direction == .up)
         }
     }
@@ -157,15 +162,15 @@ struct PriceChart: View {
         guard let first = points.first?.day else { return [] }
         return lots.enumerated().compactMap { i, lot in
             guard lot.day >= first, let idx = points.lastIndex(where: { $0.day <= lot.day }) else { return nil }
-            return Marker(id: i, date: points[idx].day.date, value: points[idx].priceEUR, up: true)
+            return Marker(id: i, date: points[idx].day.date, value: price(points[idx]), up: true)
         }
     }
 
     private var yDomain: ClosedRange<Double> {
         var lo = Double.greatestFiniteMagnitude, hi = -Double.greatestFiniteMagnitude
         for p in points {
-            lo = min(lo, p.priceEUR); hi = max(hi, p.priceEUR)
-            for spec in lines { if let v = p.lines[spec] { lo = min(lo, v); hi = max(hi, v) } }
+            lo = min(lo, price(p)); hi = max(hi, price(p))
+            for spec in lines { if let v = line(p, spec) { lo = min(lo, v); hi = max(hi, v) } }
         }
         if let a = averagePrice, a < hi * 1.6, a > lo * 0.6 { lo = min(lo, a); hi = max(hi, a) }
         guard lo.isFinite, hi.isFinite, hi > lo else { return 0...1 }
@@ -210,12 +215,12 @@ struct PriceChart: View {
             }
             for i in 1..<max(1, shown.count) {
                 let a = shown[i - 1], b = shown[i]
-                guard let la = a.lines[signalLine], let lb = b.lines[signalLine],
-                      let p1 = pt(a.day, a.priceEUR), let p2 = pt(b.day, b.priceEUR),
+                guard let la = line(a, signalLine), let lb = line(b, signalLine),
+                      let p1 = pt(a.day, price(a)), let p2 = pt(b.day, price(b)),
                       let q1 = pt(a.day, la), let q2 = pt(b.day, lb) else { continue }
                 var path = Path()
                 path.move(to: p1); path.addLine(to: p2); path.addLine(to: q2); path.addLine(to: q1); path.closeSubpath()
-                let above = (a.priceEUR + b.priceEUR) >= (la + lb)
+                let above = (price(a) + price(b)) >= (la + lb)
                 ctx.fill(path, with: .color(above ? Palette.up.opacity(0.10) : Palette.down.opacity(0.13)))
             }
         }
@@ -226,19 +231,21 @@ private struct HoverCard: View {
     var point: Evaluator.ChartPoint
     var lines: [LineSpec]
     var currency: String
+    var inLocal: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(Format.day(point.day)).type(11, .semibold).foregroundStyle(Palette.inkSoft)
-            Text(Format.eur(point.priceEUR)).type(15, .semibold).foregroundStyle(Palette.ink)
+            Text(inLocal ? Format.money(point.priceLocal, currency) : Format.eur(point.priceEUR)).type(15, .semibold).foregroundStyle(Palette.ink)
             if currency != "EUR" {
-                Text(Format.money(point.priceLocal, currency)).type(11).foregroundStyle(Palette.inkSoft)
+                Text(inLocal ? Format.eur(point.priceEUR) : Format.money(point.priceLocal, currency)).type(11).foregroundStyle(Palette.inkSoft)
+                Text("1 € = \(Format.number(1 / point.rate, decimals: 4)) \(CurrencyNormalizer.symbol(currency))").type(11).foregroundStyle(Palette.inkFaint)
             }
             ForEach(Array(lines.enumerated()), id: \.element) { i, spec in
-                if let v = point.lines[spec] {
+                if let v = inLocal ? point.linesLocal[spec] : point.lines[spec] {
                     HStack(spacing: 5) {
                         RoundedRectangle(cornerRadius: 1).fill(Palette.line(spec, index: i)).frame(width: 10, height: 3)
-                        Text("\(spec.shortLabel) \(Format.eur(v))").type(11).foregroundStyle(Palette.ink)
+                        Text("\(spec.shortLabel) \(inLocal ? Format.money(v, currency) : Format.eur(v))").type(11).foregroundStyle(Palette.ink)
                     }
                 }
             }

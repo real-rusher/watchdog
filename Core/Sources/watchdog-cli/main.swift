@@ -201,6 +201,53 @@ func verify() async {
     for p in problems { print("  - \(p)") }
 }
 
+/// Checks the euro conversion against independent sources:
+/// 1) chart points of the example depot (each day) against the ECB rate of that day fetched separately from Frankfurter,
+/// 2) the rate used for today's values against the ECB reference rate (shows how far live and reference rate are apart).
+func fxcheck() async {
+    print("# Prüfung der Euro-Umrechnung (\(Date()))\n")
+    let dir = FileManager.default.temporaryDirectory.appendingPathComponent("watchdog-cli-fx")
+    let engine = MarketEngine(cacheDir: dir, http: http)
+    let depot = DepotFile.example()
+    _ = await engine.refresh(depot: depot, keys: keys, force: true)
+    let snap = await engine.snapshot(depot: depot)
+    print("## Kurs für heutige Werte")
+    let today = DayKey.today(in: .berlin)
+    for (c, l) in snap.liveFX.sorted(by: { $0.key < $1.key }) {
+        let ecb = snap.fx.eurPerUnit(c, today).map { 1 / $0 }
+        let diff = ecb.map { (l.unitsPerEUR / $0 - 1) * 100 }
+        print("  1 € = \(String(format: "%.4f", l.unitsPerEUR)) \(c) live (\(l.source.displayName), \(Format.time(l.time)))   EZB \(ecb.map { String(format: "%.4f", $0) } ?? "-") (\(snap.fx.latestDay(c)?.iso ?? "-"))   Unterschied \(diff.map { String(format: "%+.2f %%", $0) } ?? "-")")
+    }
+    if snap.liveFX.isEmpty { print("  keine Live-Kurse (Yahoo nicht erreichbar), es gilt der EZB-Kurs") }
+    print("\n## Chartpunkte gegen den EZB-Kurs des jeweiligen Tages (unabhängig abgefragt)")
+    var worst = 0.0
+    var checked = 0
+    for p in depot.positions {
+        guard let m = snap.metrics[p.id], m.currency != "EUR" else { continue }
+        let pts = await engine.chart(position: p, depot: depot, from: today.adding(days: -5 * 366), lines: [.sma(200)])
+        guard pts.count > 10 else { print("  \(p.name): kein Verlauf"); continue }
+        // Six points spread over five years (not the newest one, that uses the live rate).
+        let picks = stride(from: 0, to: pts.count - 1, by: max(1, (pts.count - 1) / 6)).map { pts[$0] }
+        var line = "  \(pad(p.name, 22)) \(m.currency): "
+        for pt in picks {
+            let url = URL(string: "https://api.frankfurter.dev/v1/\(pt.day.iso)?base=EUR&symbols=\(m.currency)")!
+            guard let (data, _) = try? await http.get(url),
+                  let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let units = (obj["rates"] as? [String: Any])?[m.currency] as? Double else {
+                line += "\(pt.day.iso) ? "
+                continue
+            }
+            let expected = pt.priceLocal / units
+            let dev = (pt.priceEUR / expected - 1) * 100
+            worst = max(worst, abs(dev))
+            checked += 1
+            line += "\(pt.day.iso) \(String(format: "%+.3f", dev)) %  "
+        }
+        print(line)
+    }
+    print("\n# Ergebnis: \(checked) Chartpunkte geprüft, größte Abweichung \(String(format: "%.3f", worst)) %")
+}
+
 /// watchdog-cli import FILE [--resolve] : reads a file like the import dialog and optionally finds every listing live.
 func importFile() async {
     guard args.count >= 2 else { print("usage: import FILE [--resolve]"); return }
@@ -253,6 +300,8 @@ case "venues":
     }
 case "verify":
     await verify()
+case "fxcheck":
+    await fxcheck()
 case "import":
     await importFile()
 case "search":

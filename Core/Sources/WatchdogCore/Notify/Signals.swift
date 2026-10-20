@@ -175,6 +175,7 @@ public enum Format {
     private static let f1 = nf(1, 1)
     private static let f0 = nf(0, 0)
     private static let f4 = nf(2, 4)
+    private static let f3 = nf(2, 3)
     private static let fQty = nf(0, 6)
 
     /// Prices: small values get more decimals (penny stocks, crypto fractions), always three significant digits.
@@ -187,7 +188,8 @@ public enum Format {
             while t.hasSuffix("0"), let dot = t.firstIndex(of: "."), t.distance(from: dot, to: t.endIndex) > 3 { t.removeLast() }
             return t.replacingOccurrences(of: ".", with: ",")
         }
-        let f = a >= 1 ? f2 : f4
+        // Below 10 the third decimal is often quoted (6,275 €); it is shown so values match the exchange exactly.
+        let f = a >= 10 ? f2 : a >= 1 ? f3 : f4
         return f.string(from: NSNumber(value: v)) ?? "\(v)"
     }
 

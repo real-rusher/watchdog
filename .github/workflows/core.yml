@@ -28,6 +28,7 @@ jobs:
           timeout 600 $BIN depot > ../out/depot.txt 2>&1 || true
           timeout 60 $BIN ntfy > ../out/ntfy.txt 2>&1 || true
           timeout 600 $BIN verify > ../out/verify.txt 2>&1 || true
+          timeout 600 $BIN fxcheck > ../out/fxcheck.txt 2>&1 || true
           timeout 120 $BIN venues DE0007164600 CA13321L1085 JE00BF50RG45 > ../out/venues.txt 2>&1 || true
           for f in Tests/WatchdogCoreTests/Fixtures/import/*; do timeout 300 $BIN import "$f" --resolve; echo; done > ../out/import.txt 2>&1 || true
       - name: Publish results

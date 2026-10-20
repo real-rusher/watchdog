@@ -38,6 +38,8 @@ public struct EngineSnapshot: Sendable {
     public var eventLog: [SignalEvent]
     /// Data freshness per listing key.
     public var freshness: [String: Freshness]
+    /// Current market exchange rates per currency (when available).
+    public var liveFX: [String: LiveFX]
 }
 
 /// Fetches, caches and evaluates market data for a depot.
@@ -239,6 +241,7 @@ public actor MarketEngine {
         let currencies = Set(depot.positions.compactMap { histories[$0.listing.key]?.currency ?? catalog[$0.listing.exchangeID]?.currency })
         await fx.ensure(currencies, from: wantFrom)
         await fillNonECB(currencies, from: wantFrom, env: env)
+        await refreshLiveFX(currencies, env: env, force: force)
 
         // Signals.
         fxTableSync = await fx.current()
@@ -396,6 +399,31 @@ public actor MarketEngine {
         }
     }
 
+    /// Current market rates (Yahoo "EURJPY=X" and so on), at most as often as quotes are fetched.
+    /// A rate that is more than 5 % away from the ECB rate is treated as an error and not used.
+    private var liveFX: [String: LiveFX] = [:]
+
+    private func refreshLiveFX(_ currencies: Set<String>, env: ProviderEnvironment, force: Bool) async {
+        guard let yahoo = router.registry[.yahoo], let ex = env.catalog["XETR"] else { return }
+        let table = await fx.current()
+        let today = DayKey.today(in: .berlin)
+        for c in currencies.sorted() where c != "EUR" {
+            if !force, let l = liveFX[c], Date().timeIntervalSince(l.fetchedAt) < max(300, quoteInterval) { continue }
+            guard let q = try? await yahoo.quote(symbol: "EUR\(c)=X", exchange: ex, env: env), q.price > 0 else { continue }
+            let eurPerUnit = 1 / q.price
+            if let ecb = table.eurPerUnit(c, today), abs(eurPerUnit / ecb - 1) > 0.05 { continue }
+            liveFX[c] = LiveFX(eurPerUnit: eurPerUnit, time: q.time, source: .yahoo)
+        }
+    }
+
+    /// A live rate is used while it is at most 6 hours old; otherwise the ECB rate applies.
+    private func liveRate(_ currency: String) -> Double? {
+        guard currency != "EUR", let l = liveFX[currency], Date().timeIntervalSince(l.fetchedAt) < 6 * 3600 else { return nil }
+        return l.eurPerUnit
+    }
+
+    public func setLiveFX(_ currency: String, _ value: LiveFX?) { liveFX[currency] = value }
+
     // MARK: Evaluation
 
     private func priceData(_ key: String) -> (bars: [Bar], quote: Quote?, currency: String?) {
@@ -423,7 +451,8 @@ public actor MarketEngine {
             let d = priceData(p.listing.key)
             let cur = d.currency ?? p.listing.currency ?? ex.currency
             let q = aligned(d.quote, to: cur, table: table)
-            out[p.id] = Evaluator.evaluate(position: p, exchange: ex, history: d.bars, quote: q, currency: cur, rules: depot.rules, fx: table.lookup)
+            out[p.id] = Evaluator.evaluate(position: p, exchange: ex, history: d.bars, quote: q, currency: cur, rules: depot.rules, fx: table.lookup,
+                                           liveRate: liveRate(cur))
         }
         return out
     }
@@ -435,7 +464,8 @@ public actor MarketEngine {
         fxTableSync = await fx.current()
         let m = snapshotMetrics(depot: depot)
         return EngineSnapshot(metrics: m, status: status, fx: fxTableSync, health: await router.health.snapshot(),
-                              lastRefresh: lastRefresh, eventLog: signalState.log, freshness: freshnessMap(depot: depot, now: Date()))
+                              lastRefresh: lastRefresh, eventLog: signalState.log, freshness: freshnessMap(depot: depot, now: Date()),
+                              liveFX: liveFX.filter { Date().timeIntervalSince($0.value.fetchedAt) < 6 * 3600 })
     }
 
     private func freshnessMap(depot: DepotFile, now: Date) -> [String: Freshness] {
@@ -457,7 +487,7 @@ public actor MarketEngine {
         let d = priceData(p.listing.key)
         let cur = d.currency ?? ex.currency
         return Evaluator.chart(history: d.bars, quote: aligned(d.quote, to: cur, table: table), exchange: ex, currency: cur,
-                               lines: lines, from: from, fx: table.lookup)
+                               lines: lines, from: from, fx: table.lookup, liveRate: liveRate(cur))
     }
 
     public func history(_ key: String) -> PriceHistory? { histories[key] }

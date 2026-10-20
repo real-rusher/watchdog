@@ -63,6 +63,26 @@ public struct FXTable: Codable, Sendable {
     public var lookup: FXLookup { { cur, day in self.eurPerUnit(cur, day) } }
 }
 
+/// Current market exchange rate (not the once-a-day ECB reference rate), used for today's values.
+public struct LiveFX: Codable, Hashable, Sendable {
+    /// Euro per one unit of the currency.
+    public var eurPerUnit: Double
+    /// Time of the rate at the source.
+    public var time: Date
+    public var fetchedAt: Date
+    public var source: ProviderID
+
+    public init(eurPerUnit: Double, time: Date, fetchedAt: Date = Date(), source: ProviderID) {
+        self.eurPerUnit = eurPerUnit
+        self.time = time
+        self.fetchedAt = fetchedAt
+        self.source = source
+    }
+
+    /// Units of the currency per euro, the usual way to quote it (1 € = 177,82 ¥).
+    public var unitsPerEUR: Double { 1 / eurPerUnit }
+}
+
 /// Loads ECB reference rates (via Frankfurter, falling back to the ECB XML feed).
 public actor FXService {
     private var table: FXTable

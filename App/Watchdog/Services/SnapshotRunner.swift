@@ -90,6 +90,25 @@ enum SnapshotRunner {
             capture(window, "2-detail-\(tag)")
         }
 
+        // A yen stock: chart in euro and in yen, with the exchange rate used.
+        NSApp.appearance = NSAppearance(named: .aqua)
+        if let toyota = model.depot.positions.first(where: { $0.listing.exchangeID == "XTKS" }) {
+            model.selection = toyota.id
+            UserDefaults.standard.set(false, forKey: "chartInListingCurrency")
+            await sleep(2.5)
+            capture(window, "2b-toyota-euro")
+            UserDefaults.standard.set(true, forKey: "chartInListingCurrency")
+            await sleep(2)
+            capture(window, "2c-toyota-yen")
+            UserDefaults.standard.set(false, forKey: "chartInListingCurrency")
+            if let m = model.metrics(toyota.id) {
+                note("TOYOTA Kurs \(m.priceLocal.map { Format.money($0, "JPY") } ?? "-") = \(m.priceEUR.map { Format.eur($0) } ?? "-"), Kurs 1 € = \(m.fxRateNow.map { String(format: "%.4f", 1 / $0) } ?? "-") JPY, live \(m.fxLive)")
+            }
+            for (c, l) in (model.snapshot?.liveFX ?? [:]).sorted(by: { $0.key < $1.key }) {
+                note("LIVEFX \(c) 1 € = \(String(format: "%.4f", l.unitsPerEUR)) (\(l.time))")
+            }
+        }
+
         // Simulated outage.
         NSApp.appearance = NSAppearance(named: .aqua)
         let victims = Array(model.allRows.filter { $0.metrics?.hasData == true && $0.metrics?.ampel.state != .unknown }.prefix(2))

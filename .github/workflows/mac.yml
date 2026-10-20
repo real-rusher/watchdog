@@ -53,6 +53,7 @@ jobs:
         run: |
           swift build -c release --product watchdog-cli > /dev/null 2>&1
           "$(swift build -c release --show-bin-path)/watchdog-cli" verify > ../out/verify-mac.txt 2>&1 || true
+          "$(swift build -c release --show-bin-path)/watchdog-cli" fxcheck > ../out/fxcheck-mac.txt 2>&1 || true
       - name: Screenshots with live data and import test
         continue-on-error: true
         run: |

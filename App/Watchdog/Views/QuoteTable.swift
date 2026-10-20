@@ -389,7 +389,12 @@ struct QuoteRow: View {
 
     private var helpText: String {
         var parts: [String] = []
-        if let m = row.metrics, m.currency != "EUR", let pl = m.priceLocal { parts.append("Kurs an der Börse: \(Format.money(pl, m.currency))") }
+        if let m = row.metrics, m.currency != "EUR", let pl = m.priceLocal {
+            parts.append("Kurs an der Börse: \(Format.money(pl, m.currency))")
+            if let r = m.fxRateNow, r > 0 {
+                parts.append("Umgerechnet mit 1 € = \(Format.number(1 / r, decimals: 4)) \(CurrencyNormalizer.symbol(m.currency)) (\(m.fxLive ? "aktueller Devisenkurs" : "EZB-Referenzkurs"))")
+            }
+        }
         if let f = row.freshness, f.level != .ok, f.level != .pending, !f.detail.isEmpty {
             parts.append(f.detail)
         } else if let e = row.status?.lastError {
