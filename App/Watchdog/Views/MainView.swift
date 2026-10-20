@@ -35,6 +35,7 @@ struct MainView: View {
                     DetailView(positionID: id, showsClose: true)
                         .environment(model)
                         .environment(\.uiScale, scale)
+                        .environment(\.locale, WatchdogApp.german)
                         .frame(minWidth: min(560, geo.size.width - 40), idealWidth: 560, minHeight: min(640, geo.size.height - 40), idealHeight: 720)
                 }
             }
@@ -46,11 +47,13 @@ struct MainView: View {
             PositionEditor(request: req)
                 .environment(model)
                 .environment(\.uiScale, scale)
+                .environment(\.locale, WatchdogApp.german)
         }
         .sheet(item: $model.importSession) { session in
             ImportView(session: session)
                 .environment(model)
                 .environment(\.uiScale, scale)
+                .environment(\.locale, WatchdogApp.german)
         }
         .overlay(alignment: .bottom) {
             if let n = model.notice {

@@ -84,7 +84,12 @@ struct DetailView: View {
                 .controlSize(.large)
             }
             HStack(alignment: .firstTextBaseline, spacing: 12) {
-                Text(m?.priceEUR.map { Format.eur($0) } ?? Placeholder.missing).type(30, .semibold).foregroundStyle(Palette.ink)
+                if let pe = m?.priceEUR {
+                    Text(Format.eur(pe)).type(30, .semibold).foregroundStyle(Palette.ink)
+                } else {
+                    Text(model.snapshot?.status[p.listing.key]?.isLoading == true ? "Kurs wird geladen" : "Kein Kurs")
+                        .type(20, .medium).foregroundStyle(Palette.inkFaint)
+                }
                 if let d = m?.dayChangePercent {
                     Text(Format.pct(d, signed: true) + " heute").type(15, .medium).foregroundStyle(Palette.change(d))
                 }

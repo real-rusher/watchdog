@@ -396,24 +396,30 @@ private struct LotRow: View {
     var remove: () -> Void
 
     var body: some View {
-        HStack(spacing: 10) {
+        // Labels outside the fields: inside a form macOS would squeeze them into the field width.
+        HStack(spacing: 8) {
             DatePicker("", selection: $lot.date, displayedComponents: .date)
                 .labelsHidden()
                 .datePickerStyle(.field)
-                .frame(width: 110)
-            TextField("Stück", text: $lot.quantity)
-                .frame(width: 80)
+                .environment(\.locale, Locale(identifier: "de_DE"))
+                .frame(width: 104)
+            TextField("", text: $lot.quantity, prompt: Text("Anzahl"))
+                .labelsHidden()
+                .frame(width: 76)
                 .multilineTextAlignment(.trailing)
-            TextField(lot.priceIsTotal ? "Gesamt €" : "€ pro Stück", text: $lot.price)
-                .frame(width: 110)
+            Text("Stk.").type(12).foregroundStyle(Palette.inkSoft).fixedSize()
+            TextField("", text: $lot.price, prompt: Text(lot.priceIsTotal ? "gesamt" : "je Stück"))
+                .labelsHidden()
+                .frame(width: 96)
                 .multilineTextAlignment(.trailing)
+            Text("€").type(12).foregroundStyle(Palette.inkSoft).fixedSize()
             Picker("", selection: $lot.priceIsTotal) {
-                Text("pro Stück").tag(false)
+                Text("je Stück").tag(false)
                 Text("gesamt").tag(true)
             }
             .labelsHidden()
             .pickerStyle(.segmented)
-            .frame(width: 150)
+            .fixedSize()
             Spacer(minLength: 0)
             Button(action: remove) { Image(systemName: "minus.circle") }
                 .buttonStyle(.borderless)
