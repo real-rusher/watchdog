@@ -1,0 +1,41 @@
+name: diag
+on:
+  push:
+    paths: [.github/workflows/diag.yml]
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - name: Yahoo answers for the affected symbols
+        run: |
+          mkdir -p out
+          for s in AOE ALCO IUL ICCC FCA.UN.V FCA-UN.V MTA.V X9C.F; do
+            for r in "range=5d&interval=1d" "range=1mo&interval=1d"; do
+              echo "=== $s $r" >> out/yahoo.txt
+              curl -sS -m 20 -A "Mozilla/5.0" "https://query1.finance.yahoo.com/v8/finance/chart/$s?$r" -o body.json -w "HTTP %{http_code}\n" >> out/yahoo.txt
+              python3 -c "
+          import json,sys,datetime
+          try:
+              d=json.load(open('body.json'))
+          except Exception as e:
+              print('kein JSON', open('body.json').read()[:300]); sys.exit()
+          c=d.get('chart',{})
+          if c.get('error'): print('error', c['error']); sys.exit()
+          r=c['result'][0]; m=r['meta']
+          t=lambda x: datetime.datetime.utcfromtimestamp(x).isoformat()+'Z' if x else None
+          print('symbol',m.get('symbol'),'name',m.get('longName') or m.get('shortName'),'exch',m.get('exchangeName'),m.get('fullExchangeName'),'cur',m.get('currency'),'type',m.get('instrumentType'))
+          print('price',m.get('regularMarketPrice'),'time',t(m.get('regularMarketTime')),'prev',m.get('previousClose') or m.get('chartPreviousClose'))
+          ts=r.get('timestamp') or []; cl=(r.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
+          print('bars', [(t(a)[:10], b) for a,b in zip(ts,cl)][-8:])
+          " >> out/yahoo.txt
+            done
+          done
+          cat out/yahoo.txt
+      - name: Publish
+        if: always()
+        run: |
+          cd out && git init -q -b r && git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -A && git commit -qm "diag ${GITHUB_SHA::7}" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:results-diag
