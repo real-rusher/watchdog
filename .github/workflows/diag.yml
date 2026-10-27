@@ -34,6 +34,19 @@ jobs:
             done
           done
           cat out/yahoo.txt
+      - name: Yahoo search by ISIN
+        run: |
+          for q in US0162301040 US4525253062 CA59124U6051 JP3633400001 CA13321L1085 DE0007164600 US0378331005 AU000000PDN8 GB0007188757 SE0000108656; do
+            echo "=== $q" >> out/search.txt
+            curl -sS -m 20 -A "Mozilla/5.0" "https://query2.finance.yahoo.com/v1/finance/search?q=$q&quotesCount=25&newsCount=0&listsCount=0&enableFuzzyQuery=false" -o s.json -w "HTTP %{http_code}\n" >> out/search.txt
+            python3 -c "
+          import json
+          d=json.load(open('s.json'))
+          for q in d.get('quotes',[]): print(q.get('symbol'),'|',q.get('exchange'),'|',q.get('exchDisp'),'|',q.get('quoteType'),'|',q.get('longname') or q.get('shortname'))
+          " >> out/search.txt
+            sleep 1
+          done
+          cat out/search.txt
       - name: Publish
         if: always()
         run: |
