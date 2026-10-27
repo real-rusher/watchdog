@@ -1,41 +1,36 @@
 #!/bin/bash
-# What does macOS show for a downloaded (quarantined) Watchdog? Screenshots of the dialogs plus the system log.
+# Which situations make macOS show the plain "The application can't be opened." (no choice, Finder icon)?
 APP=/Applications/Watchdog.app
 mkdir -p out
-install() {
-  rm -rf dl && mkdir dl
-  gh release download "$1" -p Watchdog.dmg -D dl || return 1
-  xattr -w com.apple.quarantine "0083;$(printf %x $(date +%s));Safari;" dl/Watchdog.dmg
-  MNT=$(hdiutil attach -nobrowse -readonly dl/Watchdog.dmg | tail -1 | awk -F'\t' '{print $NF}')
+fresh() {
   sudo rm -rf "$APP"
-  cp -R "$MNT/Watchdog.app" /Applications/
-  hdiutil detach "$MNT" -quiet
-  xattr -l "$APP" | head -3
+  [ -d src ] || { gh release download v1.0.5 -p Watchdog.dmg -D dl >/dev/null; MNT=$(hdiutil attach -nobrowse -readonly dl/Watchdog.dmg | tail -1 | awk -F'\t' '{print $NF}'); cp -R "$MNT/Watchdog.app" src.app; hdiutil detach "$MNT" -quiet; mkdir src; }
+  cp -R src.app "$APP"
 }
-sw_vers
-echo "== 1) heruntergeladene v1.0.5 öffnen (Quarantäne von der DMG geerbt)"
-install v1.0.5
-( open "$APP" > out/open1.txt 2>&1 & )
-sleep 8; screencapture -x out/dialog-1.png
-pgrep -x Watchdog >/dev/null && echo "   => LÄUFT" || echo "   => LÄUFT NICHT"
-cat out/open1.txt
-osascript -e 'tell application "System Events" to get name of every process whose visible is true' 2>&1 | head -3
-osascript -e 'tell application "System Events" to tell process "CoreServicesUIAgent" to get value of static texts of window 1' 2>&1 | head -5
-log show --last 1m --style compact --predicate 'process == "syspolicyd" OR process == "CoreServicesUIAgent" OR (process == "launchservicesd" AND eventMessage CONTAINS[c] "watchdog")' 2>/dev/null | grep -iE "watchdog|assess|gatekeeper|deny|reject|prompt|malware|notar|adhoc|ad-hoc" | tail -40
-osascript -e 'tell application "System Events" to tell process "CoreServicesUIAgent" to click button 1 of window 1' 2>&1 | head -2
-sleep 2; pkill -x Watchdog
+quarantine() { xattr -w com.apple.quarantine "0083;$(printf %x $(date +%s));Safari;" "$APP"; }
+try() {
+  local name="$1"
+  echo; echo "================ $name"
+  ( osascript -e "tell application \"Finder\" to open POSIX file \"$APP\"" > /dev/null 2>&1 & )
+  sleep 7
+  screencapture -x "out/$name.png"
+  pgrep -x Watchdog >/dev/null && echo "   Prozess vorhanden" || echo "   kein Prozess"
+  for p in CoreServicesUIAgent Finder UserNotificationCenter; do
+    osascript -e "tell application \"System Events\" to tell process \"$p\" to get value of static texts of every window" 2>/dev/null | grep -v "^$" | head -3 | sed "s/^/   [$p] /"
+  done
+  log show --last 20s --style compact --predicate 'eventMessage CONTAINS[c] "watchdog" OR process == "syspolicyd"' 2>/dev/null | grep -iE "error|fail|reject|denied|deny|-10[0-9]{3}|-6[0-9]{2}|kill|invalid|launch" | tail -12 | sed 's/^/   log: /'
+  osascript -e 'tell application "System Events" to key code 36' 2>/dev/null   # Return closes the dialog
+  sleep 1; pkill -9 -x Watchdog 2>/dev/null; sleep 1
+}
+sw_vers | head -2
 
-echo "== 2) Freigabe wie über Datenschutz & Sicherheit simulieren, dann öffnen"
-sudo xattr -d com.apple.quarantine "$APP"
-( open "$APP" & ); sleep 10
-pgrep -x Watchdog >/dev/null && echo "   => LÄUFT" || echo "   => LÄUFT NICHT"
-screencapture -x out/dialog-2.png
-pkill -x Watchdog; sleep 2
-
-echo "== 3) v1.0.5 noch einmal heruntergeladen über die freigegebene Kopie gelegt"
-install v1.0.5
-( open "$APP" > out/open3.txt 2>&1 & )
-sleep 8; screencapture -x out/dialog-3.png
-pgrep -x Watchdog >/dev/null && echo "   => LÄUFT" || echo "   => LÄUFT NICHT"
-osascript -e 'tell application "System Events" to tell process "CoreServicesUIAgent" to get value of static texts of window 1' 2>&1 | head -5
-log show --last 1m --style compact --predicate 'process == "syspolicyd" OR process == "CoreServicesUIAgent"' 2>/dev/null | grep -iE "watchdog|assess|deny|reject|prompt|malware|notar" | tail -30
+fresh; try "a-normal-ohne-quarantaene"
+fresh; quarantine; try "b-normal-mit-quarantaene"
+fresh; chmod -x "$APP/Contents/MacOS/Watchdog"; try "c-nicht-ausfuehrbar"
+fresh; chmod -x "$APP/Contents/MacOS/Watchdog"; quarantine; try "d-nicht-ausfuehrbar-quarantaene"
+fresh; /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.5x" "$APP/Contents/Info.plist"; try "e-signatur-kaputt"
+fresh; /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.5x" "$APP/Contents/Info.plist"; quarantine; try "f-signatur-kaputt-quarantaene"
+fresh; printf '\x00' | dd of="$APP/Contents/MacOS/Watchdog" bs=1 seek=50000 conv=notrunc 2>/dev/null; try "g-programmdatei-veraendert"
+fresh; sudo chown -R root:wheel "$APP"; sudo chmod -R go-rwx "$APP"; try "h-keine-leserechte"
+fresh; quarantine; ( open "$APP" & ); sleep 5; try "i-zweiter-start-waehrend-abfrage"
+fresh; xattr -w com.apple.provenance "$(printf '\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00')" "$APP" 2>/dev/null; try "j-provenance"
