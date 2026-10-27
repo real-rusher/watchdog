@@ -1,0 +1,26 @@
+=== AXL1.F range=5d&interval=1d
+HTTP 200
+symbol AXL1.F name Axfood AB (publ) exch FRA Frankfurt cur EUR type EQUITY
+price 24.85 time 2026-10-27T07:13:12Z prev 23.95
+bars [('2026-10-21', 23.950000762939453), ('2026-10-22', 24.020000457763672), ('2026-10-23', 24.59000015258789), ('2026-10-26', 24.510000228881836), ('2026-10-27', 24.850000381469727)]
+=== AXL1.F range=1mo&interval=1d
+HTTP 200
+symbol AXL1.F name Axfood AB (publ) exch FRA Frankfurt cur EUR type EQUITY
+price 24.85 time 2026-10-27T07:13:12Z prev 22.3
+bars [('2026-10-16', 23.25), ('2026-10-19', 23.68000030517578), ('2026-10-20', 24.110000610351562), ('2026-10-21', 23.950000762939453), ('2026-10-22', 24.020000457763672), ('2026-10-23', 24.59000015258789), ('2026-10-26', 24.510000228881836), ('2026-10-27', 24.850000381469727)]
+=== AXFO.ST range=5d&interval=1d
+HTTP 200
+symbol AXFO.ST name Axfood AB (publ) exch STO Stockholm cur SEK type EQUITY
+price 277.1 time 2026-10-27T16:29:45Z prev 270.1
+bars [('2026-10-21', 270.1000061035156), ('2026-10-22', 273.70001220703125), ('2026-10-23', 278.3999938964844), ('2026-10-26', 278.70001220703125), ('2026-10-27', 277.1000061035156)]
+=== AXFO.ST range=1mo&interval=1d
+HTTP 200
+symbol AXFO.ST name Axfood AB (publ) exch STO Stockholm cur SEK type EQUITY
+price 277.1 time 2026-10-27T16:29:45Z prev 255.1
+bars [('2026-10-16', 268.8999938964844), ('2026-10-19', 273.5), ('2026-10-20', 271.79998779296875), ('2026-10-21', 270.1000061035156), ('2026-10-22', 273.70001220703125), ('2026-10-23', 278.3999938964844), ('2026-10-26', 278.70001220703125), ('2026-10-27', 277.1000061035156)]
+=== AXL1.DE range=5d&interval=1d
+HTTP 404
+error {'code': 'Not Found', 'description': 'No data found, symbol may be delisted'}
+=== AXL1.DE range=1mo&interval=1d
+HTTP 404
+error {'code': 'Not Found', 'description': 'No data found, symbol may be delisted'}

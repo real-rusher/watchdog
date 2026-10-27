@@ -1,0 +1,17 @@
+=== DGH%20International
+HTTP 200
+=== DGH%20International%20AB
+HTTP 200
+=== AXL1
+HTTP 200
+AXL1.F | FRA | Frankfurt | EQUITY | Axfood AB (publ)
+AXL17799-USD | CCC | CCC | CRYPTOCURRENCY | Axelar USD
+AXL1.HA | HAN | Hanover | EQUITY | Axfood AB
+AXL1.DU | DUS | Dusseldorf Stock Exchange | EQUITY | Axfood AB
+AXL1.MU | MUN | Munich | EQUITY | Axfood AB
+=== SE0006993770
+HTTP 200
+AXFO.ST | STO | Stockholm | EQUITY | Axfood AB (publ)
+SE0006993770.SG | STU | Stuttgart | EQUITY | Axfood AB
+=== A14RAV
+HTTP 200
