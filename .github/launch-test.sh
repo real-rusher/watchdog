@@ -19,8 +19,8 @@ try() {
     osascript -e "tell application \"System Events\" to tell process \"$p\" to get value of static texts of every window" 2>/dev/null | grep -v "^$" | head -3 | sed "s/^/   [$p] /"
   done
   log show --last 20s --style compact --predicate 'eventMessage CONTAINS[c] "watchdog" OR process == "syspolicyd"' 2>/dev/null | grep -iE "error|fail|reject|denied|deny|-10[0-9]{3}|-6[0-9]{2}|kill|invalid|launch" | tail -12 | sed 's/^/   log: /'
-  osascript -e 'tell application "System Events" to key code 36' 2>/dev/null   # Return closes the dialog
-  sleep 1; pkill -9 -x Watchdog 2>/dev/null; sleep 1
+  # Close whatever dialog is open so the next case starts clean.
+  pkill -9 -x Watchdog 2>/dev/null; killall CoreServicesUIAgent 2>/dev/null; killall Finder 2>/dev/null; sleep 3
 }
 sw_vers | head -2
 
