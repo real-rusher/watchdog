@@ -36,9 +36,11 @@ public struct Quote: Codable, Hashable, Sendable {
     public var confirmedBy: ProviderID?
     /// Large move that no second source confirmed: shown, but not used for alarms.
     public var suspect: Bool
+    /// Company name as the source reports it, used to spot a symbol that points to another company. Not stored.
+    public var instrumentName: String?
 
     public init(price: Double, time: Date, previousClose: Double?, currency: String, source: ProviderID, fetchedAt: Date = Date(),
-                confirmedBy: ProviderID? = nil, suspect: Bool = false) {
+                confirmedBy: ProviderID? = nil, suspect: Bool = false, instrumentName: String? = nil) {
         self.price = price
         self.time = time
         self.previousClose = previousClose
@@ -47,6 +49,7 @@ public struct Quote: Codable, Hashable, Sendable {
         self.fetchedAt = fetchedAt
         self.confirmedBy = confirmedBy
         self.suspect = suspect
+        self.instrumentName = instrumentName
     }
 
     enum CodingKeys: String, CodingKey { case price, time, previousClose, currency, source, fetchedAt, confirmedBy, suspect }
@@ -69,13 +72,24 @@ public struct HistoryResult: Sendable {
     public var bars: [Bar]
     public var currency: String
     public var source: ProviderID
+    /// Company name as the source reports it.
+    public var instrumentName: String?
 
-    public init(bars: [Bar], currency: String, source: ProviderID) {
+    public init(bars: [Bar], currency: String, source: ProviderID, instrumentName: String? = nil) {
         self.bars = bars.sorted { $0.day < $1.day }
         self.currency = currency
         self.source = source
+        self.instrumentName = instrumentName
     }
 }
+
+/// An answer that names the company it belongs to.
+public protocol NamedAnswer {
+    var instrumentName: String? { get }
+}
+
+extension Quote: NamedAnswer {}
+extension HistoryResult: NamedAnswer {}
 
 /// Cached daily history of one listing.
 public struct PriceHistory: Codable, Sendable {

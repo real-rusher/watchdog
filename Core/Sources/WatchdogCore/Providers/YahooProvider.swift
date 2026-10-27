@@ -43,7 +43,32 @@ public final class YahooProvider: MarketDataProvider, @unchecked Sendable {
     public func resolveSymbol(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String {
         if let s = ref.listing.symbol(.yahoo), !s.isEmpty { return s }
         guard let suffix = exchange.code(.yahoo) else { throw ProviderError.unsupported(exchange.name) }
+        // The ticker may come from another venue (OnVista reports German codes like "AOE" for Alico, which is "ALCO" at Nasdaq),
+        // so the ISIN decides where Yahoo knows the venue.
+        do {
+            if let s = try await symbolByISIN(ref, exchange: exchange, env: env) { return s }
+        } catch let e as ProviderError where e.isProviderWide {
+            throw e
+        } catch {}
         return ProviderUtil.yahooTicker(ref.listing.ticker) + suffix
+    }
+
+    public func symbolByISIN(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String? {
+        guard let isin = ref.isin?.uppercased(), Lenient.isISIN(isin), exchange.code(.yahoo) != nil else { return nil }
+        let hits = try await search(isin, env: env)
+        return hits.first(where: { $0.exchangeID == exchange.id })?.symbol
+    }
+
+    /// The venue's own ticker inside a Yahoo symbol ("MTA.V" at TSX Venture is "MTA"), nil if the symbol is no ticker.
+    public static func venueTicker(_ symbol: String, exchange: Exchange) -> String? {
+        guard let suffix = exchange.code(.yahoo) else { return nil }
+        var t = symbol
+        if !suffix.isEmpty {
+            guard t.uppercased().hasSuffix(suffix.uppercased()) else { return nil }
+            t.removeLast(suffix.count)
+        }
+        guard !t.isEmpty, !Lenient.isISIN(t), !t.contains("=") else { return nil }
+        return t
     }
 
     // MARK: Data
@@ -56,7 +81,8 @@ public final class YahooProvider: MarketDataProvider, @unchecked Sendable {
         guard let price = parsed.price else { throw ProviderError.notFound(symbol) }
         let quoteDay = DayKey(date: parsed.time ?? Date(), timeZone: exchange.tz)
         let prev = parsed.bars.last(where: { $0.day < quoteDay })?.close ?? parsed.previousClose
-        return Quote(price: price, time: parsed.time ?? Date(), previousClose: prev, currency: parsed.currency, source: id)
+        return Quote(price: price, time: parsed.time ?? Date(), previousClose: prev, currency: parsed.currency, source: id,
+                     instrumentName: parsed.name)
     }
 
     public func history(symbol: String, exchange: Exchange, from: DayKey, env: ProviderEnvironment) async throws -> HistoryResult {
@@ -66,7 +92,9 @@ public final class YahooProvider: MarketDataProvider, @unchecked Sendable {
             ("period1", String(p1)), ("period2", String(p2)), ("interval", "1d"), ("includePrePost", "false"), ("events", "div,split"),
         ])
         let parsed = try parseChart(try await request(url, env: env), symbol: symbol)
-        return HistoryResult(bars: parsed.bars, currency: parsed.currency, source: id)
+        // Yahoo answers unknown or empty symbols with an empty chart instead of an error.
+        if parsed.bars.isEmpty { throw ProviderError.notFound("Verlauf \(symbol)") }
+        return HistoryResult(bars: parsed.bars, currency: parsed.currency, source: id, instrumentName: parsed.name)
     }
 
     struct ParsedChart {
@@ -75,6 +103,7 @@ public final class YahooProvider: MarketDataProvider, @unchecked Sendable {
         var price: Double?
         var time: Date?
         var previousClose: Double?
+        var name: String?
     }
 
     func parseChart(_ obj: Any, symbol: String) throws -> ParsedChart {
@@ -109,7 +138,9 @@ public final class YahooProvider: MarketDataProvider, @unchecked Sendable {
         let price = meta.num("regularMarketPrice").map { $0 * norm.factor }
         let time = meta.num("regularMarketTime").map { Date(timeIntervalSince1970: $0) }
         let prev = (meta.num("previousClose") ?? meta.num("chartPreviousClose")).map { $0 * norm.factor }
-        return ParsedChart(bars: dedup.values.sorted { $0.day < $1.day }, currency: norm.code, price: price, time: time, previousClose: prev)
+        let name = meta.str("longName") ?? meta.str("shortName")
+        return ParsedChart(bars: dedup.values.sorted { $0.day < $1.day }, currency: norm.code, price: price, time: time, previousClose: prev,
+                           name: name)
     }
 
     // MARK: Transport with crumb handling

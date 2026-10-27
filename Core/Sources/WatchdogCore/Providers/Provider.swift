@@ -28,6 +28,13 @@ public struct SecurityRef: Sendable, Hashable {
     public init(_ p: Position) {
         self.init(name: p.name, isin: p.isin, wkn: p.wkn, listing: p.listing, assetType: p.assetType)
     }
+
+    /// The same security without the symbol stored for one provider, so that provider has to look it up again.
+    public func withoutStoredSymbol(_ p: ProviderID) -> SecurityRef {
+        var r = self
+        r.listing.symbols[p.rawValue] = nil
+        return r
+    }
 }
 
 /// One search hit: a security at a venue, as one provider sees it.
@@ -88,6 +95,9 @@ public protocol MarketDataProvider: AnyObject, Sendable {
     func search(_ query: String, env: ProviderEnvironment) async throws -> [SearchCandidate]
     /// Provider specific symbol for a security at a venue. May perform a lookup.
     func resolveSymbol(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String
+    /// The provider's symbol for the security's ISIN at this venue, or nil if the provider cannot tell.
+    /// Used to repair a stored symbol that names another company or nothing at all.
+    func symbolByISIN(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String?
     func quote(symbol: String, exchange: Exchange, env: ProviderEnvironment) async throws -> Quote
     func history(symbol: String, exchange: Exchange, from: DayKey, env: ProviderEnvironment) async throws -> HistoryResult
 }
@@ -98,6 +108,8 @@ public extension MarketDataProvider {
     func search(_ query: String, env: ProviderEnvironment) async throws -> [SearchCandidate] {
         throw ProviderError.unsupported("Suche")
     }
+
+    func symbolByISIN(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String? { nil }
 
     func quote(symbol: String, exchange: Exchange, env: ProviderEnvironment) async throws -> Quote {
         throw ProviderError.unsupported("Kurs")

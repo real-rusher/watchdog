@@ -47,10 +47,11 @@ public final class FTProvider: MarketDataProvider, @unchecked Sendable {
         guard !codes.isEmpty else { throw ProviderError.unsupported(exchange.name) }
         let stored = ref.listing.symbol(.ft)
         if let s = stored, s.contains("|") { return s }
+        // The ISIN first: a ticker may belong to another venue and name another company here.
+        if let s = try? await symbolByISIN(ref, exchange: exchange, env: env) { return s }
         var queries: [String] = []
         if let s = stored, !s.isEmpty { queries.append(s) }
         queries.append("\(ref.listing.ticker):\(codes[0])")
-        if let isin = ref.isin { queries.append(isin) }
         queries.append(ref.name)
         for q in queries {
             guard let hits = try? await rawSearch(q, env: env) else { continue }
@@ -59,7 +60,8 @@ public final class FTProvider: MarketDataProvider, @unchecked Sendable {
                 let p = h.symbol.split(separator: ":").map(String.init)
                 return p.count >= 2 && codes.contains(p[1])
             }
-            if let exact = onVenue.first(where: { $0.symbol.split(separator: ":").first.map(String.init)?.uppercased() == wantedTicker }) {
+            if let exact = onVenue.first(where: { $0.symbol.split(separator: ":").first.map(String.init)?.uppercased() == wantedTicker }),
+               Lenient.sameCompany(exact.name, ref.name) != false {
                 return Self.format(exact)
             }
             // Searching by ISIN or name: accept the venue match.
@@ -68,6 +70,17 @@ public final class FTProvider: MarketDataProvider, @unchecked Sendable {
             }
         }
         throw ProviderError.notFound("\(ref.name) an \(exchange.name)")
+    }
+
+    public func symbolByISIN(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String? {
+        guard let isin = ref.isin?.uppercased(), Lenient.isISIN(isin) else { return nil }
+        let codes = exchange.matchCodes(.ft)
+        guard !codes.isEmpty else { return nil }
+        let onVenue = try await rawSearch(isin, env: env).filter { h in
+            let p = h.symbol.split(separator: ":").map(String.init)
+            return p.count >= 2 && codes.contains(p[1])
+        }
+        return (onVenue.first(where: { $0.assetClass == "Equities" || $0.assetClass == "ETFs" }) ?? onVenue.first).map(Self.format)
     }
 
     static func format(_ h: Hit) -> String {

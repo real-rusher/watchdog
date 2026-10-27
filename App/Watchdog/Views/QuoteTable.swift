@@ -401,6 +401,7 @@ struct QuoteRow: View {
             parts.append(e)
         }
         if let note = row.status?.plausibilityNote { parts.append(note) }
+        if let n = row.notice { parts.append(n.detail) }
         return parts.joined(separator: "\n")
     }
 
@@ -524,8 +525,32 @@ struct NameCell: View {
                 .fixedSize()
             } else if row.isStale || (m?.hasData != true && row.status?.lastError != nil && row.status?.isLoading != true) {
                 Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10 * scale)).foregroundStyle(Palette.caution)
+            } else if withStale, let n = row.notice {
+                NoticeChip(notice: n)
+            } else if let n = row.notice {
+                Image(systemName: n.kind == .check ? "questionmark.circle.fill" : "checkmark.circle")
+                    .font(.system(size: 10 * scale)).foregroundStyle(n.kind == .check ? Palette.caution : Palette.inkSoft)
             }
         }
+    }
+}
+
+/// "Kürzel korrigiert" (neutral, for a week) or "Kürzel prüfen" (caution, until solved).
+struct NoticeChip: View {
+    @Environment(\.uiScale) private var scale
+    var notice: ListingNotice
+
+    var body: some View {
+        let color = notice.kind == .check ? Palette.caution : Palette.inkSoft
+        HStack(spacing: 3) {
+            Image(systemName: notice.kind == .check ? "questionmark.circle.fill" : "checkmark.circle").font(.system(size: 9 * scale))
+            Text(notice.headline).type(11, .semibold).lineLimit(1)
+        }
+        .foregroundStyle(color)
+        .padding(.horizontal, 5).padding(.vertical, 0.5)
+        .overlay(RoundedRectangle(cornerRadius: 3).stroke(color.opacity(0.7)))
+        .fixedSize()
+        .help(notice.detail)
     }
 }
 

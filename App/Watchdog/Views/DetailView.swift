@@ -22,6 +22,7 @@ struct DetailView: View {
                     header(p, m, ex)
                     if let f = model.freshness(p), f.isProblem || f.level == .noTradeToday { dataNotice(f) }
                     if m?.quoteSuspect == true { suspectNotice(p) }
+                    if let n = model.notice(p) { tickerNotice(n) }
                     verdict(m)
                     chartBlock(p, m)
                     figures(p, m, ex)
@@ -164,6 +165,26 @@ struct DetailView: View {
         }
         .padding(12)
         .background(Palette.cautionWash, in: RoundedRectangle(cornerRadius: 6))
+    }
+
+    /// A wrong ticker was replaced, or a source still delivers another company under it.
+    private func tickerNotice(_ n: ListingNotice) -> some View {
+        let check = n.kind == .check
+        return HStack(alignment: .top, spacing: 10) {
+            Image(systemName: check ? "questionmark.circle.fill" : "checkmark.circle")
+                .foregroundStyle(check ? Palette.caution : Palette.inkSoft)
+                .padding(.top, 1)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(n.headline).type(14, .semibold).foregroundStyle(Palette.ink)
+                Text(n.detail).type(12).foregroundStyle(Palette.inkSoft).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
+                if !check {
+                    Text("Korrigiert \(Format.time(n.date)).").type(12).foregroundStyle(Palette.inkSoft)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .background(check ? Palette.cautionWash : Palette.zebra, in: RoundedRectangle(cornerRadius: 6))
     }
 
     static func sentence(_ s: String) -> String {

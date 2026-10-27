@@ -8,6 +8,8 @@ struct TableRow: Identifiable {
     let exchange: Exchange?
     let status: ListingStatus?
     let freshness: Freshness?
+    /// A corrected ticker, or one that still names another company.
+    var notice: ListingNotice? = nil
     var id: UUID { position.id }
 
     /// Data should be there but is not (source down, throttled, symbol broken, no exchange rate).
@@ -243,6 +245,7 @@ final class AppModel {
                 }
             }
             await recompute()
+            await applyCorrections(snapshot?.corrections ?? [])
             if only == nil {
                 isRefreshing = false
                 lastSummary = summary
@@ -264,6 +267,31 @@ final class AppModel {
     func recompute() async {
         let s = await engine.snapshot(depot: depot)
         snapshot = s
+    }
+
+    /// Writes tickers and symbols the engine found wrong (checked through the ISIN) into the depot.
+    /// Purchases, groups and everything else of the position stay as they are; the values then load fresh.
+    private func applyCorrections(_ list: [ListingCorrection]) async {
+        guard !list.isEmpty else { return }
+        var ids: Set<UUID> = []
+        for c in list {
+            let idx = depot.positions.indices.filter { depot.positions[$0].listing.key == c.listingKey }
+            guard let first = idx.first else {
+                await engine.applied(c, newKey: c.listingKey)
+                continue
+            }
+            let newKey = c.newKey(exchangeID: depot.positions[first].listing.exchangeID)
+            mutate { d in
+                for i in idx {
+                    if let t = c.ticker { d.positions[i].listing.ticker = t }
+                    for (k, v) in c.symbols { d.positions[i].listing.symbols[k] = v }
+                }
+            }
+            ids.formUnion(idx.map { depot.positions[$0].id })
+            await engine.applied(c, newKey: newKey)
+        }
+        await recompute()
+        if !ids.isEmpty { refresh(force: true, only: ids) }
     }
 
     private func scheduleRecompute() {
@@ -341,6 +369,7 @@ final class AppModel {
     func position(_ id: UUID?) -> Position? { depot.positions.first { $0.id == id } }
     func metrics(_ id: UUID?) -> PositionMetrics? { id.flatMap { snapshot?.metrics[$0] } }
     func freshness(_ p: Position) -> Freshness? { simulatedOutage[p.listing.key] ?? snapshot?.freshness[p.listing.key] }
+    func notice(_ p: Position) -> ListingNotice? { snapshot?.notices[p.listing.key].flatMap { $0.isVisible() ? $0 : nil } }
 
     func add(_ p: Position) {
         mutate { $0.positions.append(p) }
@@ -518,7 +547,8 @@ final class AppModel {
 
     func row(_ p: Position) -> TableRow {
         TableRow(position: p, metrics: snapshot?.metrics[p.id], exchange: catalog[p.listing.exchangeID], status: snapshot?.status[p.listing.key],
-                 freshness: simulatedOutage[p.listing.key] ?? snapshot?.freshness[p.listing.key])
+                 freshness: simulatedOutage[p.listing.key] ?? snapshot?.freshness[p.listing.key],
+                 notice: notice(p))
     }
 
     var allRows: [TableRow] { depot.positions.map(row) }

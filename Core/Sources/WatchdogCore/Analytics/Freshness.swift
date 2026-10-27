@@ -120,3 +120,24 @@ public enum FreshnessCheck {
         return Freshness(level: level, headline: headline, detail: details.joined(separator: "\n"), lastSuccess: lastSuccess)
     }
 }
+
+/// What a source has to deliver to count as current. An older answer does not end the search for data:
+/// the next sources are asked, and the newest answer of all is used.
+public enum Currentness {
+    /// A quote at or after this time is current.
+    /// While the venue trades: not older than the stale limit (3 intervals, at least 45 minutes).
+    /// Otherwise, and shortly after the open: the close of the last completed session.
+    public static func quoteDue(_ exchange: Exchange, interval: TimeInterval, now: Date = Date()) -> Date {
+        let allowed = max(3 * interval, 45 * 60)
+        if exchange.kind == .crypto { return now.addingTimeInterval(-allowed) }
+        if exchange.isOpen(at: now), Double(exchange.minutesSinceOpen(at: now) ?? 0) * 60 > allowed {
+            return now.addingTimeInterval(-allowed)
+        }
+        return ProviderUtil.closeTime(exchange.lastCompletedSession(at: now), exchange).addingTimeInterval(-60)
+    }
+
+    /// The last daily bar a current history ends with. Sources get three hours after the close to publish it.
+    public static func historyDue(_ exchange: Exchange, now: Date = Date()) -> DayKey {
+        exchange.lastCompletedSession(at: now.addingTimeInterval(-3 * 3600))
+    }
+}

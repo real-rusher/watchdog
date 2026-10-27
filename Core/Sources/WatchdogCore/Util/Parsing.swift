@@ -136,6 +136,42 @@ public enum Lenient {
         let kept = words.filter { !stop.contains($0) }
         return (kept.isEmpty ? words : kept).prefix(2).joined(separator: " ")
     }
+
+    /// Distinctive words of a company name: legal forms, share classes and words many companies share are dropped.
+    static func distinctiveWords(_ name: String) -> [String] {
+        let generic: Set<String> = [
+            "inc", "incorporated", "corp", "corporation", "ltd", "limited", "llc", "lp", "plc", "se", "ag", "sa", "asa", "nv", "bv", "co",
+            "company", "the", "and", "und", "of", "for", "group", "holding", "holdings", "shs", "reg", "registered", "class", "cl", "ord",
+            "adr", "gdr", "kgaa", "gmbh", "spa", "ab", "publ", "oyj", "bhd", "tbk", "pcl", "sab", "cv", "ltda", "jsc", "pjsc", "aktiengesellschaft",
+            "namens", "namensaktien", "inhaber", "aktie", "aktien", "inh", "vz", "pref", "preferred", "new", "dl", "eo", "sf", "cad", "usd",
+            "share", "shares", "stock", "common", "unit", "units", "trust", "reit", "fund", "etf", "etc", "etn", "ucits", "acc", "dist", "dis",
+            "real", "estate", "investment", "investments", "royalty", "royalties", "streaming", "mining", "mines", "minerals", "metals",
+            "resources", "energy", "gold", "silver", "uranium", "oil", "gas", "capital", "international", "global", "technologies",
+            "technology", "industries", "national", "bank", "financial", "partners", "ventures", "exploration", "power", "electric",
+        ]
+        let folded = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "de_DE")).lowercased()
+            .replacingOccurrences(of: ".", with: "")
+        return folded.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).map(String.init)
+            .filter { $0.count >= 3 && !$0.contains(where: \.isNumber) && !generic.contains($0) }
+    }
+
+    /// Whether two names denote the same company ("IMMUCELL CORP. DL-,10" and "ImmuCell Corporation").
+    /// Nil when one of the names has no distinctive word, so nothing can be said.
+    public static func sameCompany(_ a: String, _ b: String) -> Bool? {
+        let wa = distinctiveWords(a), wb = distinctiveWords(b)
+        guard !wa.isEmpty, !wb.isEmpty else { return nil }
+        for x in wa {
+            for y in wb {
+                if x == y { return true }
+                // "Uran" and "Uranium", "Ericsson" and "Ericssons".
+                if min(x.count, y.count) >= 4 && (x.hasPrefix(y) || y.hasPrefix(x)) { return true }
+            }
+        }
+        // Names written together or apart ("Immu Cell", "ImmuCell").
+        let ja = wa.joined(), jb = wb.joined()
+        if ja.count >= 5 && jb.count >= 5 && (ja.contains(jb) || jb.contains(ja)) { return true }
+        return false
+    }
 }
 
 public extension Dictionary where Key == String, Value == Any {

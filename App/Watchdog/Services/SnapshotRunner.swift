@@ -154,6 +154,48 @@ enum SnapshotRunner {
             }
         }
         window.makeKeyAndOrderFront(nil)
+        await wrongTickers(model, window)
+    }
+
+    /// Live check with the tickers the customer's import produced: German codes from OnVista at Nasdaq ("AOE", "IUL")
+    /// and a TSX Venture symbol that belongs to another company ("FCA.UN"). Watchdog has to find the right ones through the ISIN.
+    static func wrongTickers(_ model: AppModel, _ window: NSWindow) async {
+        let cases = [
+            Position(name: "Alico", isin: "US0162301040", listing: Listing(exchangeID: "XNAS", ticker: "AOE")),
+            Position(name: "IMMUCELL CORP. DL-,10", isin: "US4525253062", listing: Listing(exchangeID: "XNAS", ticker: "IUL")),
+            Position(name: "Metalla Royalty & Streaming", isin: "CA59124U6051",
+                     listing: Listing(exchangeID: "XTSX", ticker: "FCA.UN", symbols: ["yahoo": "FCA-UN.V"])),
+        ]
+        for p in cases { model.add(p) }
+        model.selection = nil
+        for _ in 0..<12 {
+            await sleep(10)
+            let tickers = cases.compactMap { c in model.position(c.id)?.listing.ticker }
+            if tickers == ["ALCO", "ICCC", "MTA"], cases.allSatisfy({ model.metrics($0.id)?.hasData == true }), !model.isRefreshing { break }
+        }
+        await sleep(3)
+        for c in cases {
+            guard let p = model.position(c.id) else { continue }
+            let r = model.row(p)
+            let m = r.metrics
+            note("KORREKTUR \(c.listing.ticker) -> \(p.listing.ticker) symbols \(p.listing.symbols) | Kurs \(m?.priceLocal.map { Format.money($0, m?.currency ?? "") } ?? "-") vom \(m?.quoteTime.map { "\($0)" } ?? "-") | Verlauf bis \(model.snapshot?.status[p.listing.key]?.historySource?.displayName ?? "-") | Hinweis \(r.notice?.headline ?? "-"): \(r.notice?.detail ?? "")")
+            if let s = model.snapshot?.status[p.listing.key] {
+                note("   Abfragen: " + s.attempts.map { "\($0.provider.displayName): \($0.error ?? "ok")" }.joined(separator: "; "))
+            }
+            if let f = r.freshness, f.level != .ok { note("   Daten: \(f.level) \(f.headline)") }
+        }
+        for appearance in [NSAppearance.Name.aqua, .darkAqua] {
+            NSApp.appearance = NSAppearance(named: appearance)
+            let tag = appearance == .aqua ? "light" : "dark"
+            model.selection = nil
+            await sleep(1.2)
+            capture(window, "8-corrected-\(tag)")
+            model.selection = cases[2].id
+            await sleep(2.5)
+            capture(window, "9-corrected-detail-\(tag)")
+        }
+        NSApp.appearance = NSAppearance(named: .aqua)
+        model.selection = nil
     }
 
     // MARK: Import with real files and live search
