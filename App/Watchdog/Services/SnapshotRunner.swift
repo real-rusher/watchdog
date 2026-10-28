@@ -165,9 +165,10 @@ enum SnapshotRunner {
         note("BEISPIEL Titel: \(e.title) | Text: \(e.body)")
         let s = NotificationSettings(ntfyEnabled: true)
         do {
-            try await NtfyNotifier(settings: s, http: model.engine.http).send(e)
+            let http = await model.engine.http
+            try await NtfyNotifier(settings: s, http: http).send(e)
             await sleep(2)
-            let (data, _) = try await model.engine.http.get(URL(string: "https://ntfy.sh/\(s.ntfyTopic)/json?poll=1")!)
+            let (data, _) = try await http.get(URL(string: "https://ntfy.sh/\(s.ntfyTopic)/json?poll=1")!)
             let text = String(data: data, encoding: .utf8) ?? ""
             note("BEISPIEL ntfy: \(text.contains("TEST") ? "angekommen" : "NICHT angekommen") \(text.prefix(500))")
         } catch {

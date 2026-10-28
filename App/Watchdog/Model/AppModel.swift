@@ -406,9 +406,9 @@ final class AppModel {
             return
         }
         notice = "Beispielmitteilung wird gesendet …"
-        let http = engine.http
         Task {
             do {
+                let http = await engine.http
                 try await NtfyNotifier(settings: settings, http: http).send(e)
                 notice = "Beispielmitteilung gesendet: als Banner auf dem Mac und über ntfy an den Kanal \(settings.ntfyTopic). Auf dem iPhone sollte sie in wenigen Sekunden erscheinen, auf der Watch, wenn das iPhone gesperrt ist."
             } catch {
