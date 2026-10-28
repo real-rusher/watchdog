@@ -120,19 +120,26 @@ struct PriceChart: View {
                 Rectangle().fill(.clear).contentShape(Rectangle())
                     .onContinuousHover { phase in
                         switch phase {
-                        case .active(let loc):
-                            guard let frame = proxy.plotFrame else { return }
-                            let x = loc.x - geo[frame].origin.x
-                            if let date: Date = proxy.value(atX: x) { hoverIndex = nearest(date) }
-                        case .ended:
-                            hoverIndex = nil
+                        case .active(let loc): pick(loc.x, proxy: proxy, geo: geo)
+                        case .ended: hoverIndex = nil
                         }
                     }
+                    #if os(iOS) || os(watchOS)
+                    // Touch: hold and slide along the chart.
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged { pick($0.location.x, proxy: proxy, geo: geo) }
+                        .onEnded { _ in hoverIndex = nil })
+                    #endif
             }
         }
         .overlay(alignment: .topLeading) {
             if let i = hoverIndex, i < points.count { HoverCard(point: points[i], lines: lines, currency: currency, inLocal: inLocal) }
         }
+    }
+
+    private func pick(_ x: CGFloat, proxy: ChartProxy, geo: GeometryProxy) {
+        guard let frame = proxy.plotFrame else { return }
+        if let date: Date = proxy.value(atX: x - geo[frame].origin.x) { hoverIndex = nearest(date) }
     }
 
     // MARK: Data helpers

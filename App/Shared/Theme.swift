@@ -1,15 +1,38 @@
 import SwiftUI
-import AppKit
 import CoreText
 import WatchdogCore
+#if os(macOS)
+import AppKit
+typealias PlatformColor = NSColor
+#else
+import UIKit
+typealias PlatformColor = UIColor
+#endif
+
+extension Color {
+    init(platform c: PlatformColor) {
+        #if os(macOS)
+        self.init(nsColor: c)
+        #else
+        self.init(uiColor: c)
+        #endif
+    }
+}
 
 /// Colour tokens. Every token has a light and a dark value; the app follows the system appearance.
+/// The Apple Watch is always dark.
 enum Palette {
     private static func dyn(_ light: UInt32, _ dark: UInt32, alphaDark: CGFloat = 1) -> Color {
+        #if os(macOS)
         Color(nsColor: NSColor(name: nil) { app in
             let isDark = app.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
             return isDark ? NSColor(hex: dark, alpha: alphaDark) : NSColor(hex: light)
         })
+        #elseif os(watchOS)
+        Color(platform: UIColor(hex: dark, alpha: alphaDark))
+        #else
+        Color(uiColor: UIColor { t in t.userInterfaceStyle == .dark ? UIColor(hex: dark, alpha: alphaDark) : UIColor(hex: light) })
+        #endif
     }
 
     static let canvas = dyn(0xF3F4F1, 0x171A1D)
@@ -20,7 +43,7 @@ enum Palette {
     static let inkSoft = dyn(0x5A6269, 0xA2AAB0)
     static let inkFaint = dyn(0x8B9399, 0x6F787E)
     static let rule = dyn(0xD9DCD6, 0x343A40)
-    static let signal = Color(nsColor: NSColor(hex: 0xFFD100))
+    static let signal = Color(platform: PlatformColor(hex: 0xFFD100))
     static let signalWash = dyn(0xFFF1A6, 0x4A4113)
     static let selection = dyn(0xFFF4BF, 0x3B3618)
     static let up = dyn(0x15774A, 0x4CC68A)
@@ -56,9 +79,14 @@ enum Palette {
     }
 }
 
-extension NSColor {
+extension PlatformColor {
     convenience init(hex: UInt32, alpha: CGFloat = 1) {
-        self.init(srgbRed: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: alpha)
+        let r = CGFloat((hex >> 16) & 0xFF) / 255, g = CGFloat((hex >> 8) & 0xFF) / 255, b = CGFloat(hex & 0xFF) / 255
+        #if os(macOS)
+        self.init(srgbRed: r, green: g, blue: b, alpha: alpha)
+        #else
+        self.init(red: r, green: g, blue: b, alpha: alpha)
+        #endif
     }
 }
 
@@ -67,7 +95,7 @@ extension Color {
         guard var s = hexString?.trimmingCharacters(in: .whitespaces), !s.isEmpty else { return nil }
         if s.hasPrefix("#") { s.removeFirst() }
         guard s.count == 6, let v = UInt32(s, radix: 16) else { return nil }
-        self.init(nsColor: NSColor(hex: v))
+        self.init(platform: PlatformColor(hex: v))
     }
 }
 
@@ -91,7 +119,12 @@ enum Typo {
     }
 
     static func font(_ size: CGFloat, _ w: Weight = .regular, scale: CGFloat = 1) -> Font {
+        #if os(macOS)
         .custom(name(w), fixedSize: (size * scale).rounded(.toNearestOrEven))
+        #else
+        // iPhone, iPad and Watch follow the system text size ("Größerer Text").
+        .custom(name(w), size: size * scale, relativeTo: size >= 20 ? .title2 : size >= 15 ? .body : size >= 12 ? .subheadline : .caption)
+        #endif
     }
 }
 

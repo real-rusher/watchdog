@@ -204,25 +204,7 @@ struct DetailView: View {
     /// One sentence that says what to do.
     private func verdict(_ m: PositionMetrics?) -> some View {
         let rules = model.depot.rules
-        let lineName = rules.ampel.line.description
-        let (title, detail): (String, String) = {
-            guard let m, let d = m.ampel.distancePercent, let lv = m.lineValues[rules.ampel.line] else {
-                return ("Noch keine Aussage möglich", "Für die \(lineName) werden mindestens \(rules.ampel.line.length) Handelstage Kursverlauf gebraucht.")
-            }
-            let lineEUR = (m.priceEUR ?? 0) / max(m.priceLocal ?? 1, 0.0000001) * lv
-            let base = "\(Format.pct(abs(d))) \(d >= 0 ? "über" : "unter") der \(lineName) (\(Format.eur(lineEUR)))."
-            var cross = ""
-            if let c = m.ampel.lastCrossing {
-                cross = " Zuletzt nach \(c.direction == .down ? "unten" : "oben") gekreuzt am \(Format.day(c.day))"
-                cross += c.sessionsAgo == 0 ? ", heute." : c.sessionsAgo == 1 ? ", vor einem Handelstag." : ", vor \(c.sessionsAgo) Handelstagen."
-            }
-            switch m.ampel.state {
-            case .red: return (m.ampel.isFresh ? "Gerade unter die Linie gefallen. Hinschauen." : "Unter der Linie. Hinschauen.", base + cross)
-            case .yellow: return ("Knapp an der Linie. Beobachten.", base + cross)
-            case .green: return (m.ampel.isFresh ? "Gerade über die Linie gestiegen." : "Über der Linie. Kein dringender Handlungsbedarf.", base + cross)
-            case .unknown: return ("Noch keine Aussage möglich", base)
-            }
-        }()
+        let (title, detail) = Verdict.text(m, rules: rules)
         let state = m?.ampel.state ?? .unknown
         return HStack(alignment: .top, spacing: 12) {
             Rectangle().fill(Palette.ampel(state)).frame(width: 4)

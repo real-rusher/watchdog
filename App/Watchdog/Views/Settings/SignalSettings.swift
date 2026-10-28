@@ -210,6 +210,10 @@ struct NotificationSettingsView: View {
                     }
                     Text("Der Kanalname wirkt wie ein Passwort: Wer ihn kennt, kann die Meldungen mitlesen. Die Meldungen enthalten nur Name, Kurs und Signal, keine Stückzahlen oder Beträge.")
                         .type(11).foregroundStyle(Palette.inkSoft)
+                    Toggle("Tippen auf die Meldung öffnet den Wert in der Watchdog-App auf dem iPhone",
+                           isOn: Binding(get: { n.ntfyOpensApp }, set: { v in model.mutate { $0.notifications.ntfyOpensApp = v } }))
+                    Text("Erst einschalten, wenn die Watchdog-App auf dem iPhone installiert ist. Ohne sie kann ntfy den Link nicht öffnen.")
+                        .type(11).foregroundStyle(Palette.inkSoft)
                     HStack {
                         Button("Testnachricht senden") {
                             testResult = "wird gesendet …"
@@ -227,6 +231,7 @@ struct NotificationSettingsView: View {
                     }
                 }
             }
+            DevicesSection()
             Section("Wenn Kurse ausbleiben") {
                 Toggle("Melden, wenn Kurse ausbleiben", isOn: Binding(get: { n.dataAlerts }, set: { v in model.mutate { $0.notifications.dataAlerts = v } }))
                 Text("Kommt während der Handelszeit \(allowed) Minuten lang kein Kurs an, fehlt ein Schlusskurs, endet der Kursverlauf oder fehlt ein Wechselkurs, wird der Wert in der Tabelle sofort markiert. Hält das 20 Minuten an, kommt eine Mitteilung auf dem Mac und über ntfy, höchstens eine am Tag.")
@@ -295,5 +300,43 @@ struct NotificationSettingsView: View {
             default: macStatus = "unbekannt"
             }
         }
+    }
+}
+
+/// Which device checks prices and announces: the Mac first, the iPhone when the Mac stops, the Watch when both stop.
+private struct DevicesSection: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        Section("Mac, iPhone und Apple Watch") {
+            Text("Geprüft und gemeldet wird in dieser Reihenfolge: zuerst der Mac. Prüft er 20 Minuten lang nicht (ausgeschaltet, im Ruhezustand, ohne Internet), übernimmt das iPhone, danach die Apple Watch. Was ein Gerät schon gemeldet hat, meldet kein anderes noch einmal. Dazu liegt neben der Depotdatei in iCloud Drive die kleine Datei \u{201E}Mitteilungen.json\u{201C}.")
+                .type(12).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            let l = model.ledger
+            let duty = l?.onDuty(asking: .mac) ?? .mac
+            ForEach(CheckerRole.allCases, id: \.self) { role in
+                LabeledContent {
+                    Text(status(role, l)).type(12).foregroundStyle(l?.isActive(role) == true ? Palette.ink : Palette.inkSoft)
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(role.displayName).type(13, .medium)
+                        if role == duty {
+                            Text("meldet").type(11, .semibold).foregroundStyle(Color.black.opacity(0.85))
+                                .padding(.horizontal, 5).padding(.vertical, 0.5)
+                                .background(Palette.signal, in: RoundedRectangle(cornerRadius: 3))
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear { model.reloadLedger() }
+    }
+
+    private func status(_ role: CheckerRole, _ l: NotificationLedger?) -> String {
+        guard let c = l?.checkers[role] else {
+            return role == .mac ? "prüft, sobald die Depotdatei in iCloud Drive liegt" : "noch nicht eingerichtet"
+        }
+        let when = Format.time(c.lastCheck)
+        if l?.isActive(role) == true { return "\(c.device): prüft, zuletzt \(when)" }
+        return c.healthy ? "\(c.device): seit \(when) keine Prüfung" : "\(c.device): bekommt seit \(when) kaum Kurse"
     }
 }

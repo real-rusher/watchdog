@@ -724,6 +724,9 @@ public actor MarketEngine {
     }
 
     public func history(_ key: String) -> PriceHistory? { histories[key] }
+
+    /// Symbols resolved per listing and provider ("listingKey|provider"), handed to the Watch so it need not search.
+    public func knownSymbols() async -> [String: String] { await symbols.all() }
     public func quote(_ key: String) -> Quote? { quotes[key] }
 
     /// Search across providers for the "add security" dialog.

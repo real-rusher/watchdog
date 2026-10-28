@@ -323,11 +323,51 @@ final class AppModel {
         }
     }
 
+    /// Duty for messages among Mac, iPhone and Watch (shared ledger next to the depot).
+    private var coordinator = NotificationCoordinator(role: .mac)
+    /// Last state of the ledger, for the settings.
+    private(set) var ledger: NotificationLedger?
+    private var lastLedgerWrite: Date?
+    private var lastLedgerHealthy: Bool?
+
+    /// Announces new events. The Mac is first in line; events the iPhone or the Watch announced while the Mac
+    /// was asleep are not repeated. Without access to the ledger the Mac simply announces everything.
     private func deliver(_ events: [SignalEvent]) {
-        guard !events.isEmpty, snapshotDir == nil else { return }
-        if depot.notifications.macEnabled { notifier.post(events) }
+        guard snapshotDir == nil else { return }
+        var send = events
+        if store.exists {
+            let healthy = NotificationLedger.healthy(snapshot?.freshness ?? [:])
+            // A heartbeat every five minutes is plenty against the 20 minute limit and keeps iCloud quiet.
+            let due = events.isEmpty == false || coordinator.pending.isEmpty == false || healthy != lastLedgerHealthy
+                || Date().timeIntervalSince(lastLedgerWrite ?? .distantPast) > 5 * 60
+            if due {
+                let file = LedgerFile(folder: store.url.deletingLastPathComponent())
+                let device = Host.current().localizedName ?? "Mac"
+                var coord = coordinator
+                var copy: NotificationLedger?
+                if let d = try? file.update({ (l: inout NotificationLedger) -> NotificationCoordinator.Decision in
+                    let d = coord.cycle(ledger: &l, newEvents: events, healthy: healthy, device: device)
+                    copy = l
+                    return d
+                }) {
+                    coordinator = coord
+                    ledger = copy
+                    lastLedgerWrite = Date()
+                    lastLedgerHealthy = healthy
+                    send = d.deliver
+                }
+            }
+        }
+        guard !send.isEmpty else { return }
+        if depot.notifications.macEnabled { notifier.post(send) }
         let settings = depot.notifications
-        Task { await engine.push(events, settings: settings) }
+        Task { await engine.push(send, settings: settings) }
+    }
+
+    /// Reads the ledger again (for the settings).
+    func reloadLedger() {
+        guard store.exists else { return }
+        ledger = LedgerFile(folder: store.url.deletingLastPathComponent()).read()
     }
 
     // MARK: Depot changes

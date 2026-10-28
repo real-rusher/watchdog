@@ -3,6 +3,8 @@ options:
   bundleIdPrefix: de.realrusher
   deploymentTarget:
     macOS: "14.0"
+    iOS: "17.0"
+    watchOS: "10.0"
   createIntermediateGroups: true
 settings:
   base:
@@ -24,8 +26,9 @@ targets:
     platform: macOS
     sources:
       - path: Watchdog
+      - path: Shared
         excludes:
-          - "Resources/Fonts/OFL.txt"
+          - "Fonts/OFL.txt"
     dependencies:
       - package: WatchdogCore
         product: WatchdogCore
@@ -48,11 +51,122 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         COMBINE_HIDPI_IMAGES: YES
         GENERATE_INFOPLIST_FILE: NO
+
+  # iPhone and iPad: view of the depot, checks and announces when the Mac stops (Core: Notify/Ledger.swift).
+  WatchdogMobile:
+    type: application
+    platform: iOS
+    sources:
+      - path: Mobile
+      - path: Shared
+        excludes:
+          - "Fonts/OFL.txt"
+    dependencies:
+      - package: WatchdogCore
+        product: WatchdogCore
+      - target: WatchdogWatch
+    info:
+      path: Mobile/Info.plist
+      properties:
+        CFBundleDisplayName: Watchdog
+        CFBundleName: Watchdog
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.finance
+        UILaunchScreen: {}
+        UIBackgroundModes: [fetch, processing]
+        BGTaskSchedulerPermittedIdentifiers: [de.realrusher.watchdog.check]
+        CFBundleURLTypes:
+          - CFBundleURLName: de.realrusher.watchdog
+            CFBundleURLSchemes: [watchdog]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.realrusher.watchdog
+        PRODUCT_NAME: Watchdog
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+
+  # Apple Watch: values below the line, own check of the current price against the line as last resort.
+  WatchdogWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: WatchApp
+      - path: WatchShared
+      - path: Shared/Theme.swift
+      - path: Shared/AmpelDot.swift
+      - path: Shared/Fonts
+        excludes:
+          - "OFL.txt"
+    dependencies:
+      - package: WatchdogCore
+        product: WatchdogCore
+      - target: WatchdogComplication
+    info:
+      path: WatchApp/Info.plist
+      properties:
+        CFBundleDisplayName: Watchdog
+        CFBundleName: Watchdog
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: de.realrusher.watchdog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.realrusher.watchdog.watchkitapp
+        PRODUCT_NAME: Watchdog
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+
+  # Watch face complication: number of values below the line.
+  WatchdogComplication:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - path: WatchComplication
+      - path: WatchShared
+    dependencies:
+      - package: WatchdogCore
+        product: WatchdogCore
+    info:
+      path: WatchComplication/Info.plist
+      properties:
+        CFBundleDisplayName: Watchdog
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.realrusher.watchdog.watchkitapp.complication
+        PRODUCT_NAME: WatchdogComplication
+        GENERATE_INFOPLIST_FILE: NO
+        SKIP_INSTALL: YES
 schemes:
   Watchdog:
     build:
       targets:
         Watchdog: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+  WatchdogMobile:
+    build:
+      targets:
+        WatchdogMobile: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+  WatchdogWatch:
+    build:
+      targets:
+        WatchdogWatch: all
     run:
       config: Debug
     archive:

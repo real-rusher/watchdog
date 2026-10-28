@@ -1,0 +1,51 @@
+name: mobile-apps
+on:
+  push:
+    branches: ['**']
+    paths: [App/Mobile/**, App/WatchApp/**, App/WatchComplication/**, App/WatchShared/**, App/Shared/**, App/project.yml,
+            Core/Sources/**, Core/Package.swift, .github/workflows/mobile.yml, .github/mobile-shots.sh]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: mobile-apps
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          mkdir -p out
+          xcodebuild -version | tee out/versions.txt
+          xcrun simctl list runtimes | tee -a out/versions.txt
+          brew install xcodegen >/dev/null 2>&1 || brew upgrade xcodegen >/dev/null 2>&1 || true
+      - name: Generate project
+        working-directory: App
+        run: xcodegen generate
+      - name: Build iPhone and iPad app (with the Watch app inside)
+        run: |
+          set -o pipefail
+          xcodebuild -project App/Watchdog.xcodeproj -scheme WatchdogMobile -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath build/m CODE_SIGNING_ALLOWED=NO \
+            build > out/ios-build.log 2>&1 || (grep -E "error:|error -|fatal" out/ios-build.log | sort -u | head -150 > out/ios-errors.txt; tail -60 out/ios-build.log > out/ios-build-tail.txt; exit 1)
+          grep -E "warning:" out/ios-build.log | grep -v DerivedData | sort -u | head -80 > out/ios-warnings.txt || true
+      - name: Build Watch app for the Watch simulator
+        run: |
+          set -o pipefail
+          xcodebuild -project App/Watchdog.xcodeproj -scheme WatchdogWatch -configuration Debug \
+            -destination 'generic/platform=watchOS Simulator' -derivedDataPath build/m CODE_SIGNING_ALLOWED=NO \
+            build > out/watch-build.log 2>&1 || (grep -E "error:|error -|fatal" out/watch-build.log | sort -u | head -150 > out/watch-errors.txt; tail -60 out/watch-build.log > out/watch-build-tail.txt; exit 1)
+          grep -E "warning:" out/watch-build.log | grep -v DerivedData | sort -u | head -80 > out/watch-warnings.txt || true
+          find build/m/Build/Products -maxdepth 2 -name "*.app" | tee out/products.txt
+      - name: Screenshots in the simulators (example depot, live prices)
+        continue-on-error: true
+        run: bash .github/mobile-shots.sh > out/shots.log 2>&1
+      - name: Publish results
+        if: always()
+        run: |
+          gzip -9 out/*-build.log 2>/dev/null || true
+          cd out && git init -q -b r && git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -A && git commit -qm "mobile results ${GITHUB_SHA::7}" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r:results-mobile

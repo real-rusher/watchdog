@@ -108,20 +108,28 @@ public struct SignalState: Codable, Sendable {
     }
 
     private func makeEvent(key: String, hit: RuleHit, day: DayKey, metrics: PositionMetrics, position: Position, exchange: Exchange) -> SignalEvent {
-        let title = "\(position.name) · \(exchange.name)"
-        var parts: [String] = [hit.rule.name]
-        if hit.rule.condition.kind.isEvent { parts[0] += " am \(Format.dayShort(day))" }
-        var facts: [String] = []
-        if let p = metrics.priceEUR { facts.append("Kurs \(Format.eur(p))") }
+        var lineEUR: Double?
         if let line = metrics.lineValues[hit.rule.condition.b], hit.rule.condition.kind.usesLines, hit.rule.condition.b != .price,
            let pl = metrics.priceLocal, pl > 0, let pe = metrics.priceEUR {
-            facts.append("\(hit.rule.condition.b.shortLabel) \(Format.eur(line * pe / pl))")
+            lineEUR = line * pe / pl
         }
-        if let d = metrics.ampel.distancePercent { facts.append("Abstand \(Format.pct(d, signed: true))") }
-        parts += facts
-        return SignalEvent(id: key, positionID: position.id, positionName: position.name, exchangeName: exchange.name,
-                           ruleName: hit.rule.name, severity: hit.rule.severity, day: day, title: title,
-                           body: parts.joined(separator: " · "), createdAt: Date())
+        return Self.event(id: key, rule: hit.rule, day: day, position: position, exchange: exchange, priceEUR: metrics.priceEUR,
+                          lineEUR: lineEUR, distance: metrics.ampel.distancePercent)
+    }
+
+    /// Message text, short enough for the Apple Watch: what happened in the title, the numbers in the body.
+    /// No amounts or quantities of the holding.
+    public static func event(id: String, rule: Rule, day: DayKey, position: Position, exchange: Exchange, priceEUR: Double?,
+                             lineEUR: Double?, distance: Double?, now: Date = Date()) -> SignalEvent {
+        var facts: [String] = []
+        if let p = priceEUR { facts.append("Kurs \(Format.eur(p))") }
+        if let l = lineEUR { facts.append("\(rule.condition.b.longLabel) \(Format.eur(l))") }
+        if let d = distance { facts.append("Abstand \(Format.pct(d, signed: true))") }
+        facts.append(exchange.name)
+        if rule.condition.kind.isEvent { facts.append(Format.dayShort(day)) }
+        return SignalEvent(id: id, positionID: position.id, positionName: position.name, exchangeName: exchange.name,
+                           ruleName: rule.name, severity: rule.severity, day: day, title: "\(position.name): \(rule.headline)",
+                           body: facts.joined(separator: " · "), createdAt: now)
     }
 }
 
@@ -136,17 +144,21 @@ public struct NtfyNotifier: Sendable {
     }
 
     public func send(_ e: SignalEvent) async throws {
-        try await send(title: e.title, body: e.body, severity: e.severity)
+        // Tapping the message opens the value in the iPhone app once it is installed.
+        let click = settings.ntfyOpensApp && e.positionID != SignalState.dataAlertID ? "watchdog://wert/\(e.positionID.uuidString)" : nil
+        try await send(title: e.title, body: e.body, severity: e.severity, click: click)
     }
 
-    public func send(title: String, body: String, severity: Severity) async throws {
+    public func send(title: String, body: String, severity: Severity, click: String? = nil) async throws {
         guard let base = settings.subscribeURL else { throw ProviderError.parse("ntfy URL") }
         // Title, priority and tags as query parameters: UTF-8 safe (umlauts), unlike raw HTTP headers.
-        let url = URL.make(base.absoluteString, [
+        var query: [(String, String)] = [
             ("title", title),
             ("priority", severity == .alarm ? "high" : severity == .warning ? "default" : "low"),
             ("tags", severity == .alarm ? "red_circle,chart_with_downwards_trend" : severity == .warning ? "yellow_circle" : "green_circle,chart_with_upwards_trend"),
-        ])
+        ]
+        if let click { query.append(("click", click)) }
+        let url = URL.make(base.absoluteString, query)
         var headers: [String: String] = [:]
         if let t = settings.ntfyToken, !t.isEmpty { headers["Authorization"] = "Bearer \(t)" }
         let (data, resp) = try await http.post(url, body: Data(body.utf8), contentType: "text/plain; charset=utf-8", headers: headers)

@@ -59,6 +59,8 @@ public struct NotificationSettings: Codable, Hashable, Sendable {
     public var ntfyTopic: String
     /// Optional access token for protected ntfy servers.
     public var ntfyToken: String?
+    /// Tapping an ntfy message opens the value in the Watchdog iPhone app (only useful once the app is installed).
+    public var ntfyOpensApp: Bool
     /// Warn when prices stop arriving.
     public var dataAlerts: Bool
     /// Optional heartbeat URL (healthchecks.io, Uptime Kuma push, Better Stack heartbeat).
@@ -72,6 +74,7 @@ public struct NotificationSettings: Codable, Hashable, Sendable {
         self.ntfyServer = ntfyServer
         self.ntfyTopic = ntfyTopic
         self.ntfyToken = ntfyToken
+        self.ntfyOpensApp = false
         self.dataAlerts = dataAlerts
         self.heartbeatURL = heartbeatURL
     }
@@ -90,6 +93,7 @@ public struct NotificationSettings: Codable, Hashable, Sendable {
         ntfyServer = c.value(.ntfyServer, "https://ntfy.sh")
         ntfyTopic = c.value(.ntfyTopic, NotificationSettings.randomTopic())
         ntfyToken = c.value(.ntfyToken, nil as String?)
+        ntfyOpensApp = c.value(.ntfyOpensApp, false)
         dataAlerts = c.value(.dataAlerts, true)
         heartbeatURL = c.value(.heartbeatURL, nil as String?)
     }

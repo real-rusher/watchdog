@@ -30,6 +30,15 @@ public struct LineSpec: Codable, Hashable, Sendable, CustomStringConvertible {
         case .ema: return "EMA \(length)"
         }
     }
+
+    /// "200-Tage-Linie" for messages.
+    public var longLabel: String {
+        switch kind {
+        case .price: return "Kurs"
+        case .sma: return "\(length)-Tage-Linie"
+        case .ema: return "EMA \(length)"
+        }
+    }
 }
 
 public enum PerformancePeriod: String, Codable, Sendable, CaseIterable {
@@ -152,6 +161,19 @@ public struct Rule: Codable, Hashable, Identifiable, Sendable {
         self.severity = severity
         self.notify = notify
         self.showBadge = showBadge
+    }
+
+    /// What happened, for the title of a message ("fällt unter die 200-Tage-Linie").
+    public var headline: String {
+        let c = condition
+        guard c.a == .price else { return name }
+        switch c.kind {
+        case .crossesBelow: return "fällt unter die \(c.b.longLabel)"
+        case .crossesAbove: return "steigt über die \(c.b.longLabel)"
+        case .below: return "liegt unter der \(c.b.longLabel)"
+        case .above: return "liegt über der \(c.b.longLabel)"
+        default: return name
+        }
     }
 }
 
