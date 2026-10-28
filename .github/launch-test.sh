@@ -4,7 +4,7 @@ APP=/Applications/Watchdog.app
 mkdir -p out
 fresh() {
   sudo rm -rf "$APP"
-  [ -d src ] || { gh release download v1.0.5 -p Watchdog.dmg -D dl >/dev/null; MNT=$(hdiutil attach -nobrowse -readonly dl/Watchdog.dmg | tail -1 | awk -F'\t' '{print $NF}'); cp -R "$MNT/Watchdog.app" src.app; hdiutil detach "$MNT" -quiet; mkdir src; }
+  [ -d src ] || { gh release download v1.0.6 -p Watchdog.dmg -D dl >/dev/null; MNT=$(hdiutil attach -nobrowse -readonly dl/Watchdog.dmg | tail -1 | awk -F'\t' '{print $NF}'); cp -R "$MNT/Watchdog.app" src.app; hdiutil detach "$MNT" -quiet; mkdir src; }
   cp -R src.app "$APP"
 }
 quarantine() { xattr -w com.apple.quarantine "0083;$(printf %x $(date +%s));Safari;" "$APP"; }
