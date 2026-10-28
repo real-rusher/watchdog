@@ -48,7 +48,28 @@ Die Linie ist der einfache gleitende Durchschnitt der letzten 200 Schlusskurse a
 ## Mitteilungen
 
 - **Mac**: Banner bei jedem neuen Durchbruch. Watchdog läuft dafür in der Menüleiste weiter, auch wenn das Fenster geschlossen ist. In den Einstellungen „Beim Anmelden am Mac starten“ einschalten.
-- **iPhone und Apple Watch**: Einstellungen > Mitteilungen > „Mitteilungen an ntfy senden“ einschalten, auf dem iPhone die kostenlose App **ntfy** installieren und den angezeigten Kanal abonnieren (QR-Code scannen).
+- **iPhone und Apple Watch über ntfy**: Einstellungen > Mitteilungen > „Mitteilungen an ntfy senden“ einschalten, auf dem iPhone die kostenlose App **ntfy** installieren und den angezeigten Kanal abonnieren (QR-Code scannen). Was auf dem iPhone ankommt, zeigt auch die Watch. Der Titel sagt kurz, was passiert ist („Cameco: fällt unter die 200-Tage-Linie“), damit er auf der Watch ganz lesbar ist.
+- **Watchdog-Apps für iPhone, iPad und Apple Watch**: vorbereitet, siehe unten. Sie lassen sich erst mit einem Apple-Entwicklerkonto auf echte Geräte bringen.
+
+### Wer prüft und meldet
+
+Mac, iPhone und Watch prüfen jeweils selbst, gemeldet wird aber nur einmal und in dieser Reihenfolge:
+
+1. **Mac**: prüft und meldet, solange er läuft.
+2. **iPhone**: meldet erst, wenn der Mac 20 Minuten lang nicht geprüft hat (ausgeschaltet, Ruhezustand, kein Internet) oder kaum noch Kurse bekommt.
+3. **Apple Watch**: meldet erst, wenn auch das iPhone 20 Minuten lang nicht geprüft hat.
+
+Dazu liegt neben der Depotdatei in iCloud Drive die kleine Datei `Mitteilungen.json` (das Meldebuch). Jedes Gerät trägt dort ein, wann es zuletzt geprüft hat und welche Durchbrüche es gemeldet hat. Was ein Gerät gemeldet hat, meldet kein anderes noch einmal, auch nicht über ntfy. Ein Durchbruch, den das zuständige Gerät verpasst hat, meldet das nächste innerhalb eines Tages nach. Unter Einstellungen > Mitteilungen steht, welches Gerät gerade meldet.
+
+Grenzen: Im Hintergrund dürfen iPhone und Watch nur prüfen, wenn iOS bzw. watchOS sie weckt, mal alle 15 Minuten, mal seltener. Die Watch erfährt vom iPhone, ob Mac und iPhone prüfen; ist das iPhone lange nicht erreichbar, prüft die Watch vorsichtshalber selbst, dann kann eine Meldung doppelt kommen.
+
+## iPhone, iPad und Apple Watch
+
+Die Apps sind gebaut und im Simulator getestet. Auf echte Geräte kommen sie erst mit einem Apple-Entwicklerkonto (99 € im Jahr, über TestFlight oder den App Store).
+
+- **iPhone und iPad**: zeigen dasselbe Depot wie der Mac, mit Gruppen (Banken, Themen, Liste), Ampel, Abstand zur Linie, Kurs, Heute, Wert, Seit Kauf, Seit 1.1. und 30 Tage (auf schmalen iPhones nur die wichtigsten Spalten), Detail mit Chart, 38- und 200-Tage-Linie und Käufen. Angelegt und bearbeitet wird am Mac. Beim ersten Start einmal den Ordner „Watchdog“ in iCloud Drive auswählen. Die Schrift folgt der Einstellung „Größerer Text“.
+- **Apple Watch**: Liste der Werte, die Werte unter der Linie und die frisch gekreuzten zuerst, mit Abstand und Kurs. Dazu eine Komplikation für das Zifferblatt mit der Zahl der Werte unter der Linie. Die Watch bekommt die Daten vom iPhone. Prüft sie selbst, holt sie nur den aktuellen Kurs der Werte nahe an der Linie und vergleicht ihn mit der Linie vom iPhone; das schont den Akku.
+- **ntfy und die App**: Ist die iPhone-App installiert, kann unter Einstellungen > Mitteilungen eingeschaltet werden, dass ein Tippen auf die ntfy-Meldung den Wert in der App öffnet.
 
 ## Kursdaten
 

@@ -22,6 +22,7 @@ public final class DepotStore: @unchecked Sendable {
         return d
     }
 
+    #if os(macOS) || os(Linux)
     /// iCloud Drive folder on the Mac if it exists, otherwise Documents.
     public static func defaultURL(home: URL = FileManager.default.homeDirectoryForCurrentUser) -> URL {
         let icloud = home.appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs", isDirectory: true)
@@ -33,6 +34,13 @@ public final class DepotStore: @unchecked Sendable {
         }
         return base.appendingPathComponent("Watchdog.json")
     }
+    #else
+    /// iPhone, iPad and Watch open the folder the user picked; this is only the app's own fallback.
+    public static func defaultURL() -> URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("Watchdog", isDirectory: true).appendingPathComponent("Watchdog.json")
+    }
+    #endif
 
     public var exists: Bool { fm.fileExists(atPath: url.path) }
 

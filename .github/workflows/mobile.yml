@@ -28,6 +28,7 @@ jobs:
       - name: Build iPhone and iPad app (with the Watch app inside)
         run: |
           set -o pipefail
+          defaults write com.apple.dt.Xcode IDEBuildingContinueBuildingAfterErrors -bool YES
           xcodebuild -project App/Watchdog.xcodeproj -scheme WatchdogMobile -configuration Debug \
             -destination 'generic/platform=iOS Simulator' -derivedDataPath build/m CODE_SIGNING_ALLOWED=NO \
             build > out/ios-build.log 2>&1 || (grep -E "error:|error -|fatal" out/ios-build.log | sort -u | head -150 > out/ios-errors.txt; tail -60 out/ios-build.log > out/ios-build-tail.txt; exit 1)
