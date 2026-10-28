@@ -136,6 +136,7 @@ struct DepotListView: View {
                     ForEach(s.positions) { p in
                         PositionRow(position: p)
                             .tag(p.id)
+                            .focusEffectDisabled()
                             .listRowBackground(model.selection == p.id ? Palette.selection : Palette.surface)
                             .listRowSeparatorTint(Palette.rule)
                     }
@@ -281,6 +282,7 @@ struct ColumnHeader: View {
                 Spacer()
                 Text("Kurs, heute, Abstand 200er")
             }
+            Text("Werte")
         }
         .type(12)
         .foregroundStyle(Palette.inkSoft)
