@@ -1,17 +1,19 @@
-Watchdog 1.0.6 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
+Watchdog 1.0.7 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
-**Neu in 1.0.6: immer der neueste verfügbare Kurs**
-- Liefert eine Quelle keinen oder nur einen alten Kurs, fragt Watchdog die weiteren Quellen und nimmt den neuesten Kurs, den irgendeine Quelle hat. Nach Handelsschluss der Nasdaq ist das der Schlusskurs von 16:00 Uhr New York, nicht mehr der Stand vom letzten erfolgreichen Abruf.
-- Dasselbe gilt für den Kursverlauf. Damit ist „Verlauf endet 16.10.“ bei Alico und ImmuCell behoben, und die 200-Tage-Linie ist wieder aktuell.
-- Ein schon angezeigter neuerer Kurs wird nie durch einen älteren ersetzt.
+**Neu in 1.0.7: Mitteilungen auf Mac, iPhone und Apple Watch, abgestimmt**
+- Neben der Depotdatei in iCloud Drive liegt jetzt die kleine Datei „Mitteilungen.json“, das Meldebuch. Darin steht, welches Gerät zuletzt geprüft und was es gemeldet hat.
+- Gemeldet wird in fester Reihenfolge: zuerst der Mac. Prüft er 20 Minuten lang nicht oder bekommt kaum Kurse, übernimmt das iPhone, danach die Apple Watch. Kein Durchbruch wird doppelt gemeldet, auch nicht über ntfy.
+- Einstellungen > Mitteilungen zeigt, welches Gerät gerade meldet und wann jedes zuletzt geprüft hat.
+- Kürzere Meldungen, die auch auf der Apple Watch ganz lesbar sind, zum Beispiel „Cameco: fällt unter die 200-Tage-Linie“ mit Kurs, Linie und Abstand darunter.
+- Neue Einstellung für ntfy: Tippen auf die Meldung öffnet den Wert in der Watchdog-App auf dem iPhone. Erst einschalten, wenn die App installiert ist.
 
-**Neu in 1.0.6: richtiges Kürzel, richtige Firma**
-- Watchdog prüft bei Yahoo, OnVista und der Financial Times, ob die Daten zur richtigen Firma gehören. Unter dem Kürzel FCA.UN lieferte Yahoo zum Beispiel Kurse von Firm Capital Apartment REIT statt von Metalla, unter AXL1 in Frankfurt kamen Kurse von Axfood für DGH International. Solche Daten werden verworfen.
-- Das richtige Kürzel wird über die ISIN gesucht und ins Depot übernommen, Kurs und Verlauf werden neu geladen. In der Zeile steht dann eine Woche lang „Kürzel korrigiert“.
-- Werte an ausländischen Börsen bekommen das Kürzel dieser Börse, zum Beispiel ALCO statt AOE und ICCC statt IUL an der Nasdaq. Käufe, Gruppen und Notizen bleiben unverändert.
-- Findet Watchdog kein passendes Kürzel, steht „Kürzel prüfen“ in der Zeile, und der Wert hat bis zu echten Kursen keinen Kurs. Bei DGH International, das derzeit vom Handel ausgesetzt ist, ist das so gewollt.
-- Nennt eine Quelle einen anderen Namen, obwohl die ISIN passt (zum Beispiel „Google“ und „Alphabet Inc.“), steht „Name prüfen“ in der Zeile. Ein Klick auf „Ist dieselbe Firma“ in der Detailansicht gibt die Daten frei, dauerhaft.
-- Der Import übernimmt keinen Treffer mehr, dessen Name nicht zum Namen in der Datei passt.
+**Vorbereitet: Watchdog für iPhone, iPad und Apple Watch**
+- Die Apps sind gebaut und im Simulator getestet: Depot mit Ampel, Chart und Kennzahlen auf iPhone und iPad, Liste und Komplikation auf der Watch.
+- Auf echte Geräte kommen sie erst mit einem Apple-Entwicklerkonto. Bis dahin laufen die Meldungen auf iPhone und Watch über ntfy.
+
+**Aus 1.0.6**
+- Immer der neueste verfügbare Kurs, auch wenn eine Quelle nur einen alten Stand liefert.
+- Falsche Kürzel werden über die ISIN korrigiert, Daten einer anderen Firma werden nie verwendet.
 
 **Installation**
 1. `Watchdog.dmg` direkt auf dem Mac in Safari von GitHub laden. Kommt die Datei über WhatsApp, iPhone oder AirDrop, meldet macOS sie als beschädigt.
