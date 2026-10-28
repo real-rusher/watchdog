@@ -179,7 +179,7 @@ final class FallbackTests: XCTestCase {
         XCTAssertEqual(c?.symbols["yahoo"], "MTA.DE")
         XCTAssertEqual(c?.wrongCompany, "Firm Capital Apartment Real Estate Investment Trust")
         let h = await r.history
-        XCTAssertNil(h, "history that may come from the other company is dropped")
+        XCTAssertNotNil(h, "the history of the repaired symbol passed the company check and is kept")
 
         // The app writes the correction into the depot.
         let newKey = c!.newKey(exchangeID: "XETR")
@@ -200,7 +200,9 @@ final class FallbackTests: XCTestCase {
         XCTAssertEqual(q?.source, .onvista)
         let snap = await r.snapshot
         XCTAssertEqual(snap.notices[r.position.listing.key]?.kind, .check)
-        XCTAssertNotEqual(snap.status[r.position.listing.key]?.historySource, .yahoo)
+        XCTAssertTrue(snap.notices[r.position.listing.key]?.detail.contains("solange von OnVista") ?? false)
+        let h = await r.history
+        XCTAssertEqual(h?.source, .onvista, "the checked source's history is kept in the same round")
     }
 
     func testOtherNameWithMatchingISINWaitsForConfirmation() async {

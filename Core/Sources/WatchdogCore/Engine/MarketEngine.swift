@@ -535,7 +535,8 @@ public actor MarketEngine {
         var s = status[key] ?? ListingStatus()
         s.isLoading = false
         var errors: [String] = []
-        // Data of another company may already sit in the cache: drop it, the next refresh loads everything from checked symbols.
+        // Data of another company may already sit in the cache: drop it. What this round delivered passed the company check
+        // and starts the history afresh; the full range follows with the next refresh.
         let wrongSeen = !r.wrongCompany.isEmpty
         if wrongSeen {
             histories[key] = nil
@@ -546,7 +547,7 @@ public actor MarketEngine {
         }
         if r.wantedHistory {
             lastHistoryAttempt[key] = wrongSeen ? nil : Date()
-            if let h = r.history, !h.bars.isEmpty, !wrongSeen {
+            if let h = r.history, !h.bars.isEmpty {
                 s.lastHistorySuccess = Date()
                 s.historyFailures = 0
                 if var existing = histories[key], existing.currency == h.currency, r.historyFrom > (existing.bars.first?.day ?? r.historyFrom) {
@@ -558,7 +559,7 @@ public actor MarketEngine {
                 dirtyHistories.insert(key)
                 s.historySource = h.source
                 summary.historiesUpdated += 1
-            } else if !wrongSeen {
+            } else {
                 s.historyFailures += 1
                 errors.append("Verlauf: " + Self.describe(r.historyAttempts))
                 summary.failures += 1
@@ -597,13 +598,17 @@ public actor MarketEngine {
         if let c = r.correction {
             corrections[key] = c
         } else if let w = r.wrongCompany.first(where: { !$0.isinMatches }) ?? r.wrongCompany.first {
-            notices[key] = w.isinMatches
+            let meanwhile = (r.quote?.source ?? r.history?.source).map { " Kurs und Verlauf kommen solange von \($0.displayName), deren Name passt." }
+                ?? " Solange gibt es für diesen Wert keine Kurse."
+            var n = w.isinMatches
                 ? ListingNotice(kind: .confirm, headline: "Name prüfen",
-                                detail: "\(w.provider.displayName) nennt unter \(w.symbol) die Firma „\(w.name)“, der Wert heißt „\(r.name)“. Die ISIN des Werts führt zu genau diesem Kürzel: Entweder ist es dieselbe Firma unter anderem Namen, oder die ISIN gehört zu einer anderen Firma. Kurse und Verlauf werden erst verwendet, wenn bestätigt ist, dass es dieselbe Firma ist.",
+                                detail: "\(w.provider.displayName) nennt unter \(w.symbol) die Firma „\(w.name)“, der Wert heißt „\(r.name)“. Die ISIN des Werts führt zu genau diesem Kürzel: Entweder ist es dieselbe Firma unter anderem Namen, oder die ISIN gehört zu einer anderen Firma. Die Daten von \(w.provider.displayName) werden erst verwendet, wenn bestätigt ist, dass es dieselbe Firma ist.",
                                 provider: w.provider, symbol: w.symbol, reportedName: w.name)
                 : ListingNotice(kind: .check, headline: "Kürzel prüfen",
                                 detail: "\(w.provider.displayName) liefert unter \(w.symbol) Daten einer anderen Firma (\(w.name)), der Wert heißt „\(r.name)“. Diese Daten werden nicht verwendet. Über die ISIN ließ sich kein passendes Kürzel finden. Bitte Kürzel und ISIN des Werts prüfen, oder bestätigen, dass es dieselbe Firma ist.",
                                 provider: w.provider, symbol: w.symbol, reportedName: w.name)
+            n.detail += meanwhile
+            notices[key] = n
         } else if let n = notices[key], n.needsUser, let p = n.provider, r.confirmedProviders.contains(p) {
             notices[key] = nil
         }
