@@ -4,6 +4,9 @@ import WatchdogCore
 
 struct RootView: View {
     @Environment(MobileModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// iPad: list and detail side by side, also upright.
+    @State private var columns: NavigationSplitViewVisibility = .all
 
     var body: some View {
         @Bindable var m = model
@@ -11,7 +14,7 @@ struct RootView: View {
             if model.needsFolder {
                 OnboardingView()
             } else {
-                NavigationSplitView {
+                NavigationSplitView(columnVisibility: $columns) {
                     DepotListView()
                         .navigationTitle("Watchdog")
                         .toolbar {
@@ -20,7 +23,7 @@ struct RootView: View {
                                     .accessibilityLabel("Einstellungen")
                             }
                         }
-                        .navigationSplitViewColumnWidth(min: 340, ideal: 620, max: 900)
+                        .navigationSplitViewColumnWidth(min: 340, ideal: 560, max: 900)
                 } detail: {
                     if let id = model.selection, model.position(id) != nil {
                         PositionDetailView(id: id)
@@ -30,10 +33,27 @@ struct RootView: View {
                             .background(Palette.canvas)
                     }
                 }
+                .navigationSplitViewStyle(.balanced)
                 .tint(Palette.ink)
             }
         }
+        // Dots, gauges and spacing grow with the system text size; the text itself scales on its own.
+        .environment(\.uiScale, Self.scale(typeSize))
         .sheet(isPresented: $m.showSettings) { MobileSettingsView() }
+    }
+}
+
+extension RootView {
+    static func scale(_ s: DynamicTypeSize) -> CGFloat {
+        switch s {
+        case .xSmall, .small, .medium, .large: return 1
+        case .xLarge: return 1.1
+        case .xxLarge: return 1.2
+        case .xxxLarge: return 1.3
+        case .accessibility1: return 1.5
+        case .accessibility2: return 1.7
+        default: return 1.9
+        }
     }
 }
 
@@ -256,7 +276,11 @@ struct ColumnHeader: View {
                 Text("30 Tage").frame(width: Col.pct, alignment: .trailing)
             }
             .frame(minWidth: Col.wide)
-            Color.clear.frame(height: 0)
+            HStack {
+                Text("Wertpapier")
+                Spacer()
+                Text("Kurs, heute, Abstand 200er")
+            }
         }
         .type(12)
         .foregroundStyle(Palette.inkSoft)
@@ -267,6 +291,7 @@ struct ColumnHeader: View {
 struct PositionRow: View {
     @Environment(MobileModel.self) private var model
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.uiScale) private var scale
     let position: Position
 
     var body: some View {
@@ -359,12 +384,15 @@ struct PositionRow: View {
         if typeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: 6) {
                 nameBlock(m)
-                HStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 4) {
                     priceBlock(m, alignment: .leading)
-                    distanceText(m)
+                    HStack(spacing: 6) {
+                        Text("Abstand 200er").type(12).foregroundStyle(Palette.inkSoft)
+                        distanceText(m)
+                    }
                     pctLabel(m?.dayChangePercent)
                 }
-                .padding(.leading, 28)
+                .padding(.leading, 28 * scale)
             }
         } else {
             HStack(spacing: 8) {

@@ -122,8 +122,8 @@ enum Typo {
         #if os(macOS)
         .custom(name(w), fixedSize: (size * scale).rounded(.toNearestOrEven))
         #else
-        // iPhone, iPad and Watch follow the system text size ("Größerer Text").
-        .custom(name(w), size: size * scale, relativeTo: size >= 20 ? .title2 : size >= 15 ? .body : size >= 12 ? .subheadline : .caption)
+        // iPhone, iPad and Watch follow the system text size ("Größerer Text") on their own; `scale` only sizes shapes there.
+        .custom(name(w), size: size, relativeTo: size >= 20 ? .title2 : size >= 15 ? .body : size >= 12 ? .subheadline : .caption)
         #endif
     }
 }
