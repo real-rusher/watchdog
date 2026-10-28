@@ -183,9 +183,18 @@ final class AppModel {
 
     // MARK: Lifecycle
 
+    /// The option key is held: the Depot menu shows the hidden test entry.
+    var optionHeld = false
+    @ObservationIgnored private var flagsMonitor: Any?
+
     func start() {
         guard !started else { return }
         started = true
+        flagsMonitor = NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] e in
+            let held = e.modifierFlags.contains(.option)
+            MainActor.assumeIsolated { self?.optionHeld = held }
+            return e
+        }
         Task {
             await engine.setQuoteInterval(TimeInterval(local.quoteIntervalMinutes * 60))
             await engine.loadCache()
@@ -362,6 +371,50 @@ final class AppModel {
         if depot.notifications.macEnabled { notifier.post(send) }
         let settings = depot.notifications
         Task { await engine.push(send, settings: settings) }
+    }
+
+    /// A message that looks exactly like a real alarm, marked as a test: as a banner on the Mac and over ntfy to iPhone
+    /// and Apple Watch. It is not written into the ledger and not into the event log.
+    func exampleEvent() -> SignalEvent {
+        let catalog = depot.catalog
+        let withData = depot.positions.filter { snapshot?.metrics[$0.id]?.hasData == true && catalog[$0.listing.exchangeID] != nil }
+        let rule = depot.rules.rules.first { $0.id == RuleSet.crossDownID } ?? RuleSet.defaultRules[0]
+        // A value of the depot, preferably one below the line; an invented one while there is no data.
+        var position = Position(name: "Beispielwert", listing: Listing(exchangeID: "XETR", ticker: "TEST"))
+        var price: Double? = 98.5, line: Double? = 100, distance: Double? = -1.5
+        if let p = withData.first(where: { snapshot?.metrics[$0.id]?.ampel.state == .red }) ?? withData.first, let m = snapshot?.metrics[p.id] {
+            position = p
+            price = m.priceEUR
+            distance = m.ampel.distancePercent
+            line = nil
+            if let lv = m.ampel.lineValue, let pl = m.priceLocal, pl > 0, let pe = m.priceEUR { line = lv * pe / pl }
+        }
+        let ex = catalog[position.listing.exchangeID] ?? ExchangeCatalog()["XETR"]!
+        var e = SignalState.event(id: "test|\(UUID().uuidString)", rule: rule, day: DayKey.today(in: .berlin), position: position,
+                                  exchange: ex, priceEUR: price, lineEUR: line, distance: distance)
+        e.title = "TEST " + e.title
+        e.body += " · Beispiel, kein echtes Signal"
+        return e
+    }
+
+    func sendExampleNotification() {
+        let e = exampleEvent()
+        notifier.post([e])
+        let settings = depot.notifications
+        guard settings.ntfyEnabled else {
+            notice = "Beispielmitteilung als Banner auf dem Mac gezeigt. An iPhone und Watch ging nichts, weil ntfy ausgeschaltet ist (Einstellungen > Mitteilungen > \u{201E}Mitteilungen an ntfy senden\u{201C})."
+            return
+        }
+        notice = "Beispielmitteilung wird gesendet …"
+        let http = engine.http
+        Task {
+            do {
+                try await NtfyNotifier(settings: settings, http: http).send(e)
+                notice = "Beispielmitteilung gesendet: als Banner auf dem Mac und über ntfy an den Kanal \(settings.ntfyTopic). Auf dem iPhone sollte sie in wenigen Sekunden erscheinen, auf der Watch, wenn das iPhone gesperrt ist."
+            } catch {
+                notice = "Die Beispielmitteilung kam auf dem Mac an, ntfy hat sie aber nicht angenommen: \(error)"
+            }
+        }
     }
 
     /// Reads the ledger again (for the settings).

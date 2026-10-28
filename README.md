@@ -125,9 +125,10 @@ Das Depot ist eine einzige Datei, standardmäßig `iCloud Drive/Watchdog/Watchdo
 ## Für die Weiterentwicklung
 
 - `Core/`: Swift-Paket mit Datenmodell, Datenquellen, Berechnung der Linien, Regeln, Import und Mitteilungen. Läuft auf macOS, iOS, watchOS und Linux und ist mit Tests abgedeckt.
-- `App/`: SwiftUI-App für macOS (XcodeGen-Projekt `project.yml`).
-- `.github/workflows/`: baut die App in der Cloud, prüft alle Datenquellen live, erstellt Screenshots und die DMG.
+- `App/`: SwiftUI-Apps (XcodeGen-Projekt `project.yml`): `Watchdog` für den Mac, `Mobile` für iPhone und iPad, `WatchApp` und `WatchComplication` für die Apple Watch, `Shared` mit Farben, Schrift, Chart und Ampel für alle.
+- `.github/workflows/`: baut die Apps in der Cloud, prüft alle Datenquellen live, erstellt Screenshots (Mac, iPhone, iPad, Watch im Simulator) und die DMG.
+- **Versteckter Test für Mitteilungen**: Wahltaste ⌥ gedrückt halten und dabei das Menü „Depot“ öffnen. Ganz unten erscheint „Beispielmitteilung an Mac, iPhone und Watch senden“. Die Mitteilung sieht aus wie ein echter Alarm mit einem Wert aus dem Depot, beginnt aber mit „TEST“, geht als Banner auf den Mac und über ntfy an iPhone und Watch und wird nicht ins Meldebuch eingetragen.
 
-Geplant: iPhone, iPad und Apple Watch auf demselben Kern (benötigt ein Apple-Entwicklerkonto), danach eine Windows-Version, die dieselbe Depotdatei liest.
+Geplant: Installation der iPhone-, iPad- und Watch-Apps, sobald es ein Apple-Entwicklerkonto gibt, danach eine Windows-Version, die dieselbe Depotdatei liest.
 
 Kurse können verzögert sein. Keine Anlageberatung. Schrift: IBM Plex (SIL Open Font License).

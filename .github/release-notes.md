@@ -1,6 +1,9 @@
-Watchdog 1.0.7 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
+Watchdog 1.0.8 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
-**Neu in 1.0.7: Mitteilungen auf Mac, iPhone und Apple Watch, abgestimmt**
+**Neu in 1.0.8**
+- Kleine Verbesserungen für die Einrichtung der Mitteilungen auf iPhone und Apple Watch.
+
+**Aus 1.0.7: Mitteilungen auf Mac, iPhone und Apple Watch, abgestimmt**
 - Neben der Depotdatei in iCloud Drive liegt jetzt die kleine Datei „Mitteilungen.json“, das Meldebuch. Darin steht, welches Gerät zuletzt geprüft und was es gemeldet hat.
 - Gemeldet wird in fester Reihenfolge: zuerst der Mac. Prüft er 20 Minuten lang nicht oder bekommt kaum Kurse, übernimmt das iPhone, danach die Apple Watch. Kein Durchbruch wird doppelt gemeldet, auch nicht über ntfy.
 - Einstellungen > Mitteilungen zeigt, welches Gerät gerade meldet und wann jedes zuletzt geprüft hat.

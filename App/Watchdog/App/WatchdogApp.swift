@@ -114,6 +114,11 @@ struct WatchdogCommands: Commands {
                 .keyboardShortcut("-")
             Button("Normale Schriftgröße") { model.updateLocal { $0.fontScale = 1 } }
                 .keyboardShortcut("0")
+            // Only visible while the option key is held when opening the menu.
+            if model.optionHeld {
+                Divider()
+                Button("Beispielmitteilung an Mac, iPhone und Watch senden") { model.sendExampleNotification() }
+            }
         }
     }
 }

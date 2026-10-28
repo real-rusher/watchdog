@@ -154,7 +154,25 @@ enum SnapshotRunner {
             }
         }
         window.makeKeyAndOrderFront(nil)
+        await exampleMessage(model)
         await wrongTickers(model, window)
+    }
+
+    /// The hidden test message (Depot menu with the option key): built from the depot, sent to a throwaway ntfy channel,
+    /// then read back from ntfy to prove it arrived.
+    static func exampleMessage(_ model: AppModel) async {
+        let e = model.exampleEvent()
+        note("BEISPIEL Titel: \(e.title) | Text: \(e.body)")
+        let s = NotificationSettings(ntfyEnabled: true)
+        do {
+            try await NtfyNotifier(settings: s, http: model.engine.http).send(e)
+            await sleep(2)
+            let (data, _) = try await model.engine.http.get(URL(string: "https://ntfy.sh/\(s.ntfyTopic)/json?poll=1")!)
+            let text = String(data: data, encoding: .utf8) ?? ""
+            note("BEISPIEL ntfy: \(text.contains("TEST") ? "angekommen" : "NICHT angekommen") \(text.prefix(500))")
+        } catch {
+            note("BEISPIEL ntfy Fehler: \(error)")
+        }
     }
 
     /// Live check with the tickers the customer's import produced: German codes from OnVista at Nasdaq ("AOE", "IUL"),
