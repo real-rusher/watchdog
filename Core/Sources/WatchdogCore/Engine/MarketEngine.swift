@@ -208,6 +208,8 @@ public actor MarketEngine {
         dirtyHistories.remove(listingKey)
         await symbols.remove(listingKey: listingKey)
         await cache?.removeHistory(listingKey)
+        // Sources that failed for the old details get a fresh chance right away, not only after six hours.
+        await router.health.clearMisses(listingKey: listingKey)
     }
 
     /// The user confirmed that the source's company is the security after all; the app stored that in the depot.
@@ -428,6 +430,8 @@ public actor MarketEngine {
         var correction: ListingCorrection?
         /// Name of the security, for the notices.
         var name = ""
+        /// Without an ISIN the right symbol cannot be looked up automatically.
+        var hasISIN = false
         /// Providers whose answer was checked against the company name and matched.
         var confirmedProviders: Set<ProviderID> = []
     }
@@ -475,6 +479,7 @@ public actor MarketEngine {
             }
         }
         r.name = j.ref.name
+        r.hasISIN = j.ref.isin.map { Lenient.isISIN($0) } ?? false
         r.confirmedProviders = Set(used.filter(\.confirmed).map(\.provider))
         r.correction = correction(ref: j.ref, exchange: ex, used: used, repairs: repairs, wrong: r.wrongCompany)
         return r
@@ -605,7 +610,10 @@ public actor MarketEngine {
                                 detail: "\(w.provider.displayName) nennt unter \(w.symbol) die Firma „\(w.name)“, der Wert heißt „\(r.name)“. Die ISIN des Werts führt zu genau diesem Kürzel: Entweder ist es dieselbe Firma unter anderem Namen, oder die ISIN gehört zu einer anderen Firma. Die Daten von \(w.provider.displayName) werden erst verwendet, wenn bestätigt ist, dass es dieselbe Firma ist.",
                                 provider: w.provider, symbol: w.symbol, reportedName: w.name)
                 : ListingNotice(kind: .check, headline: "Kürzel prüfen",
-                                detail: "\(w.provider.displayName) liefert unter \(w.symbol) Daten einer anderen Firma (\(w.name)), der Wert heißt „\(r.name)“. Diese Daten werden nicht verwendet. Über die ISIN ließ sich kein passendes Kürzel finden. Bitte Kürzel und ISIN des Werts prüfen, oder bestätigen, dass es dieselbe Firma ist.",
+                                detail: "\(w.provider.displayName) liefert unter \(w.symbol) Daten einer anderen Firma (\(w.name)), der Wert heißt „\(r.name)“. Diese Daten werden nicht verwendet. "
+                                    + (r.hasISIN
+                                        ? "Über die ISIN ließ sich kein passendes Kürzel finden. Bitte Kürzel und ISIN des Werts prüfen, oder bestätigen, dass es dieselbe Firma ist."
+                                        : "Der Wert hat keine ISIN, deshalb lässt sich das richtige Kürzel nicht von selbst finden. Abhilfe: Wert bearbeiten und die ISIN eintragen oder die Börse neu auswählen; Watchdog sucht dann sofort neu. Oder bestätigen, dass es dieselbe Firma ist."),
                                 provider: w.provider, symbol: w.symbol, reportedName: w.name)
             n.detail += meanwhile
             notices[key] = n

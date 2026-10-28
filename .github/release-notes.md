@@ -1,6 +1,8 @@
 Watchdog 1.0.8 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
 **Neu in 1.0.8**
+- Wird bei einem Wert die ISIN, die WKN oder der Name nachgetragen oder geändert, sucht Watchdog sofort neu nach dem richtigen Kürzel. Bisher geschah das nur beim Wechsel der Börse, und eine Quelle, die vorher eine andere Firma geliefert hatte, wurde sechs Stunden lang nicht mehr gefragt (Fall Metalla mit dem Kürzel FCA.UN).
+- Fehlt einem Wert die ISIN, sagt der Hinweis „Kürzel prüfen“ das jetzt ausdrücklich und nennt die Abhilfe.
 - Kleine Verbesserungen für die Einrichtung der Mitteilungen auf iPhone und Apple Watch.
 
 **Aus 1.0.7: Mitteilungen auf Mac, iPhone und Apple Watch, abgestimmt**

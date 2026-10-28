@@ -229,6 +229,28 @@ final class FallbackTests: XCTestCase {
         XCTAssertNil(after.notices[r.position.listing.key])
     }
 
+    func testAddingTheISINLaterFindsTheRightSymbolAtOnce() async {
+        // The customer's case: Metalla carried Firm Capital's ticker and no ISIN. The ISIN was added afterwards.
+        let yahoo = ScriptedProvider(.yahoo, [
+            "FCA-UN.DE": answer(4.15, name: "Firm Capital Apartment Real Estate Investment Trust"),
+            "MTA.DE": answer(100, name: "Metalla Royalty & Streaming Ltd."),
+        ], isinSymbol: "MTA.DE")
+        var r = make([yahoo], name: "METALLA ROYAL.STREAM.  ON", isin: nil, ticker: "FCA.UN", symbols: ["yahoo": "FCA-UN.DE"])
+        await refresh(r)
+        let before = await r.snapshot
+        XCTAssertNil(before.metrics[r.position.id]?.priceEUR, "no data of the other company")
+        XCTAssertTrue(before.notices[r.position.listing.key]?.detail.contains("keine ISIN") ?? false, "the notice says what is missing")
+
+        // ISIN entered in the editor: the app resets the listing and asks again right away, not six hours later.
+        r.depot.positions[0].isin = "CA59124U6051"
+        await r.engine.reset(listingKey: r.position.listing.key)
+        await refresh(r)
+        let q = await r.quote
+        XCTAssertEqual(q?.price, 100)
+        let c = await r.snapshot.corrections.first
+        XCTAssertEqual(c?.ticker, "MTA")
+    }
+
     func testSuspendedCompanyGetsNoDataOfAnother() async {
         // The customer's DGH International AB carried the Frankfurt ticker AXL1, which is Axfood.
         let yahoo = ScriptedProvider(.yahoo, ["AXL1.DE": answer(24.85, name: "Axfood AB (publ)")])

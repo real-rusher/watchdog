@@ -494,7 +494,9 @@ final class AppModel {
         guard let i = depot.positions.firstIndex(where: { $0.id == p.id }) else { return }
         let old = depot.positions[i]
         mutate { $0.positions[i] = p }
-        if old.listing != p.listing {
+        // A new venue or ticker, but also a new ISIN, WKN or name: look the value up again from scratch
+        // (the ISIN finds the right symbol, the name is what the sources' answers are checked against).
+        if old.listing != p.listing || old.isin != p.isin || old.wkn != p.wkn || old.name != p.name {
             Task {
                 await engine.reset(listingKey: old.listing.key)
                 await engine.reset(listingKey: p.listing.key)
