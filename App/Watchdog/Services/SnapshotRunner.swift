@@ -157,33 +157,43 @@ enum SnapshotRunner {
         await wrongTickers(model, window)
     }
 
-    /// Live check with the tickers the customer's import produced: German codes from OnVista at Nasdaq ("AOE", "IUL")
-    /// and a TSX Venture symbol that belongs to another company ("FCA.UN"). Watchdog has to find the right ones through the ISIN.
+    /// Live check with the tickers the customer's import produced: German codes from OnVista at Nasdaq ("AOE", "IUL"),
+    /// a TSX Venture symbol of another company ("FCA.UN"), and DGH International (suspended) carrying Axfood's Frankfurt ticker.
+    /// Plus a name that differs from the source's although the ISIN fits ("Google", "Alphabet Inc."), confirmed by a click.
     static func wrongTickers(_ model: AppModel, _ window: NSWindow) async {
         let cases = [
             Position(name: "Alico", isin: "US0162301040", listing: Listing(exchangeID: "XNAS", ticker: "AOE")),
             Position(name: "IMMUCELL CORP. DL-,10", isin: "US4525253062", listing: Listing(exchangeID: "XNAS", ticker: "IUL")),
             Position(name: "Metalla Royalty & Streaming", isin: "CA59124U6051",
                      listing: Listing(exchangeID: "XTSX", ticker: "FCA.UN", symbols: ["yahoo": "FCA-UN.V"])),
+            Position(name: "DGH INTERNATIONAL AB", listing: Listing(exchangeID: "XFRA", ticker: "AXL1")),
+            Position(name: "Google", isin: "US02079K3059", listing: Listing(exchangeID: "XNAS", ticker: "GOOGL")),
         ]
         for p in cases { model.add(p) }
         model.selection = nil
         for _ in 0..<12 {
             await sleep(10)
-            let tickers = cases.compactMap { c in model.position(c.id)?.listing.ticker }
-            if tickers == ["ALCO", "ICCC", "MTA"], cases.allSatisfy({ model.metrics($0.id)?.hasData == true }), !model.isRefreshing { break }
+            let tickers = cases.prefix(3).compactMap { c in model.position(c.id)?.listing.ticker }
+            if tickers == ["ALCO", "ICCC", "MTA"], cases.prefix(3).allSatisfy({ model.metrics($0.id)?.hasData == true }),
+               model.notice(cases[3]) != nil, model.notice(cases[4]) != nil, !model.isRefreshing { break }
         }
         await sleep(3)
-        for c in cases {
-            guard let p = model.position(c.id) else { continue }
-            let r = model.row(p)
-            let m = r.metrics
-            note("KORREKTUR \(c.listing.ticker) -> \(p.listing.ticker) symbols \(p.listing.symbols) | Kurs \(m?.priceLocal.map { Format.money($0, m?.currency ?? "") } ?? "-") vom \(m?.quoteTime.map { "\($0)" } ?? "-") | Verlauf bis \(model.snapshot?.status[p.listing.key]?.historySource?.displayName ?? "-") | Hinweis \(r.notice?.headline ?? "-"): \(r.notice?.detail ?? "")")
-            if let s = model.snapshot?.status[p.listing.key] {
-                note("   Abfragen: " + s.attempts.map { "\($0.provider.displayName): \($0.error ?? "ok")" }.joined(separator: "; "))
+        func log() {
+            for c in cases {
+                guard let p = model.position(c.id) else { continue }
+                let r = model.row(p)
+                let m = r.metrics
+                note("KORREKTUR \(c.name): \(c.listing.ticker) -> \(p.listing.ticker) symbols \(p.listing.symbols) | Kurs \(m?.priceLocal.map { Format.money($0, m?.currency ?? "") } ?? "-") vom \(m?.quoteTime.map { "\($0)" } ?? "-") | Hinweis \(r.notice?.headline ?? "-"): \(r.notice?.detail ?? "")")
+                if let s = model.snapshot?.status[p.listing.key] {
+                    note("   Abfragen: " + s.attempts.map { "\($0.provider.displayName): \($0.error ?? "ok")" }.joined(separator: "; "))
+                }
+                if let f = r.freshness, f.level != .ok { note("   Daten: \(f.level) \(f.headline)") }
             }
-            if let f = r.freshness, f.level != .ok { note("   Daten: \(f.level) \(f.headline)") }
         }
+        log()
+        // Only the watch list is open, where the new values are.
+        let others = Set(model.sections.map(\.id).filter { $0 != "watch" })
+        model.updateLocal { $0.collapsedSections = others }
         for appearance in [NSAppearance.Name.aqua, .darkAqua] {
             NSApp.appearance = NSAppearance(named: appearance)
             let tag = appearance == .aqua ? "light" : "dark"
@@ -193,8 +203,25 @@ enum SnapshotRunner {
             model.selection = cases[2].id
             await sleep(2.5)
             capture(window, "9-corrected-detail-\(tag)")
+            model.selection = cases[3].id
+            await sleep(2.5)
+            capture(window, "9b-check-detail-\(tag)")
+            model.selection = cases[4].id
+            await sleep(2.5)
+            capture(window, "9c-confirm-detail-\(tag)")
         }
         NSApp.appearance = NSAppearance(named: .aqua)
+        if let p = model.position(cases[4].id), let n = model.notice(p) {
+            model.confirmCompany(p, n)
+            for _ in 0..<6 {
+                await sleep(5)
+                if model.metrics(p.id)?.hasData == true, !model.isRefreshing { break }
+            }
+            note("BESTÄTIGT Google: confirmedSymbols \(model.position(p.id)?.listing.confirmedSymbols ?? [:])")
+            log()
+            capture(window, "9d-confirmed-light")
+        }
+        model.updateLocal { $0.collapsedSections = [] }
         model.selection = nil
     }
 

@@ -242,6 +242,21 @@ final class ResolverTests: XCTestCase {
         XCTAssertNotNil(ImportResolver.instrument(for: draft(name: "ENI SpA"), in: ok, query: "ENI SpA"))
     }
 
+    func testFoundSecurityWithOtherNameIsNotTaken() async {
+        // The file names DGH International, the search finds Axfood under the ticker: never taken automatically.
+        let d = draft(name: "DGH INTERNATIONAL AB", ticker: "AXL1")
+        let out = await ImportResolver.resolve(d, target: "XFRA", catalog: catalog) { _ in
+            [self.cand(.onvista, "Axfood", isin: "SE0006993770", ex: "XFRA", ticker: "AXL1")]
+        }
+        guard case .notFound(let why) = out else { return XCTFail("taken: \(out)") }
+        XCTAssertTrue(why.contains("Axfood"))
+
+        let ok = await ImportResolver.resolve(draft(name: "AXFOOD AB", ticker: "AXL1"), target: "XFRA", catalog: catalog) { _ in
+            [self.cand(.onvista, "Axfood", isin: "SE0006993770", ex: "XFRA", ticker: "AXL1")]
+        }
+        guard case .found = ok else { return XCTFail("right one not taken") }
+    }
+
     func testISINMismatchIsRejected() {
         let groups = ListingOption.build([cand(.yahoo, "Other", isin: "US0000000001", ex: "XNYS", ticker: "OTH")], query: "Cameco", catalog: catalog)
         XCTAssertNil(ImportResolver.instrument(for: draft(name: "Cameco", isin: "CA13321L1085"), in: groups, query: "Cameco"))

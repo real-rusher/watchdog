@@ -6,8 +6,18 @@ public final class FTProvider: MarketDataProvider, @unchecked Sendable {
     public let id = ProviderID.ft
     public let capabilities: ProviderCapabilities = .all
     public let gate = RequestGate(maxConcurrent: 3, minInterval: 0.2)
+    private let names = NameCache()
 
     public init() {}
+
+    /// Company name behind a symbol ("AXL1:FRA|xid" is Axfood), looked up once per symbol; the price series does not carry it.
+    func instrumentName(_ symbol: String, env: ProviderEnvironment) async -> String? {
+        if let n = await names.get(symbol) { return n }
+        guard let xid = try? xid(symbol), let ticker = symbol.split(separator: "|").first.map(String.init),
+              let hits = try? await rawSearch(ticker, env: env), let hit = hits.first(where: { $0.xid == xid }) else { return nil }
+        await names.put(symbol, hit.name)
+        return hit.name
+    }
 
     struct Hit {
         var symbol: String
@@ -126,13 +136,20 @@ public final class FTProvider: MarketDataProvider, @unchecked Sendable {
         let (bars, cur) = try await series(xid: try xid(symbol), days: 12, env: env)
         guard let last = bars.last else { throw ProviderError.notFound(symbol) }
         let prev = bars.count >= 2 ? bars[bars.count - 2].close : nil
-        return Quote(price: last.close, time: ProviderUtil.closeTime(last.day, exchange), previousClose: prev, currency: cur, source: id)
+        return Quote(price: last.close, time: ProviderUtil.closeTime(last.day, exchange), previousClose: prev, currency: cur, source: id,
+                     instrumentName: await instrumentName(symbol, env: env))
     }
 
     public func history(symbol: String, exchange: Exchange, from: DayKey, env: ProviderEnvironment) async throws -> HistoryResult {
         let days = max(10, from.days(to: DayKey.today()) + 5)
         let (bars, cur) = try await series(xid: try xid(symbol), days: days, env: env)
         if bars.isEmpty { throw ProviderError.notFound(symbol) }
-        return HistoryResult(bars: bars, currency: cur, source: id)
+        return HistoryResult(bars: bars, currency: cur, source: id, instrumentName: await instrumentName(symbol, env: env))
     }
+}
+
+actor NameCache {
+    private var map: [String: String] = [:]
+    func get(_ k: String) -> String? { map[k] }
+    func put(_ k: String, _ v: String) { map[k] = v }
 }

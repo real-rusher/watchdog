@@ -30,6 +30,8 @@ public final class OnVistaProvider: MarketDataProvider, @unchecked Sendable {
         var last: Double?
         var time: Date?
         var previous: Double?
+        /// Company name of the instrument the snapshot belongs to.
+        var instrumentName: String?
     }
 
     // MARK: Search
@@ -117,16 +119,18 @@ public final class OnVistaProvider: MarketDataProvider, @unchecked Sendable {
 
     static func parseVenues(_ root: [String: Any]) -> [Venue] {
         let list = (root.dict("quoteList")?["list"] as? [[String: Any]]) ?? []
+        let name = root.dict("instrument")?.str("name")
         var out: [Venue] = []
         for q in list {
             guard let market = q.dict("market"), let code = market.str("codeMarket"), let idn = market.str("idNotation") ?? q.str("idNotation") else { continue }
             let time = q.str("datetimeLast").flatMap(Self.parseDate)
             out.append(Venue(codeMarket: code, marketName: market.str("name") ?? code, idNotation: idn, currency: q.str("isoCurrency"),
-                             last: q.num("last"), time: time, previous: q.num("previousLast")))
+                             last: q.num("last"), time: time, previous: q.num("previousLast"), instrumentName: name))
         }
         if out.isEmpty, let q = root.dict("quote"), let market = q.dict("market"), let code = market.str("codeMarket"), let idn = market.str("idNotation") {
             out.append(Venue(codeMarket: code, marketName: market.str("name") ?? code, idNotation: idn, currency: q.str("isoCurrency"),
-                             last: q.num("last"), time: q.str("datetimeLast").flatMap(Self.parseDate), previous: q.num("previousLast")))
+                             last: q.num("last"), time: q.str("datetimeLast").flatMap(Self.parseDate), previous: q.num("previousLast"),
+                             instrumentName: name))
         }
         return out
     }
@@ -179,6 +183,17 @@ public final class OnVistaProvider: MarketDataProvider, @unchecked Sendable {
         throw ProviderError.notFound("\(ref.name) an \(exchange.name)")
     }
 
+    public func symbolByISIN(_ ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment) async throws -> String? {
+        guard let isin = ref.isin?.uppercased(), Lenient.isISIN(isin) else { return nil }
+        let codes = exchange.matchCodes(.onvista)
+        guard !codes.isEmpty else { return nil }
+        for inst in try await findInstruments(isin, env: env).prefix(3) where inst.isin?.uppercased() == isin {
+            guard let venues = try? await snapshot(inst, env: env) else { continue }
+            if let v = venues.first(where: { codes.contains($0.codeMarket) }) { return Self.symbol(inst, v.idNotation) }
+        }
+        return nil
+    }
+
     // MARK: Data
 
     static func symbol(_ inst: Instrument, _ idNotation: String) -> String {
@@ -200,7 +215,7 @@ public final class OnVistaProvider: MarketDataProvider, @unchecked Sendable {
         }
         let norm = CurrencyNormalizer.normalize(v.currency)
         return Quote(price: last * norm.factor, time: v.time ?? Date(), previousClose: v.previous.map { $0 * norm.factor },
-                     currency: norm.code, source: id)
+                     currency: norm.code, source: id, instrumentName: v.instrumentName)
     }
 
     public func history(symbol: String, exchange: Exchange, from: DayKey, env: ProviderEnvironment) async throws -> HistoryResult {
@@ -225,7 +240,9 @@ public final class OnVistaProvider: MarketDataProvider, @unchecked Sendable {
                             open: v(opens), high: v(highs), low: v(lows), volume: vols.flatMap { i < $0.count ? Lenient.double(any: $0[i]) : nil }))
         }
         if bars.isEmpty { throw ProviderError.notFound("Historie \(symbol)") }
-        return HistoryResult(bars: bars, currency: norm.code, source: id)
+        // The name for the company check comes from the snapshot (cached for a few seconds, the quote needs it anyway).
+        let name = try? await snapshot(Instrument(type: type, value: value, name: symbol, isin: nil), env: env).first?.instrumentName
+        return HistoryResult(bars: bars, currency: norm.code, source: id, instrumentName: name ?? nil)
     }
 }
 

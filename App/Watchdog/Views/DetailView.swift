@@ -22,7 +22,7 @@ struct DetailView: View {
                     header(p, m, ex)
                     if let f = model.freshness(p), f.isProblem || f.level == .noTradeToday { dataNotice(f) }
                     if m?.quoteSuspect == true { suspectNotice(p) }
-                    if let n = model.notice(p) { tickerNotice(n) }
+                    if let n = model.notice(p) { tickerNotice(n, p) }
                     verdict(m)
                     chartBlock(p, m)
                     figures(p, m, ex)
@@ -168,8 +168,8 @@ struct DetailView: View {
     }
 
     /// A wrong ticker was replaced, or a source still delivers another company under it.
-    private func tickerNotice(_ n: ListingNotice) -> some View {
-        let check = n.kind == .check
+    private func tickerNotice(_ n: ListingNotice, _ p: Position) -> some View {
+        let check = n.needsUser
         return HStack(alignment: .top, spacing: 10) {
             Image(systemName: check ? "questionmark.circle.fill" : "checkmark.circle")
                 .foregroundStyle(check ? Palette.caution : Palette.inkSoft)
@@ -179,6 +179,15 @@ struct DetailView: View {
                 Text(n.detail).type(12).foregroundStyle(Palette.inkSoft).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
                 if !check {
                     Text("Korrigiert \(Format.time(n.date)).").type(12).foregroundStyle(Palette.inkSoft)
+                } else if n.symbol != nil, n.provider != nil {
+                    HStack(spacing: 14) {
+                        Button("Ist dieselbe Firma") { model.confirmCompany(p, n) }
+                            .buttonStyle(.borderless).type(13, .semibold)
+                            .help("Kurse und Verlauf von \(n.provider?.displayName ?? "der Quelle") unter \(n.symbol ?? "") für diesen Wert verwenden")
+                        Button("Wert bearbeiten") { model.editor = .edit(p.id) }
+                            .buttonStyle(.borderless).type(13)
+                    }
+                    .padding(.top, 4)
                 }
             }
             Spacer(minLength: 0)

@@ -149,8 +149,10 @@ public enum Lenient {
             "resources", "energy", "gold", "silver", "uranium", "oil", "gas", "capital", "international", "global", "technologies",
             "technology", "industries", "national", "bank", "financial", "partners", "ventures", "exploration", "power", "electric",
         ]
-        let folded = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "de_DE")).lowercased()
-            .replacingOccurrences(of: ".", with: "")
+        // Bank exports abbreviate with dots ("GR.AERO.D.CEN.NOR.B") and write umlauts out ("MUENCH.RUECKVERS.").
+        let folded = name.replacingOccurrences(of: "ß", with: "ss")
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "de_DE")).lowercased()
+            .replacingOccurrences(of: ".", with: " ")
         return folded.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).map(String.init)
             .filter { $0.count >= 3 && !$0.contains(where: \.isNumber) && !generic.contains($0) }
     }
@@ -160,8 +162,12 @@ public enum Lenient {
     public static func sameCompany(_ a: String, _ b: String) -> Bool? {
         let wa = distinctiveWords(a), wb = distinctiveWords(b)
         guard !wa.isEmpty, !wb.isEmpty else { return nil }
-        for x in wa {
-            for y in wb {
+        // Each word also as written with umlauts folded ("muench" and "munchener" from "Münchener").
+        func forms(_ w: String) -> Set<String> {
+            [w, w.replacingOccurrences(of: "ae", with: "a").replacingOccurrences(of: "oe", with: "o").replacingOccurrences(of: "ue", with: "u")]
+        }
+        for x in wa.flatMap(forms) {
+            for y in wb.flatMap(forms) {
                 if x == y { return true }
                 // "Uran" and "Uranium", "Ericsson" and "Ericssons".
                 if min(x.count, y.count) >= 4 && (x.hasPrefix(y) || y.hasPrefix(x)) { return true }

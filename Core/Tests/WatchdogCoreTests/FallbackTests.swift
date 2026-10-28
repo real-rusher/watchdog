@@ -203,15 +203,43 @@ final class FallbackTests: XCTestCase {
         XCTAssertNotEqual(snap.status[r.position.listing.key]?.historySource, .yahoo)
     }
 
-    func testISINConfirmsSymbolDespiteOtherName() async {
+    func testOtherNameWithMatchingISINWaitsForConfirmation() async {
+        // Either the names merely differ or the ISIN belongs to another company: the user decides.
         let yahoo = ScriptedProvider(.yahoo, ["GOOGL.DE": answer(100, name: "Alphabet Inc.")], isinSymbol: "GOOGL.DE")
         let r = make([yahoo], name: "Google", isin: "US02079K3059", ticker: "GOOGL")
         await refresh(r)
         let q = await r.quote
-        XCTAssertEqual(q?.source, .yahoo)
+        XCTAssertNil(q, "not used before the user confirms")
         let snap = await r.snapshot
-        XCTAssertTrue(snap.corrections.isEmpty)
-        XCTAssertNil(snap.notices[r.position.listing.key])
+        let n = snap.notices[r.position.listing.key]
+        XCTAssertEqual(n?.kind, .confirm)
+        XCTAssertEqual(n?.symbol, "GOOGL.DE")
+        XCTAssertEqual(n?.reportedName, "Alphabet Inc.")
+
+        // Confirmed: stored in the depot, then used.
+        var depot = r.depot
+        depot.positions[0].listing.confirmedSymbols = ["yahoo": "GOOGL.DE"]
+        await r.engine.confirmedCompany(listingKey: r.position.listing.key)
+        _ = await r.engine.refresh(depot: depot, keys: [:], force: true)
+        let q2 = await r.engine.quote(r.position.listing.key)
+        XCTAssertEqual(q2?.price, 100)
+        let after = await r.engine.snapshot(depot: depot)
+        XCTAssertNil(after.notices[r.position.listing.key])
+    }
+
+    func testSuspendedCompanyGetsNoDataOfAnother() async {
+        // The customer's DGH International AB carried the Frankfurt ticker AXL1, which is Axfood.
+        let yahoo = ScriptedProvider(.yahoo, ["AXL1.DE": answer(24.85, name: "Axfood AB (publ)")])
+        let onvista = ScriptedProvider(.onvista, ["AXL1": answer(24.85, name: "Axfood")])
+        let r = make([yahoo, onvista], name: "DGH INTERNATIONAL AB", isin: nil, ticker: "AXL1")
+        await refresh(r)
+        let q = await r.quote
+        let h = await r.history
+        XCTAssertNil(q)
+        XCTAssertNil(h)
+        let snap = await r.snapshot
+        XCTAssertEqual(snap.notices[r.position.listing.key]?.kind, .check)
+        XCTAssertFalse(snap.metrics[r.position.id]?.hasData ?? false, "no value in the depot total")
     }
 
     func testMatchingTickerNeedsNoCorrection() async {
@@ -232,11 +260,16 @@ final class CompanyNameTests: XCTestCase {
         XCTAssertEqual(Lenient.sameCompany("Nestlé", "Nestle S.A."), true)
         XCTAssertEqual(Lenient.sameCompany("KAZATOMPROM GDR", "National Atomic Company Kazatomprom Joint Stock Company"), true)
         XCTAssertEqual(Lenient.sameCompany("Ericsson B", "Telefonaktiebolaget LM Ericsson (publ)"), true)
+        XCTAssertEqual(Lenient.sameCompany("MUENCH.RUECKVERS.VNA O.N.", "Münchener Rückversicherungs-Gesellschaft AG"), true)
+        XCTAssertEqual(Lenient.sameCompany("GR.AERO.D.CEN.NOR.B", "Grupo Aeroportuario del Centro Norte, S.A.B. de C.V."), true)
+        XCTAssertEqual(Lenient.sameCompany("BOERSE STUTTG. EUWAX", "Börse Stuttgart"), true)
+        XCTAssertEqual(Lenient.sameCompany("PAMPA ENERGIA SA GDR", "Pampa Energía S.A."), true)
     }
 
     func testOtherCompany() {
         XCTAssertEqual(Lenient.sameCompany("Metalla Royalty & Streaming", "Firm Capital Apartment Real Estate Investment Trust"), false)
         XCTAssertEqual(Lenient.sameCompany("Cameco", "Camden Property Trust"), false)
+        XCTAssertEqual(Lenient.sameCompany("DGH INTERNATIONAL AB", "Axfood AB (publ)"), false)
     }
 
     func testUndecidable() {

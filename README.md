@@ -52,9 +52,25 @@ Die Linie ist der einfache gleitende Durchschnitt der letzten 200 Schlusskurse a
 
 ## Kursdaten
 
-Standard ist Yahoo Finance. Fällt Yahoo aus oder drosselt, nimmt Watchdog automatisch die nächste Quelle: OnVista (Tradegate, gettex, LS Exchange und weitere), Financial Times (Tokio, Australien, Kanada, Skandinavien und weitere), Lang & Schwarz, Tradegate, Bitfinex. Mit eigenem API-Schlüssel zusätzlich EODHD, Twelve Data, Alpha Vantage und Finnhub. Reihenfolge und erste Quelle lassen sich in der Symbolleiste und unter Einstellungen > Datenquellen ändern.
+Standard ist Yahoo Finance. Fällt Yahoo aus, drosselt oder liefert nur einen alten Stand, nimmt Watchdog automatisch die nächste Quelle: OnVista (Tradegate, gettex, LS Exchange und weitere), Financial Times (Tokio, Australien, Kanada, Skandinavien und weitere), Lang & Schwarz, Tradegate, Bitfinex. Mit eigenem API-Schlüssel zusätzlich EODHD, Twelve Data, Alpha Vantage und Finnhub. Reihenfolge und erste Quelle lassen sich in der Symbolleiste und unter Einstellungen > Datenquellen ändern.
 
 Die Kurse sind echte Börsenkurse, aber keine Echtzeitkurse: je nach Börse und Quelle 15 bis 20 Minuten verzögert, bei der Financial Times nur Schlusskurse.
+
+### Immer der neueste verfügbare Kurs
+
+- Eine Antwort gilt nur dann als aktuell, wenn sie zur Handelszeit der Börse passt: während des Handels höchstens 45 Minuten alt, nach Handelsschluss der Schlusskurs des letzten Handelstags. Beim Kursverlauf muss der letzte abgeschlossene Handelstag enthalten sein.
+- Liefert eine Quelle nur einen älteren Stand, fragt Watchdog die weiteren Quellen und nimmt den neuesten Kurs, den irgendeine Quelle hat. Ist die Nasdaq zum Beispiel geschlossen, ist das der Schlusskurs von 16:00 Uhr New York, auch wenn die erste Quelle noch einen Kurs von vor einer Woche meldet.
+- Ein schon angezeigter neuerer Kurs wird nie durch einen älteren ersetzt.
+- Hat nach Handelsschluss keine Quelle etwas Neueres, fragt Watchdog bis zum nächsten Handelstag nicht ständig nach.
+
+### Richtiges Kürzel und richtige Firma
+
+- Yahoo, OnVista und die Financial Times melden zu jedem Kurs den Firmennamen. Watchdog vergleicht ihn mit dem Namen des Werts. Gehört die Antwort zu einer anderen Firma, werden Kurs und Verlauf nicht verwendet, und schon gespeicherte Daten dieser Quelle werden verworfen.
+- Watchdog sucht dann über die ISIN das richtige Kürzel an der gewählten Börse, übernimmt es ins Depot und lädt Kurs und Verlauf neu. In der Zeile steht eine Woche lang „Kürzel korrigiert“, in der Detailansicht und im Tooltip, was gefunden wurde.
+- Lässt sich kein passendes Kürzel finden, steht in der Zeile „Kürzel prüfen“. Der Wert hat dann keinen Kurs und zählt nicht zum Depotwert, bis echte Kurse kommen; die Käufe bleiben erhalten. So geschieht es zum Beispiel bei einem vom Handel ausgesetzten Wert, dessen Kürzel inzwischen zu einer anderen Firma gehört.
+- Weichen nur die Namen ab und führt die ISIN genau zu diesem Kürzel (zum Beispiel „Google“ und „Alphabet Inc.“), steht „Name prüfen“ in der Zeile. Erst nach einem Klick auf **Ist dieselbe Firma** in der Detailansicht werden die Daten verwendet. Die Bestätigung wird im Depot gespeichert und gilt dauerhaft.
+- Werte an ausländischen Börsen bekommen das Kürzel dieser Börse, zum Beispiel ALCO für Alico an der Nasdaq statt des deutschen Kürzels AOE. Das geschieht beim ersten Abruf nach dem Import oder nach dem Update von selbst; Käufe, Gruppen und Notizen bleiben unverändert.
+- Der Import übernimmt keinen Treffer, dessen Firmenname nicht zum Namen in der Datei passt. Die Zeile zeigt dann „Name passt nicht zum Treffer“ und den gefundenen Namen; der Wert lässt sich von Hand hinzufügen.
 
 ### Umrechnung in Euro
 

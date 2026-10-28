@@ -202,17 +202,36 @@ public extension ImportResolver {
     }
 
     /// Searches with ISIN, WKN, ticker and name in this order and stops at the first certain match.
+    /// A match whose company name does not fit the name in the file is never taken.
     static func resolve(_ d: CSVImport.Draft, target: ExchangeID, catalog: ExchangeCatalog,
                         search: (String) async -> [SearchCandidate]) async -> Outcome {
         var sawResults = false
+        var otherCompany: String?
         for q in queries(d) {
             let cands = await search(q)
             if !cands.isEmpty { sawResults = true }
             let groups = ListingOption.build(cands, query: q, catalog: catalog)
             if let g = instrument(for: d, in: groups, query: q), let c = choose(d, group: g, target: d.exchangeID ?? target, catalog: catalog) {
+                if let other = otherName(d, g) {
+                    otherCompany = otherCompany ?? other
+                    continue
+                }
                 return .found(c)
             }
         }
+        if let other = otherCompany {
+            return .notFound("Name passt nicht zum Treffer (\(other)), bitte von Hand hinzufügen")
+        }
         return .notFound(sawResults ? "Kein eindeutiger Treffer, bitte von Hand hinzufügen" : "Bei keiner Datenquelle gefunden")
+    }
+
+    /// The name of the found security if it clearly is another company than the one named in the file, else nil.
+    static func otherName(_ d: CSVImport.Draft, _ group: [ListingOption]) -> String? {
+        let fileName = d.name.trimmingCharacters(in: .whitespaces)
+        guard !fileName.isEmpty, fileName != d.identifier else { return nil }
+        let names = Set(group.flatMap { [$0.name] + $0.candidates.map(\.name) })
+        let verdicts = names.map { Lenient.sameCompany(fileName, $0) }
+        guard verdicts.contains(false), !verdicts.contains(true) else { return nil }
+        return group.first?.name
     }
 }

@@ -269,6 +269,26 @@ final class AppModel {
         snapshot = s
     }
 
+    /// The user says the company a source names is this security after all ("Google" and "Alphabet Inc.").
+    /// Stored in the depot, so it holds on every Mac and after clearing the cache.
+    func confirmCompany(_ p: Position, _ n: ListingNotice) {
+        guard let provider = n.provider, let symbol = n.symbol else { return }
+        let key = p.listing.key
+        let ids = depot.positions.filter { $0.listing.key == key }.map(\.id)
+        mutate { d in
+            for i in d.positions.indices where d.positions[i].listing.key == key {
+                var c = d.positions[i].listing.confirmedSymbols ?? [:]
+                c[provider.rawValue] = symbol
+                d.positions[i].listing.confirmedSymbols = c
+            }
+        }
+        Task {
+            await engine.confirmedCompany(listingKey: key)
+            await recompute()
+            refresh(force: true, only: Set(ids))
+        }
+    }
+
     /// Writes tickers and symbols the engine found wrong (checked through the ISIN) into the depot.
     /// Purchases, groups and everything else of the position stay as they are; the values then load fresh.
     private func applyCorrections(_ list: [ListingCorrection]) async {

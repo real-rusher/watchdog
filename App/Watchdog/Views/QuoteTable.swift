@@ -514,7 +514,10 @@ struct NameCell: View {
                     .fixedSize()
                     .help(cr.direction == .down ? "Am \(Format.day(cr.day)) unter die Linie gefallen" : "Am \(Format.day(cr.day)) über die Linie gestiegen")
             }
-            if withStale, row.isStale, let f = row.freshness {
+            // A held back source explains the missing data better than "keine Kurse".
+            if withStale, let n = row.notice, n.needsUser {
+                NoticeChip(notice: n)
+            } else if withStale, row.isStale, let f = row.freshness {
                 HStack(spacing: 3) {
                     Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 9 * scale))
                     Text(f.headline).type(11, .semibold).lineLimit(1)
@@ -528,22 +531,22 @@ struct NameCell: View {
             } else if withStale, let n = row.notice {
                 NoticeChip(notice: n)
             } else if let n = row.notice {
-                Image(systemName: n.kind == .check ? "questionmark.circle.fill" : "checkmark.circle")
+                Image(systemName: n.needsUser ? "questionmark.circle.fill" : "checkmark.circle")
                     .font(.system(size: 10 * scale)).foregroundStyle(n.kind == .check ? Palette.caution : Palette.inkSoft)
             }
         }
     }
 }
 
-/// "Kürzel korrigiert" (neutral, for a week) or "Kürzel prüfen" (caution, until solved).
+/// "Kürzel korrigiert" (neutral, for a week), "Kürzel prüfen" or "Name prüfen" (caution, until solved).
 struct NoticeChip: View {
     @Environment(\.uiScale) private var scale
     var notice: ListingNotice
 
     var body: some View {
-        let color = notice.kind == .check ? Palette.caution : Palette.inkSoft
+        let color = notice.needsUser ? Palette.caution : Palette.inkSoft
         HStack(spacing: 3) {
-            Image(systemName: notice.kind == .check ? "questionmark.circle.fill" : "checkmark.circle").font(.system(size: 9 * scale))
+            Image(systemName: notice.needsUser ? "questionmark.circle.fill" : "checkmark.circle").font(.system(size: 9 * scale))
             Text(notice.headline).type(11, .semibold).lineLimit(1)
         }
         .foregroundStyle(color)

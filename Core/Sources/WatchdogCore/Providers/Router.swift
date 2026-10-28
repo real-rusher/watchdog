@@ -72,6 +72,11 @@ public actor ProviderHealth {
 
     public func snapshot() -> [ProviderID: Status] { status }
 
+    /// Lets every provider try a listing again (after the user confirmed or corrected it).
+    public func clearMisses(listingKey: String) {
+        symbolMisses = symbolMisses.filter { !$0.key.contains("|\(listingKey)|") }
+    }
+
     public func reset() {
         status = [:]
         symbolMisses = [:]
@@ -138,6 +143,9 @@ public struct DataRouter: Sendable {
         public var provider: ProviderID
         public var symbol: String
         public var name: String
+        /// The security's ISIN leads to this very symbol: either the names merely differ ("Google", "Alphabet Inc.")
+        /// or the ISIN itself is wrong. Only the user can tell, so the data waits for a confirmation.
+        public var isinMatches = false
     }
 
     public struct Outcome<T: Sendable>: Sendable {
@@ -196,9 +204,16 @@ public struct DataRouter: Sendable {
                 answer = try await checked(p, sym, ref: ref, exchange: exchange, env: env, symbols: symbols, body)
                 if case .wrong(let name) = answer {
                     answer = await repaired(p, sym, ref: ref, exchange: exchange, env: env, symbols: symbols, wrongName: name, body)
-                    // The ISIN confirming the same symbol means the names merely differ ("Google", "Alphabet Inc.").
-                    if case .ok(_, _, nil) = answer {} else { wrong.append(WrongCompany(provider: pid, symbol: sym, name: name)) }
-                    if case .failed = answer {
+                    var w = WrongCompany(provider: pid, symbol: sym, name: name)
+                    if case .unconfirmed = answer { w.isinMatches = true }
+                    wrong.append(w)
+                    switch answer {
+                    case .ok: break
+                    case .unconfirmed:
+                        await health.failure(pid, key, what, ProviderError.notFound("andere Firma"))
+                        attempts.append(Attempt(provider: pid, error: "nennt unter \(sym) die Firma \(name); wird erst nach Bestätigung verwendet"))
+                        continue
+                    default:
                         await symbols?.remove(key, pid)
                         await health.failure(pid, key, what, ProviderError.notFound("andere Firma"))
                         attempts.append(Attempt(provider: pid, error: "liefert unter \(sym) eine andere Firma (\(name))"))
@@ -250,6 +265,8 @@ public struct DataRouter: Sendable {
     private enum Checked<T: Sendable>: Sendable {
         case ok(T, confirmed: Bool, repair: SymbolRepair?)
         case wrong(String)
+        /// Another company name, but the ISIN leads to the same symbol.
+        case unconfirmed
         case failed
     }
 
@@ -258,6 +275,7 @@ public struct DataRouter: Sendable {
                                       symbols: SymbolCache?, _ body: @Sendable (MarketDataProvider, String) async throws -> T) async throws -> Checked<T> {
         let v = try await body(p, sym)
         guard let name = (v as? NamedAnswer)?.instrumentName, !name.isEmpty else { return .ok(v, confirmed: false, repair: nil) }
+        if ref.listing.confirmedSymbols?[p.id.rawValue] == sym { return .ok(v, confirmed: true, repair: nil) }
         if await symbols?.isVerified(ref.listing.key, p.id, sym) == true { return .ok(v, confirmed: true, repair: nil) }
         switch Lenient.sameCompany(name, ref.name) {
         case true?: return .ok(v, confirmed: true, repair: nil)
@@ -267,17 +285,13 @@ public struct DataRouter: Sendable {
     }
 
     /// Looks the symbol up again through the ISIN. If that finds another symbol, it is tried and kept when it works.
-    /// If the ISIN leads to the same symbol, the security is the right one after all (the names merely differ).
+    /// If the ISIN leads to the same symbol after another company name, the user has to confirm it.
     private func repaired<T: Sendable>(_ p: MarketDataProvider, _ sym: String, ref: SecurityRef, exchange: Exchange, env: ProviderEnvironment,
                                        symbols: SymbolCache?, wrongName: String?,
                                        _ body: @Sendable (MarketDataProvider, String) async throws -> T) async -> Checked<T> {
         guard let fresh = try? await p.symbolByISIN(ref, exchange: exchange, env: env), !fresh.isEmpty else { return .failed }
         let key = ref.listing.key
-        if fresh == sym {
-            guard wrongName != nil, let v = try? await body(p, sym) else { return .failed }
-            await symbols?.markVerified(key, p.id, sym)
-            return .ok(v, confirmed: true, repair: nil)
-        }
+        if fresh == sym { return wrongName != nil ? .unconfirmed : .failed }
         guard let answer = try? await checked(p, fresh, ref: ref, exchange: exchange, env: env, symbols: symbols, body),
               case .ok(let v, _, _) = answer else { return .failed }
         await symbols?.put(key, p.id, fresh)

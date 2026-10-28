@@ -73,6 +73,8 @@ public struct ListingNotice: Codable, Hashable, Sendable {
         case corrected
         /// A source delivers another company and no right symbol was found: please check the ticker.
         case check
+        /// A source names another company, but the ISIN leads to exactly this symbol: please confirm.
+        case confirm
     }
 
     public var kind: Kind
@@ -80,18 +82,27 @@ public struct ListingNotice: Codable, Hashable, Sendable {
     public var detail: String
     public var date: Date
     public var provider: ProviderID?
+    /// Symbol and company name the source reported, for "Ist dieselbe Firma".
+    public var symbol: String?
+    public var reportedName: String?
 
-    public init(kind: Kind, headline: String, detail: String, date: Date = Date(), provider: ProviderID? = nil) {
+    public init(kind: Kind, headline: String, detail: String, date: Date = Date(), provider: ProviderID? = nil,
+                symbol: String? = nil, reportedName: String? = nil) {
         self.kind = kind
         self.headline = headline
         self.detail = detail
         self.date = date
         self.provider = provider
+        self.symbol = symbol
+        self.reportedName = reportedName
     }
+
+    /// The data of this listing is held back until the user checks it.
+    public var needsUser: Bool { kind != .corrected }
 
     /// Corrections are shown in the table for a week, open problems until they are solved.
     public func isVisible(now: Date = Date()) -> Bool {
-        kind == .check || now.timeIntervalSince(date) < 7 * 86400
+        needsUser || now.timeIntervalSince(date) < 7 * 86400
     }
 }
 
@@ -197,6 +208,16 @@ public actor MarketEngine {
         dirtyHistories.remove(listingKey)
         await symbols.remove(listingKey: listingKey)
         await cache?.removeHistory(listingKey)
+    }
+
+    /// The user confirmed that the source's company is the security after all; the app stored that in the depot.
+    /// The listing is asked again right away.
+    public func confirmedCompany(listingKey: String) async {
+        notices[listingKey] = nil
+        lastQuoteAttempt[listingKey] = nil
+        lastHistoryAttempt[listingKey] = nil
+        await router.health.clearMisses(listingKey: listingKey)
+        await cache?.write(notices, "notices.json")
     }
 
     /// The app has written a correction into the depot. Data fetched under the old ticker or from another company is dropped
@@ -405,6 +426,8 @@ public actor MarketEngine {
         /// Sources that delivered another company under the stored symbol.
         var wrongCompany: [DataRouter.WrongCompany] = []
         var correction: ListingCorrection?
+        /// Name of the security, for the notices.
+        var name = ""
         /// Providers whose answer was checked against the company name and matched.
         var confirmedProviders: Set<ProviderID> = []
     }
@@ -451,6 +474,7 @@ public actor MarketEngine {
                 r.plausibilityNote = checked.note
             }
         }
+        r.name = j.ref.name
         r.confirmedProviders = Set(used.filter(\.confirmed).map(\.provider))
         r.correction = correction(ref: j.ref, exchange: ex, used: used, repairs: repairs, wrong: r.wrongCompany)
         return r
@@ -572,11 +596,15 @@ public actor MarketEngine {
 
         if let c = r.correction {
             corrections[key] = c
-        } else if let w = r.wrongCompany.first {
-            notices[key] = ListingNotice(kind: .check, headline: "Kürzel prüfen",
-                                         detail: "\(w.provider.displayName) liefert unter \(w.symbol) Daten einer anderen Firma (\(w.name)). Diese Daten werden nicht verwendet. Über die ISIN ließ sich kein passendes Kürzel finden; bitte Kürzel und ISIN des Werts prüfen.",
-                                         provider: w.provider)
-        } else if let n = notices[key], n.kind == .check, let p = n.provider, r.confirmedProviders.contains(p) {
+        } else if let w = r.wrongCompany.first(where: { !$0.isinMatches }) ?? r.wrongCompany.first {
+            notices[key] = w.isinMatches
+                ? ListingNotice(kind: .confirm, headline: "Name prüfen",
+                                detail: "\(w.provider.displayName) nennt unter \(w.symbol) die Firma „\(w.name)“, der Wert heißt „\(r.name)“. Die ISIN des Werts führt zu genau diesem Kürzel: Entweder ist es dieselbe Firma unter anderem Namen, oder die ISIN gehört zu einer anderen Firma. Kurse und Verlauf werden erst verwendet, wenn bestätigt ist, dass es dieselbe Firma ist.",
+                                provider: w.provider, symbol: w.symbol, reportedName: w.name)
+                : ListingNotice(kind: .check, headline: "Kürzel prüfen",
+                                detail: "\(w.provider.displayName) liefert unter \(w.symbol) Daten einer anderen Firma (\(w.name)), der Wert heißt „\(r.name)“. Diese Daten werden nicht verwendet. Über die ISIN ließ sich kein passendes Kürzel finden. Bitte Kürzel und ISIN des Werts prüfen, oder bestätigen, dass es dieselbe Firma ist.",
+                                provider: w.provider, symbol: w.symbol, reportedName: w.name)
+        } else if let n = notices[key], n.needsUser, let p = n.provider, r.confirmedProviders.contains(p) {
             notices[key] = nil
         }
     }

@@ -25,6 +25,9 @@ public struct Listing: Codable, Hashable, Sendable {
     public var symbols: [String: String]
     /// Forces a provider for this listing (nil = automatic).
     public var preferredProvider: ProviderID?
+    /// Symbols the user confirmed as the right security although the source names another company
+    /// ("Google" and "Alphabet Inc."), keyed by `ProviderID.rawValue`.
+    public var confirmedSymbols: [String: String]?
 
     public init(exchangeID: ExchangeID, ticker: String, currency: String? = nil, symbols: [String: String] = [:], preferredProvider: ProviderID? = nil) {
         self.exchangeID = exchangeID
