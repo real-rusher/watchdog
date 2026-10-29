@@ -75,7 +75,7 @@ targets:
         LSApplicationCategoryType: public.app-category.finance
         UILaunchScreen: {}
         UIBackgroundModes: [fetch, processing]
-        BGTaskSchedulerPermittedIdentifiers: [de.realrusher.watchdog.check]
+        BGTaskSchedulerPermittedIdentifiers: ["$(PRODUCT_BUNDLE_IDENTIFIER).check"]
         CFBundleURLTypes:
           - CFBundleURLName: de.realrusher.watchdog
             CFBundleURLSchemes: [watchdog]

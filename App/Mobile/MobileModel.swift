@@ -21,7 +21,8 @@ final class MobileModel {
         let positions: [Position]
     }
 
-    static let backgroundTaskID = "de.realrusher.watchdog.check"
+    /// Same as in Info.plist ("<bundle id>.check"), so it also fits when the app is built under another id for a personal Apple ID.
+    static let backgroundTaskID = (Bundle.main.bundleIdentifier ?? "de.realrusher.watchdog") + ".check"
 
     var depot = DepotFile()
     var snapshot: EngineSnapshot?

@@ -51,6 +51,8 @@ jobs:
           echo "watch embeds before: $(grep -c '      - target: WatchdogWatch' App/project.yml) after: $(grep -c '      - target: WatchdogWatch' /tmp/p.yml)" >> out/iphone-script.log
           echo "complication kept: $(grep -c '      - target: WatchdogComplication' /tmp/p.yml)" >> out/iphone-script.log
           grep -o 'de.realrusher.wd-ci[a-z.]*' ~/Library/Caches/Watchdog-iPhone/src/App/project.yml | sort -u >> out/iphone-script.log
+          P=~/Library/Caches/Watchdog-iPhone/build/Build/Products/Release-iphoneos/Watchdog.app/Info.plist
+          echo "bundle $(plutil -extract CFBundleIdentifier raw $P) background $(plutil -extract BGTaskSchedulerPermittedIdentifiers.0 raw $P)" >> out/iphone-script.log
       - name: Screenshots in the simulators (example depot, live prices)
         continue-on-error: true
         run: bash .github/mobile-shots.sh > out/shots.log 2>&1
