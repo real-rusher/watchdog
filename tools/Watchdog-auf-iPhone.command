@@ -185,10 +185,39 @@ if ! xcrun devicectl device process launch --device "$DEVICE" "$BUNDLE" > "$WORK
     echo "Danach Watchdog auf dem iPhone öffnen. Das ist nur beim ersten Mal nötig."
 fi
 
+# 8. Watch-App direkt auf die Uhr (zuverlässiger als auf "Verfügbare Apps" in der Watch-App zu warten)
+WATCH_DONE=0
+if [ "$WITHOUT_WATCH" = "0" ] && [ -d "$APP/Watch/Watchdog.app" ]; then
+    say "Apple Watch suchen"
+    xcrun devicectl list devices --json-output "$WORK/devices.json" >/dev/null 2>&1
+    WPICK="(function () {
+        var l = ((d.result || {}).devices || []).filter(function (x) {
+            var h = x.hardwareProperties || {}, c = x.connectionProperties || {};
+            return h.platform === 'watchOS' && c.pairingState === 'paired';
+        });
+        return l[0];
+    })()"
+    WATCHDEV=$(json "$WORK/devices.json" "($WPICK || {}).identifier")
+    WNAME=$(json "$WORK/devices.json" "(($WPICK || {}).deviceProperties || {}).name")
+    if [ -n "$WATCHDEV" ]; then
+        echo "$WNAME gefunden, Watch-App wird installiert (Watch entsperrt am Handgelenk lassen, das dauert etwas)."
+        if xcrun devicectl device install app --device "$WATCHDEV" "$APP/Watch/Watchdog.app" > "$WORK/install-watch.log" 2>&1; then
+            WATCH_DONE=1
+        else
+            tail -3 "$WORK/install-watch.log"
+        fi
+    fi
+fi
+
 say "Fertig: Watchdog $VERSION ist auf $NAME."
-if [ "$WITHOUT_WATCH" = "1" ]; then
-    echo "Diesmal ohne Watch-App. Auf der Watch: Einstellungen > Datenschutz & Sicherheit > Entwicklermodus einschalten,"
-    echo "Watch neu starten, iPhone wieder anschließen und dieses Skript noch einmal starten."
+if [ "$WATCH_DONE" = "1" ]; then
+    echo "Die Watch-App ist auf $WNAME."
+elif [ "$WITHOUT_WATCH" = "1" ] || [ -z "$WATCHDEV" ]; then
+    echo "Diesmal ohne Watch-App: Xcode kennt die Watch noch nicht als Entwicklungsgerät. So geht es einmalig:"
+    echo "  1. Xcode nach vorne holen, im Menü Window > Devices and Simulators (Umschalt+Befehl+2), oben \"Devices\"."
+    echo "  2. iPhone am Kabel und entsperrt, Watch entsperrt am Handgelenk. Warten, bis die Watch links erscheint und fertig vorbereitet ist."
+    echo "  3. Auf der Watch: Einstellungen > Datenschutz & Sicherheit > Entwicklermodus einschalten, Neustart, bestätigen."
+    echo "  4. Dieses Skript noch einmal starten."
 else
 echo "Die Watch-App kommt von selbst auf die gekoppelte Apple Watch, wenn in der Watch-App des iPhones"
 echo "\"Apps automatisch installieren\" an ist (sonst dort unter \"Verfügbare Apps\" Watchdog installieren)."
