@@ -40,7 +40,7 @@ find_team() {
                 Object.keys(o).forEach(function (k) { try { walk(o[k], depth + 1); } catch (e) {} });
             }
             ['com.apple.dt.Xcode', 'com.apple.dt.xcodebuild'].forEach(function (s) {
-                try { walk(ObjC.deepUnwrap($.NSUserDefaults.alloc.initWithSuiteName(s).dictionaryRepresentation), 0); } catch (e) {}
+                try { walk(ObjC.deepUnwrap($.NSUserDefaults.standardUserDefaults.persistentDomainForName(s)), 0); } catch (e) {}
             });
             var personal = found.filter(function (x) {
                 return x.isFreeProvisioningTeam || x.teamType === 'Personal' || /personal/i.test(String(x.teamName || x.name || ''));
@@ -116,6 +116,30 @@ if [ "$CI_MODE" != "1" ]; then
     if [ "$DEVMODE" = "disabled" ]; then
         fail "Auf dem iPhone ist der Entwicklermodus aus. Einstellungen > Datenschutz & Sicherheit > Entwicklermodus einschalten, iPhone neu starten, nach dem Neustart \"Einschalten\" bestätigen. Dann erneut starten."
     fi
+
+    # Sieht Xcode die gekoppelte Watch, und ist ihr Entwicklermodus an? Ohne beides lässt sich die Watch-App nicht signieren.
+    say "Apple Watch prüfen"
+    WSTATE=$(json "$WORK/devices.json" "(function () {
+        var w = ((d.result || {}).devices || []).filter(function (x) { return (x.hardwareProperties || {}).platform === 'watchOS'; })[0];
+        if (!w) return 'none';
+        var c = w.connectionProperties || {}, p = w.deviceProperties || {};
+        return [p.name || 'Apple Watch', c.pairingState || '?', c.tunnelState || '?', p.developerModeStatus || '?'].join('|');
+    })()")
+    if [ "$WSTATE" = "none" ] || [ -z "$WSTATE" ]; then
+        echo "Xcode sieht keine Apple Watch. Die iPhone-App wird trotzdem installiert; für die Watch einmalig:"
+        echo "  Mac, iPhone und Watch im selben WLAN, Bluetooth an, kein VPN. Watch entsperrt am Handgelenk."
+        echo "  Xcode > Window > Devices and Simulators (Umschalt+Befehl+2) > Devices, iPhone links anklicken"
+        echo "  und warten, bis die Watch erscheint und vorbereitet ist. Auf der Watch \"Vertrauen\" bestätigen."
+    else
+        IFS='|' read -r WN WPAIR WTUN WDEV <<< "$WSTATE"
+        echo "$WN: Kopplung $WPAIR, Verbindung $WTUN, Entwicklermodus $WDEV."
+        if [ "$WDEV" = "disabled" ]; then
+            echo "Auf der Watch: Einstellungen > Datenschutz & Sicherheit > ganz unten Entwicklermodus einschalten, Neustart, bestätigen."
+        elif [ "$WPAIR" != "paired" ]; then
+            echo "Xcode kennt die Watch, ist aber noch nicht mit ihr verbunden: in Xcode > Window > Devices and Simulators die Watch anklicken"
+            echo "und auf der Watch \"Vertrauen\" bestätigen; dann ist sie vorbereitet und der Entwicklermodus erscheint."
+        fi
+    fi
 fi
 
 # 4. Neuesten Stand holen
@@ -163,6 +187,8 @@ if ! build_app; then
     # Die Watch-App lässt sich erst signieren, wenn die Watch für die Entwicklung freigegeben ist. Dann wenigstens das iPhone.
     if grep -E "error:" "$WORK/build.log" | grep -qiE "watch|WatchdogWatch|WatchdogComplication"; then
         say "Die Watch-App ließ sich noch nicht signieren, ich baue ohne Watch weiter"
+        echo "Grund laut Xcode:"
+        grep -E "error:" "$WORK/build.log" | grep -iE "watch|provision|device|signing" | sed 's/^.*error: /  /' | sort -u | head -4
         sed -i '' '/^  WatchdogMobile:/,/^  WatchdogWatch:/{/      - target: WatchdogWatch/d;}' "$WORK/src/App/project.yml"
         (cd "$WORK/src/App" && "$WORK/tools/xcodegen/bin/xcodegen" generate --quiet) || fail "Das Projekt ließ sich nicht erzeugen."
         build_app || fail "Der Bau ist fehlgeschlagen."
