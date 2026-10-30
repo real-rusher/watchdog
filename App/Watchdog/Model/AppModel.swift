@@ -122,7 +122,9 @@ final class AppModel {
     var deleteRequest: DeleteRequest?
     /// Text of the "deleted, undo?" banner; the depot before the delete is kept until then.
     var undoText: String?
-    @ObservationIgnored private var undoDepot: DepotFile?
+    /// What the last delete or group change replaced: the values as they were, and banks and themes if those were removed.
+    @ObservationIgnored private var undoPositions: [Position]?
+    @ObservationIgnored private var undoGroups: (banks: [Bank], themes: [Theme])?
     var lastSummary: RefreshSummary?
     var isExampleDepot = false
     /// Incremented to ask the main view to open the settings window (used by the screenshot run).
@@ -141,6 +143,8 @@ final class AppModel {
     @ObservationIgnored private var loopTask: Task<Void, Never>?
     @ObservationIgnored private var recomputeTask: Task<Void, Never>?
     @ObservationIgnored private var knownModification: Date?
+    /// The depot as last read from or written to the file; saving merges against it (Mac and iPhone edit the same file).
+    @ObservationIgnored private var base: DepotFile?
     @ObservationIgnored private var started = false
 
     init() {
@@ -175,6 +179,7 @@ final class AppModel {
         engine = MarketEngine(cacheDir: LocalSettings.supportDir.appendingPathComponent("Cache", isDirectory: true))
         if s.exists, let d = try? s.load() {
             depot = d
+            base = d
         } else {
             depot = DepotFile()
         }
@@ -439,7 +444,14 @@ final class AppModel {
             try? await Task.sleep(nanoseconds: 600_000_000)
             guard !Task.isCancelled, let self else { return }
             do {
-                try self.store.save(self.depot)
+                let mine = self.depot
+                let written = try self.store.saveMerging(mine, base: self.base)
+                self.base = written
+                // The iPhone changed something meanwhile: show the merged state.
+                if DepotMerge.fileChanged(base: mine, theirs: written) {
+                    self.depot = written
+                    self.scheduleRecompute()
+                }
                 self.knownModification = self.store.modificationDate()
             } catch {
                 self.notice = "Speichern fehlgeschlagen: \(error.localizedDescription)"
@@ -454,6 +466,7 @@ final class AppModel {
         if let known = knownModification, mod.timeIntervalSince(known) < 1 { return }
         if let d = try? store.load() {
             depot = d
+            base = d
             knownModification = mod
             scheduleRecompute()
         }
@@ -554,7 +567,8 @@ final class AppModel {
         let existing = ids.filter { id in depot.positions.contains { $0.id == id } }
         guard !existing.isEmpty || !keepGroups else { return }
         if snapshotDir == nil { store.backupNow() }
-        undoDepot = depot
+        undoPositions = depot.positions.filter { existing.contains($0.id) }
+        undoGroups = keepGroups ? nil : (depot.banks, depot.themes)
         mutate { d in
             d.positions.removeAll { existing.contains($0.id) }
             if !keepGroups {
@@ -573,16 +587,48 @@ final class AppModel {
         remove(Set(depot.positions.map(\.id)), keepGroups: keepGroups)
     }
 
+    /// Puts back only what the last delete or group change touched, so changes from the iPhone in between stay.
     func undoDelete() {
-        guard let d = undoDepot else { return }
-        undoDepot = nil
+        guard let old = undoPositions else { return }
+        let groups = undoGroups
+        undoPositions = nil
+        undoGroups = nil
         undoText = nil
-        mutate { $0 = d }
+        mutate { d in
+            for p in old {
+                if let i = d.positions.firstIndex(where: { $0.id == p.id }) { d.positions[i] = p } else { d.positions.append(p) }
+            }
+            if let groups {
+                for b in groups.banks where !d.banks.contains(where: { $0.id == b.id }) { d.banks.append(b) }
+                for t in groups.themes where !d.themes.contains(where: { $0.id == t.id }) { d.themes.append(t) }
+            }
+        }
         refresh(force: false)
     }
 
     private func depotName(_ id: UUID?) -> String {
-        undoDepot?.positions.first { $0.id == id }?.name ?? "1 Wert"
+        undoPositions?.first { $0.id == id }?.name ?? "1 Wert"
+    }
+
+    /// Bank or theme for several values at once (selection bar and context menu).
+    func assignBank(_ bank: UUID?, to ids: Set<UUID>) {
+        let name = bank.flatMap { depot.bank($0)?.name } ?? "Ohne Bank"
+        assign(ids, text: "Bank \u{201E}\(name)\u{201C}") { $0.bankID = bank }
+    }
+
+    func assignTheme(_ theme: UUID?, to ids: Set<UUID>) {
+        let name = theme.flatMap { depot.theme($0)?.name } ?? "Ohne Thema"
+        assign(ids, text: "Thema \u{201E}\(name)\u{201C}") { $0.themeID = theme }
+    }
+
+    private func assign(_ ids: Set<UUID>, text: String, _ change: (inout Position) -> Void) {
+        guard !ids.isEmpty else { return }
+        undoPositions = depot.positions.filter { ids.contains($0.id) }
+        undoGroups = nil
+        mutate { d in
+            for i in d.positions.indices where ids.contains(d.positions[i].id) { change(&d.positions[i]) }
+        }
+        undoText = ids.count == 1 ? "\(text) für 1 Wert gesetzt." : "\(text) für \(ids.count) Werte gesetzt."
     }
 
     func reloadData(for id: UUID) {
@@ -620,6 +666,7 @@ final class AppModel {
         let newStore = DepotStore(url: target)
         do {
             try newStore.save(depot)
+            base = try? newStore.load()
             store = newStore
             knownModification = newStore.modificationDate()
             updateLocal { $0.depotPath = target.path }
@@ -634,6 +681,7 @@ final class AppModel {
         let s = DepotStore(url: url)
         do {
             depot = try s.load()
+            base = depot
             store = s
             knownModification = s.modificationDate()
             updateLocal { $0.depotPath = url.path }

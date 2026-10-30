@@ -276,6 +276,7 @@ struct SelectionBar: View {
             .buttonStyle(.borderless).type(13)
             Button("Auswahl aufheben") { model.clearMarks() }
                 .buttonStyle(.borderless).type(13)
+            GroupAssignMenus(ids: model.marked)
             Button(role: .destructive) {
                 model.deleteRequest = .positions(model.marked)
             } label: {
@@ -289,5 +290,35 @@ struct SelectionBar: View {
         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Palette.rule))
         .overlay(alignment: .leading) { Rectangle().fill(Palette.signal).frame(width: 4).clipShape(RoundedRectangle(cornerRadius: 2)).padding(.vertical, 6) }
         .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
+    }
+}
+
+/// "Bank" and "Thema" for all selected values at once.
+struct GroupAssignMenus: View {
+    @Environment(AppModel.self) private var model
+    var ids: Set<UUID>
+    var inContextMenu = false
+
+    var body: some View {
+        let banks = model.depot.banks.sorted { $0.sortIndex < $1.sortIndex }
+        let themes = model.depot.themes.sorted { $0.sortIndex < $1.sortIndex }
+        Group {
+            Menu {
+                ForEach(banks) { b in Button(b.name) { model.assignBank(b.id, to: ids) } }
+                if !banks.isEmpty { Divider() }
+                Button("Ohne Bank") { model.assignBank(nil, to: ids) }
+            } label: {
+                Text(inContextMenu ? "Bank zuweisen" : "Bank …").type(13)
+            }
+            Menu {
+                ForEach(themes) { t in Button(t.name) { model.assignTheme(t.id, to: ids) } }
+                if !themes.isEmpty { Divider() }
+                Button("Ohne Thema") { model.assignTheme(nil, to: ids) }
+            } label: {
+                Text(inContextMenu ? "Thema zuweisen" : "Thema …").type(13)
+            }
+        }
+        .menuStyle(.borderlessButton)
+        .fixedSize()
     }
 }

@@ -362,6 +362,8 @@ struct QuoteRow: View {
         })
         .contextMenu {
             if model.marked.count > 1 && model.marked.contains(row.id) {
+                GroupAssignMenus(ids: model.marked, inContextMenu: true)
+                Divider()
                 Button("\(model.marked.count) ausgewählte Werte löschen …", role: .destructive) { model.deleteRequest = .positions(model.marked) }
                 Button("Auswahl aufheben") { model.clearMarks() }
             } else {
