@@ -1,6 +1,12 @@
-Watchdog 1.0.8 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
+Watchdog 1.0.9 für den Mac (macOS 14 oder neuer, Apple Silicon und Intel).
 
-**Neu in 1.0.8**
+**Neu in 1.0.9**
+- Mac und iPhone bearbeiten dasselbe Depot. Vor dem Speichern liest Watchdog die Depotdatei neu und übernimmt nur die eigenen Änderungen. Speichern Mac und iPhone kurz nacheinander, bleiben die Änderungen beider erhalten.
+- Bank und Thema für mehrere Werte auf einmal: Werte mit ⌘-Klick oder ⇧-Klick auswählen, dann in der Auswahlleiste „Bank …“ oder „Thema …“ wählen, oder per Rechtsklick „Bank zuweisen“ und „Thema zuweisen“. Rückgängig ist möglich.
+- Rückgängig nach dem Löschen setzt nur die gelöschten Werte zurück, Änderungen vom iPhone in derselben Zeit bleiben.
+- Diese Version vor dem Bearbeiten auf dem iPhone installieren. Ältere Versionen kennen das Zusammenführen noch nicht.
+
+**Aus 1.0.8**
 - Wird bei einem Wert die ISIN, die WKN oder der Name nachgetragen oder geändert, sucht Watchdog sofort neu nach dem richtigen Kürzel. Bisher geschah das nur beim Wechsel der Börse, und eine Quelle, die vorher eine andere Firma geliefert hatte, wurde sechs Stunden lang nicht mehr gefragt (Fall Metalla mit dem Kürzel FCA.UN).
 - Fehlt einem Wert die ISIN, sagt der Hinweis „Kürzel prüfen“ das jetzt ausdrücklich und nennt die Abhilfe.
 - Kleine Verbesserungen für die Einrichtung der Mitteilungen auf iPhone und Apple Watch.
