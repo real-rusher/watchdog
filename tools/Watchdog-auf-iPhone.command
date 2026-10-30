@@ -22,6 +22,55 @@ json() { # json DATEI JS-AUSDRUCK(d)  wertet JSON ohne Zusatzprogramme mit JavaS
         var d = JSON.parse(t); var r = ($2); (r === undefined || r === null) ? '' : String(r);" 2>/dev/null
 }
 
+# Team-ID der in Xcode angemeldeten Apple-ID, auf mehreren Wegen, weil Xcode-Versionen sie unterschiedlich ablegen.
+find_team() {
+    local t=""
+    # a) Schon einmal eingegeben oder gefunden.
+    [ -f "$WORK/team" ] && t=$(cat "$WORK/team")
+    # b) Xcode-Einstellungen: jedes Objekt mit einer Team-ID, egal unter welchem Schlüssel; das persönliche Team zuerst.
+    if [ -z "$t" ]; then
+        t=$(/usr/bin/osascript -l JavaScript -e "
+            ObjC.import('Foundation');
+            var found = [];
+            function walk(o, depth) {
+                if (!o || typeof o !== 'object' || depth > 12) return;
+                if (Array.isArray(o)) { o.forEach(function (x) { walk(x, depth + 1); }); return; }
+                var id = o.teamID || o.TeamID || o.teamIdentifier;
+                if (typeof id === 'string' && /^[A-Z0-9]{10}$/.test(id)) found.push(o);
+                Object.keys(o).forEach(function (k) { try { walk(o[k], depth + 1); } catch (e) {} });
+            }
+            ['com.apple.dt.Xcode', 'com.apple.dt.xcodebuild'].forEach(function (s) {
+                try { walk(ObjC.deepUnwrap($.NSUserDefaults.alloc.initWithSuiteName(s).dictionaryRepresentation), 0); } catch (e) {}
+            });
+            var personal = found.filter(function (x) {
+                return x.isFreeProvisioningTeam || x.teamType === 'Personal' || /personal/i.test(String(x.teamName || x.name || ''));
+            });
+            var pick = personal[0] || found[0] || {};
+            pick.teamID || pick.TeamID || pick.teamIdentifier || '';" 2>/dev/null)
+    fi
+    # c) Entwicklerzertifikat im Schlüsselbund: die Team-ID steht im Feld OU.
+    if [ -z "$t" ]; then
+        rm -rf "$WORK/certs" && mkdir -p "$WORK/certs"
+        security find-certificate -a -c "Apple Development" -p 2>/dev/null \
+            | awk -v dir="$WORK/certs" '/BEGIN CERTIFICATE/{n++} n{print > (dir "/c" n ".pem")}'
+        for f in "$WORK/certs/"c*.pem; do
+            [ -f "$f" ] || continue
+            t=$(openssl x509 -in "$f" -noout -subject 2>/dev/null | sed -n 's/.*OU *= *\([A-Z0-9]\{10\}\).*/\1/p')
+            [ -n "$t" ] && break
+        done
+    fi
+    # d) Vorhandene Bereitstellungsprofile.
+    if [ -z "$t" ]; then
+        for f in "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/"*.mobileprovision \
+                 "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision; do
+            [ -f "$f" ] || continue
+            t=$(security cms -D -i "$f" 2>/dev/null | plutil -extract TeamIdentifier.0 raw - 2>/dev/null)
+            [ -n "$t" ] && break
+        done
+    fi
+    [[ "$t" =~ ^[A-Z0-9]{10}$ ]] && { printf "%s" "$t" > "$WORK/team"; printf "%s" "$t"; }
+}
+
 clear
 say "Watchdog auf iPhone und Apple Watch bringen"
 mkdir -p "$WORK" || fail "Ordner $WORK lässt sich nicht anlegen."
@@ -35,16 +84,17 @@ TEAM="" ; DEVICE="" ; UDID="" ; NAME="" ; WATCHDEV=""
 if [ "$CI_MODE" != "1" ]; then
     # 2. Persönliches Team der in Xcode angemeldeten Apple-ID
     say "Apple-ID in Xcode suchen"
-    defaults export com.apple.dt.Xcode - 2>/dev/null | plutil -convert json -o "$WORK/xcode.json" - 2>/dev/null
-    TEAM=$(json "$WORK/xcode.json" "
-        var all = [];
-        ['IDEProvisioningTeamByIdentifier', 'IDEProvisioningTeams'].forEach(function (k) {
-            var v = d[k]; if (!v) return;
-            Object.keys(v).forEach(function (acc) { (v[acc] || []).forEach(function (t) { all.push(t); }); });
-        });
-        var personal = all.filter(function (t) { return t.isFreeProvisioningTeam || t.teamType === 'Personal'; });
-        ((personal[0] || all[0]) || {}).teamID")
-    [ -n "$TEAM" ] || fail "In Xcode ist keine Apple-ID angemeldet. Xcode öffnen, Xcode > Einstellungen > Accounts > + > Apple-ID, anmelden, dann dieses Skript erneut starten."
+    TEAM=$(find_team)
+    if [ -z "$TEAM" ]; then
+        echo "Die Team-ID ließ sich nicht von selbst finden (je nach Xcode-Version liegt sie an anderer Stelle)."
+        echo "Sie steht unter https://developer.apple.com/account > Mitgliedschaft (Membership details) > Team-ID,"
+        echo "nach der Anmeldung mit derselben Apple-ID wie in Xcode. Sie hat 10 Zeichen, zum Beispiel A1B2C3D4E5."
+        printf "Team-ID eingeben und Return drücken: "
+        read -r TEAM
+        TEAM=$(printf "%s" "$TEAM" | tr -d ' ' | tr '[:lower:]' '[:upper:]')
+        [[ "$TEAM" =~ ^[A-Z0-9]{10}$ ]] || fail "Das ist keine gültige Team-ID (10 Buchstaben und Ziffern)."
+        printf "%s" "$TEAM" > "$WORK/team"
+    fi
     echo "Team $TEAM."
 
     # 3. Angeschlossenes iPhone

@@ -53,6 +53,16 @@ jobs:
           grep -o 'de.realrusher.wd-ci[a-z.]*' ~/Library/Caches/Watchdog-iPhone/src/App/project.yml | sort -u >> out/iphone-script.log
           P=~/Library/Caches/Watchdog-iPhone/build/Build/Products/Release-iphoneos/Watchdog.app/Info.plist
           echo "bundle $(plutil -extract CFBundleIdentifier raw $P) background $(plutil -extract BGTaskSchedulerPermittedIdentifiers.0 raw $P)" >> out/iphone-script.log
+      - name: Script finds the team id (Xcode settings under an unknown key, certificate)
+        continue-on-error: true
+        run: |
+          defaults write com.apple.dt.Xcode SomeFutureAccountsKey -array '{ teamID = "Q1W2E3R4T5"; teamType = "Company"; }' '{ teamID = "A1B2C3D4E5"; teamType = "Personal"; isFreeProvisioningTeam = 1; }'
+          export WORK=$(mktemp -d)
+          source <(sed -n '/^find_team() {/,/^}/p' tools/Watchdog-auf-iPhone.command)
+          echo "team from settings: [$(find_team)] (expected A1B2C3D4E5)" >> out/iphone-script.log
+          defaults delete com.apple.dt.Xcode SomeFutureAccountsKey
+          rm -f "$WORK/team"
+          echo "team without anything: [$(find_team)] (expected empty)" >> out/iphone-script.log
       - name: Screenshots in the simulators (example depot, live prices)
         continue-on-error: true
         run: bash .github/mobile-shots.sh > out/shots.log 2>&1
