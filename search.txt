@@ -1,0 +1,394 @@
+# Suche DE0007164600: 38 Treffer
+  OV  BAAD  Baader Trading        SAP       STOCK|82849|46984537|DE0007164600 EUR  SAP DE0007164600
+  OV  GETX  gettex                SAP       STOCK|82849|120499220|DE0007164600EUR  SAP DE0007164600
+  LS  LSEX  LS Exchange           716460    34313                             EUR  SAP SE DE0007164600
+  OV  LSEX  LS Exchange           SAP       STOCK|82849|244494482|DE0007164600EUR  SAP DE0007164600
+  OV  LSTC  Lang & Schwarz        SAP       STOCK|82849|3389771|DE0007164600  EUR  SAP DE0007164600
+  OV  OOTC  Nasdaq OTC            SAP       STOCK|82849|9493482|DE0007164600  USD  SAP DE0007164600
+  12D OOTC  OTC                   SAPGF     SAPGF|PINX                        USD  SAP SE DE0007164600
+  OV  QUOT  Quotrix               SAP       STOCK|82849|134129119|DE0007164600EUR  SAP DE0007164600
+  OV  TGAT  Tradegate BSX         SAP       STOCK|82849|9386131|DE0007164600  EUR  SAP DE0007164600
+  FT  XDUS  DUS                   SAP       SAP:DUS|247847                    EUR  SAP SE DE0007164600
+  OV  XDUS  Düsseldorf            SAP       STOCK|82849|15555465|DE0007164600 EUR  SAP DE0007164600
+  12D XDUS  XDUS                  SAP       SAP|XDUS                          EUR  SAP SE DE0007164600
+  FT  XETR  GER                   SAPX      SAPX:GER|247848                   EUR  SAP SE DE0007164600
+  OV  XETR  Xetra                 SAP       STOCK|82849|163500|DE0007164600   EUR  SAP DE0007164600
+  12D XETR  XETR                  SAP       SAP|XETR                          EUR  SAP SE DE0007164600
+  FT  XFRA  FRA                   SAP       SAP:FRA|247850                    EUR  SAP SE DE0007164600
+  OV  XFRA  Frankfurt             SAP       STOCK|82849|163497|DE0007164600   EUR  SAP DE0007164600
+  12D XFRA  FSX                   SAP       SAP|XFRA                          EUR  SAP SE DE0007164600
+  FT  XHAM  HAM                   SAP       SAP:HAM|247851                    EUR  SAP SE DE0007164600
+  OV  XHAM  Hamburg               SAP       STOCK|82849|15555467|DE0007164600 EUR  SAP DE0007164600
+  OV  XHAN  Hannover              SAP       STOCK|82849|15555468|DE0007164600 EUR  SAP DE0007164600
+  12D XHAN  XHAN                  SAP       SAP|XHAN                          EUR  SAP SE DE0007164600
+  FT  XLON  LSE                   0NW4      0NW4:LSE|13377811                 GBP  SAP SE DE0007164600
+  12D XMIL  MTA                   1SAP      1SAP|XMIL                         EUR  SAP SE DE0007164600
+  OV  XMUN  München               SAP       STOCK|82849|15555466|DE0007164600 EUR  SAP DE0007164600
+  12D XMUN  Munich                SAP       SAP|XMUN                          EUR  SAP SE DE0007164600
+  OV  XSTU  Stuttgart             SAP       STOCK|82849|22031|DE0007164600    EUR  SAP DE0007164600
+  12D XSTU  XSTU                  SAP       SAP|XSTU                          EUR  SAP SE DE0007164600
+  OV  XSWX  Swiss Exchange        SAP       STOCK|82849|120364809|DE0007164600CHF  SAP DE0007164600
+  12D XSWX  SIX                   SAP       SAP|XSWX                          CHF  SAP SE DE0007164600
+  12D XWBO  VSE                   SAP       SAP|XWBO                          EUR  SAP SE DE0007164600
+  OV  ?     LSE European TR       SAP       STOCK|82849|39748696|DE0007164600 EUR  SAP DE0007164600
+  OV  ?     Stuttgart TradeREBEL  SAP       STOCK|82849|404392008|DE0007164600EUR  SAP DE0007164600
+  OV  ?     Societe Generale      SAP       STOCK|82849|10336976|DE0007164600 EUR  SAP DE0007164600
+  12D ?     BSE                   SAP       SAP|XBUD                          HUF  SAP SE DE0007164600
+  12D ?     GPW                   SAP       SAP|XWAR                          PLN  SAP SE DE0007164600
+  12D ?     CBOE                  1SAPM     1SAPM|BCXE                        EUR  SAP SE DE0007164600
+  12D ?     CBOE                  SAPD      SAPD|BCXE                         EUR  SAP SE DE0007164600
+# Suche Cameco: 51 Treffer
+  OV  BAAD  Baader Trading        CJ6       STOCK|88013|46986205|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  GETX  gettex                CJ6       STOCK|88013|120529997|CA13321L1085EUR  Cameco CA13321L1085
+  LS  LSEX  LS Exchange           882017    53873                             EUR  Cameco Corp. CA13321L1085
+  OV  LSEX  LS Exchange           CJ6       STOCK|88013|244499310|CA13321L1085EUR  Cameco CA13321L1085
+  OV  LSTC  Lang & Schwarz        CJ6       STOCK|88013|23714718|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  QUOT  Quotrix               CJ6       STOCK|88013|134126786|CA13321L1085EUR  Cameco CA13321L1085
+  OV  TGAT  Tradegate BSX         CJ6       STOCK|88013|12654542|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  XCNQ  Toronto CNSX          CJ6       STOCK|88013|41538588|CA13321L1085 CAD  Cameco CA13321L1085
+  OV  XCNQ  Toronto CNSX          CA65394430FUND|306696484|521787466|CA6539443CAD  NINEPOINT CAMECO HIGHSHARES ETF CA6539443060
+  OV  XCNQ  Toronto CNSX          CA54315B61FUND|311562212|530006145|CA54315B6CAD  SAVVYLONG (2X) CAMECO ETF CA54315B6153
+  OV  XCNQ  Toronto CNSX          CA41791630FUND|306625652|521601006|CA4179163CAD  HARVEST CAMECO ENHANCED HIGH INCOME SHARES ETF CA4179163015
+  OV  XDUS  Düsseldorf            CJ6       STOCK|88013|30739815|CA13321L1085 EUR  Cameco CA13321L1085
+  12D XDUS  XDUS                  CJ6       CJ6|XDUS                          EUR  Cameco Corporation
+  FT  XFRA  FRA                   CJ6       CJ6:FRA|71670                     EUR  Cameco Corporation
+  OV  XFRA  Frankfurt             CJ6       STOCK|88013|97142|CA13321L1085    EUR  Cameco CA13321L1085
+  12D XFRA  FSX                   CJ6       CJ6|XFRA                          EUR  Cameco Corporation
+  OV  XHAM  Hamburg               CJ6       STOCK|88013|457255113|CA13321L1085EUR  Cameco CA13321L1085
+  OV  XHAN  Hannover              CJ6       STOCK|88013|457255114|CA13321L1085EUR  Cameco CA13321L1085
+  12D XHAN  XHAN                  CJ6       CJ6|XHAN                          EUR  Cameco Corporation
+  FT  XLON  LSE                   0R35      0R35:LSE|447847727                GBP  Cameco Corporation
+  OV  XLON  London Stock Exchange CJ6       STOCK|88013|116742511|CA13321L1085CAD  Cameco CA13321L1085
+  12D XLON  LSE                   0R35      0R35|XLON                         CAD  Cameco Corporation
+  OV  XMUN  München               CJ6       STOCK|88013|8299137|CA13321L1085  EUR  Cameco CA13321L1085
+  12D XMUN  Munich                CJ6       CJ6|XMUN                          EUR  Cameco Corporation
+  FT  XNYS  NYQ                   CCJ       CCJ:NYQ|71569                     USD  Cameco Corporation
+  FT  XNYS  NYS                   CCJ       CCJ:NYS|71571                     USD  Cameco Corporation
+  OV  XNYS  NYSE                  CJ6       STOCK|88013|97140|CA13321L1085    USD  Cameco CA13321L1085
+  12D XNYS  NYSE                  CCJ       CCJ|XNYS                          USD  Cameco Corporation
+  OV  XSTU  Stuttgart             CJ6       STOCK|88013|11399077|CA13321L1085 EUR  Cameco CA13321L1085
+  12D XSTU  XSTU                  CJ6       CJ6|XSTU                          EUR  Cameco Corporation
+  OV  XSWX  Swiss Exchange        CJ6       STOCK|88013|568873985|CA13321L1085CHF  Cameco CA13321L1085
+  OV  XSWX  Swiss Exchange        CJ6       STOCK|88013|568874034|CA13321L1085USD  Cameco CA13321L1085
+  FT  XTSE  TOR                   CCO       CCO:TOR|71674                     CAD  Cameco Corporation
+  FT  XTSE  TOR                   CCOE      CCOE:TOR|1008125978               CAD  Harvest Cameco Enhanced High Income Shares ETF
+  FT  XTSE  TOR                   CCHI      CCHI:TOR|1008373928               CAD  Ninepoint Cameco Highshares ETF
+  FT  XTSE  TOR                   CCOU      CCOU:TOR|1022094570               CAD  SavvyLong (2X) Cameco ETF
+  12D XTSE  TSX                   CCO       CCO|XTSE                          CAD  Cameco Corporation
+  12D XTSE  TSX                   CCHI      CCHI|XTSE                         CAD  Ninepoint Cameco High Income Shares ETF
+  12D XTSE  TSX                   CCOE      CCOE|XTSE                         CAD  Harvest Cameco Enhanced High Income Shares ETF
+  12D XTSE  TSX                   CCOU      CCOU|XTSE                         CAD  SavvyLong (2X) Cameco ETF
+  OV  ?     Stuttgart TradeREBEL  CJ6       STOCK|88013|404436340|CA13321L1085EUR  Cameco CA13321L1085
+  OV  ?     Societe Generale      CJ6       STOCK|88013|72663863|CA13321L1085 EUR  Cameco CA13321L1085
+  12D ?     BMV                   CCJN      CCJN|XMEX                         MXN  CAMECO CORP
+  12D ?     NEO                   CCO       CCO|NEOE                          CAD  Cameco Corporation
+  12D ?     Bovespa               C1CJ34    C1CJ34|BVMF                       BRL  Cameco Corporation
+  12D ?     IEX                   CCJ       CCJ|IEXG                          USD  Cameco Corporation
+  12D ?     BCBA                  CCJ       CCJ|XBUE                          ARS  Cameco Corporation Depositary Receipt
+  12D ?     SET                   CCJ23     CCJ23|XBKK                        THB  Cameco Corporation Depositary Receipt
+  12D ?     BCBA                  CCJD      CCJD|XBUE                         USD  Cameco Corporation Depositary Receipt
+  12D ?     NEO                   CCHI      CCHI|NEOE                         CAD  Ninepoint Cameco HighShares ETF
+  12D ?     NEO                   CCOU      CCOU|NEOE                         CAD  SavvyLong (2X) Cameco ETF
+# Suche Toyota: 93 Treffer
+  OV  BAAD  Baader Trading        TOM       STOCK|85671|46983719|JP3633400001 EUR  Toyota JP3633400001
+  OV  BAAD  Baader Trading        TOMA      STOCK|213298|330556196|US892331307EUR  Toyota (ADR) US8923313071
+  OV  BAAD  Baader Trading        9TO       STOCK|197902|46988203|JP3635000007EUR  Toyota Tsusho JP3635000007
+  OV  GETX  gettex                TOM       STOCK|85671|120481279|JP3633400001EUR  Toyota JP3633400001
+  OV  GETX  gettex                TOMA      STOCK|213298|330568394|US892331307EUR  Toyota (ADR) US8923313071
+  OV  GETX  gettex                9TO       STOCK|197902|120576538|JP363500000EUR  Toyota Tsusho JP3635000007
+  LS  LSEX  LS Exchange           853510    41459                             EUR  TOYOTA MOTOR CO JP3633400001
+  LS  LSEX  LS Exchange           888452    283169                            EUR  TOYOTA MOTOR ADR US8923313071
+  LS  LSEX  LS Exchange           866920    763816                            EUR  TOYOTA TSUSHO JP3635000007
+  LS  LSEX  LS Exchange           883944    1679754                           EUR  TOYOTA BOSHOKU CORP. JP3635400009
+  LS  LSEX  LS Exchange           A0MS9A    1904548                           EUR  TOYOTA CAETANO PO.NAM.EO1 PTSCT0AP0018
+  LS  LSEX  LS Exchange           A3KQMS    1434841                           EUR  TOYOTA M.CRD 21/27 MTN XS2338955805
+  LS  LSEX  LS Exchange           A28V58    2902869                           EUR  TOYOTA FIN. 20/27 MTN XS2156236452
+  LS  LSEX  LS Exchange           A3LV5F    3167319                           EUR  TOYOTA FIN. 24/30 MTN XS2785465787
+  LS  LSEX  LS Exchange           A4E1EQ    5139700                           EUR  TOYOTA M.CRD 26/33 MTN XS3511196753
+  OV  LSEX  LS Exchange           TOM       STOCK|85671|244495687|JP3633400001EUR  Toyota JP3633400001
+  OV  LSEX  LS Exchange           TOMA      STOCK|213298|244541259|US892331307EUR  Toyota (ADR) US8923313071
+  OV  LSEX  LS Exchange           9TO       STOCK|197902|244499759|JP363500000EUR  Toyota Tsusho JP3635000007
+  OV  LSTC  Lang & Schwarz        TOM       STOCK|85671|12233702|JP3633400001 EUR  Toyota JP3633400001
+  OV  LSTC  Lang & Schwarz        TOMA      STOCK|213298|163027267|US892331307EUR  Toyota (ADR) US8923313071
+  OV  LSTC  Lang & Schwarz        9TO       STOCK|197902|236837615|JP363500000EUR  Toyota Tsusho JP3635000007
+  OV  OOTC  Nasdaq OTC            TOM       STOCK|85671|467773274|JP3633400001USD  Toyota JP3633400001
+  OV  OOTC  Nasdaq OTC            9TO       STOCK|197902|20604967|JP3635000007USD  Toyota Tsusho JP3635000007
+  12D OOTC  OTC                   TOYOF     TOYOF|PINX                        USD  Toyota Motor Corporation
+  OV  QUOT  Quotrix               TOM       STOCK|85671|134122490|JP3633400001EUR  Toyota JP3633400001
+  OV  QUOT  Quotrix               TOMA      STOCK|213298|162923085|US892331307EUR  Toyota (ADR) US8923313071
+  OV  QUOT  Quotrix               9TO       STOCK|197902|456501538|JP363500000EUR  Toyota Tsusho JP3635000007
+  OV  TGAT  Tradegate BSX         TOM       STOCK|85671|9385956|JP3633400001  EUR  Toyota JP3633400001
+  OV  TGAT  Tradegate BSX         TOMA      STOCK|213298|33692493|US8923313071EUR  Toyota (ADR) US8923313071
+  OV  TGAT  Tradegate BSX         9TO       STOCK|197902|426620459|JP363500000EUR  Toyota Tsusho JP3635000007
+  OV  XDUS  Düsseldorf            TOM       STOCK|85671|19659|JP3633400001    EUR  Toyota JP3633400001
+  OV  XDUS  Düsseldorf            TOMA      STOCK|213298|345307359|US892331307EUR  Toyota (ADR) US8923313071
+  OV  XDUS  Düsseldorf            9TO       STOCK|197902|119678424|JP363500000EUR  Toyota Tsusho JP3635000007
+  12D XDUS  XDUS                  TOM       TOM|XDUS                          EUR  Toyota Motor Corporation
+  12D XDUS  XDUS                  TOMA      TOMA|XDUS                         EUR  Toyota Motor Corporation Sponsored ADR
+  12D XDUS  XDUS                  US892331ASUS892331AS8|XDUS                  USD  Toyota Motor Corporation 4.186% Senior Notes due 2027
+  12D XDUS  XDUS                  US892331AUUS892331AU3|XDUS                  USD  Toyota Motor Corporation 4.45% Senior Unsecured Notes due 2030
+  12D XDUS  XDUS                  US892331AVUS892331AV1|XDUS                  USD  Toyota Motor Corporation 5.053% Senior Notes due 2035
+  OV  XFRA  Frankfurt             TOM       STOCK|85671|3357976|JP3633400001  EUR  Toyota JP3633400001
+  OV  XFRA  Frankfurt             TOMA      STOCK|213298|28383026|US8923313071EUR  Toyota (ADR) US8923313071
+  OV  XFRA  Frankfurt             9TO       STOCK|197902|34017501|JP3635000007EUR  Toyota Tsusho JP3635000007
+  12D XFRA  FSX                   TOM       TOM|XFRA                          EUR  Toyota Motor Corporation
+  12D XFRA  FSX                   TOM0      TOM0|XFRA                         EUR  Toyota Motor Corporation
+  12D XFRA  FSX                   TOMA      TOMA|XFRA                         EUR  Toyota Motor Corporation Sponsored ADR
+  OV  XHAM  Hamburg               TOM       STOCK|85671|19658|JP3633400001    EUR  Toyota JP3633400001
+  OV  XHAM  Hamburg               TOMA      STOCK|213298|531432672|US892331307EUR  Toyota (ADR) US8923313071
+  OV  XHAM  Hamburg               9TO       STOCK|197902|529392759|JP363500000EUR  Toyota Tsusho JP3635000007
+  OV  XHAN  Hannover              TOM       STOCK|85671|124043477|JP3633400001EUR  Toyota JP3633400001
+  OV  XHAN  Hannover              TOMA      STOCK|213298|582985763|US892331307EUR  Toyota (ADR) US8923313071
+  OV  XHAN  Hannover              9TO       STOCK|197902|582936682|JP363500000EUR  Toyota Tsusho JP3635000007
+  12D XHAN  XHAN                  TOM       TOM|XHAN                          EUR  TOYOTA MOTOR CORP.
+  12D XHAN  XHAN                  TOMA      TOMA|XHAN                         EUR  TOYOTA MOTOR CORP.            R
+  FT  XLON  LSE                   TYT       TYT:LSE|27183                     GBP  TOYOTA MOTOR CORPORATION
+  FT  XLON  LSE                   0LG5      0LG5:LSE|449734121                GBP  TOYOTA MOTOR CORPORATION
+  OV  XLON  London Stock Exchange TOM       STOCK|85671|216350|JP3633400001   JPY  Toyota JP3633400001
+  OV  XLON  London Stock Exchange TOMA      STOCK|213298|208370373|US892331307USD  Toyota (ADR) US8923313071
+  12D XLON  LSE                   TYT       TYT|XLON                          JPY  Toyota Motor Corporation
+  12D XLON  LSE                   0LG5      0LG5|XLON                         USD  Toyota Motor Corporation Sponsored ADR
+  12D XLON  LSE                   6CA0      6CA0|XLON                         EUR  Toyota Motor Credit Corporation
+  OV  XMUN  München               TOM       STOCK|85671|19656|JP3633400001    EUR  Toyota JP3633400001
+  OV  XMUN  München               TOMA      STOCK|213298|330509162|US892331307EUR  Toyota (ADR) US8923313071
+  OV  XMUN  München               9TO       STOCK|197902|514985705|JP363500000EUR  Toyota Tsusho JP3635000007
+  OV  XMUN  München               A0Q8E1    STOCK|20412679|377506578|US8923301EUR  Toyota Industries (ADR) US8923301019
+  12D XMUN  Munich                TOM       TOM|XMUN                          EUR  Toyota Motor Corporation
+  12D XMUN  Munich                TOMA      TOMA|XMUN                         EUR  Toyota Motor Corporation Sponsored ADR
+  FT  XNYS  NYQ                   TM        TM:NYQ|269774                     USD  TOYOTA MOTOR CORPORATION
+  FT  XNYS  NYS                   TMH       TMH:NYS|971564936                 USD  Toyota Motor Corporation ADRhedged
+  OV  XNYS  NYSE                  TOMA      STOCK|213298|84704|US8923313071   USD  Toyota (ADR) US8923313071
+  12D XNYS  NYSE                  TM        TM|XNYS                           USD  Toyota Motor Corporation Sponsored ADR
+  OV  XSTU  Stuttgart             TOM       STOCK|85671|19657|JP3633400001    EUR  Toyota JP3633400001
+  OV  XSTU  Stuttgart             TOMA      STOCK|213298|75628705|US8923313071EUR  Toyota (ADR) US8923313071
+  OV  XSTU  Stuttgart             9TO       STOCK|197902|230372082|JP363500000EUR  Toyota Tsusho JP3635000007
+  12D XSTU  XSTU                  TOMA      TOMA|XSTU                         EUR  Toyota Motor Corporation American Depositary Receipt
+  FT  XTKS  TYO                   7203      7203:TYO|27182                    JPY  TOYOTA MOTOR CORPORATION
+  12D XTKS  JPX                   7203      7203|XJPX                         JPY  Toyota Motor Corporation
+  12D XWBO  VSE                   TOM       TOM|XWBO                          EUR  Toyota Motor Corporation
+  FT  ?     SET                   TOYOTA80  TOYOTA80:SET|891618794                 Krung Thai Bank PCL
+  FT  ?     PCQ                   TMH       TMH:PCQ|971557712                 USD  Toyota Motor Corporation ADRhedged
+  FT  ?     ASE                   TMH       TMH:ASE|971570899                      Toyota Motor Corporation ADRhedged
+  OV  ?     Societe Generale      TOM       STOCK|85671|10337147|JP3633400001 EUR  Toyota JP3633400001
+  OV  ?     Stuttgart TradeREBEL  TOM       STOCK|85671|404403090|JP3633400001EUR  Toyota JP3633400001
+  OV  ?     Societe Generale      TOMA      STOCK|213298|168083717|US892331307EUR  Toyota (ADR) US8923313071
+  OV  ?     Societe Generale      9TO       STOCK|197902|558192588|JP363500000EUR  Toyota Tsusho JP3635000007
+  12D ?     SET                   TOYOTA80  TOYOTA80|XBKK                     THB  Toyota Motor Corporation
+  12D ?     Bovespa               TMCO34    TMCO34|BVMF                       BRL  Toyota Motor Corporation
+  12D ?     NEO                   TOYM      TOYM|NEOE                         CAD  Toyota Motor Corporation
+  12D ?     BCBA                  TM        TM|XBUE                           ARS  Toyota Motor Corporation CEDEAR
+  12D ?     BCBA                  TMD       TMD|XBUE                          USD  Toyota Motor Corporation CEDEAR
+  12D ?     BCBA                  TMC       TMC|XBUE                          USD  Toyota Motor Corporation CEDEAR
+  12D ?     IEX                   TM        TM|IEXG                           USD  Toyota Motor Corporation Sponsored ADR
+  12D ?     BMV                   TMN       TMN|XMEX                          MXN  Toyota Motor Corporation Sponsored ADR
+  12D ?     NYSE                  TMH       TMH|ARCX                          USD  Toyota Motor Corporation ADRhedged
+  12D ?     IEX                   TMH       TMH|IEXG                          USD  Toyota Motor Corporation ADRhedged
+# Suche Yellow Cake: 29 Treffer
+  OV  BAAD  Baader Trading        0LZ       STOCK|140560260|306202189|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  OV  GETX  gettex                0LZ       STOCK|140560260|306202370|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  LS  LSEX  LS Exchange           A2JEX5    1280268                           EUR  YELLOW CAKE PLC    LS-,01 JE00BF50RG45
+  OV  LSEX  LS Exchange           0LZ       STOCK|140560260|313538736|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  OV  LSTC  Lang & Schwarz        0LZ       STOCK|140560260|313538982|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  FT  OOTC  QXE                   YLLXF     YLLXF:QXE|481823901               USD  Yellow Cake PLC
+  OV  OOTC  Nasdaq OTC            0LZ       STOCK|140560260|225146005|JE00BF50USD  YELLOW CAKE JE00BF50RG45
+  OV  OOTC  Nasdaq OTC            YN3A      STOCK|41002098|45632189|US74754Q10USD  Yellowcake Mining Inc. Registered Shares DL -,001 US74754Q1058
+  12D OOTC  OTC                   YLLXF     YLLXF|PINX                        USD  Yellow Cake Plc
+  OV  QUOT  Quotrix               0LZ       STOCK|140560260|273805750|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  OV  TGAT  Tradegate BSX         0LZ       STOCK|140560260|273188667|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  OV  XDUS  Düsseldorf            0LZ       STOCK|140560260|342471288|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  12D XDUS  XDUS                  0LZ       0LZ|XDUS                          EUR  Yellow Cake Plc
+  FT  XFRA  FRA                   0LZ       0LZ:FRA|546075749                 EUR  Yellow Cake PLC
+  OV  XFRA  Frankfurt             0LZ       STOCK|140560260|263730053|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  12D XFRA  FSX                   0LZ       0LZ|XFRA                          EUR  Yellow Cake Plc
+  OV  XHAM  Hamburg               0LZ       STOCK|140560260|527459394|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  OV  XHAN  Hannover              0LZ       STOCK|140560260|583314632|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  FT  XLON  LSE                   YCA       YCA:LSE|477828121                 GBP  Yellow Cake PLC
+  OV  XLON  London Stock Exchange 0LZ       STOCK|140560260|221723203|JE00BF50GBP  YELLOW CAKE JE00BF50RG45
+  FT  XMUN  MUN                   0LZ       0LZ:MUN|616862732                 EUR  Yellow Cake PLC
+  OV  XMUN  München               0LZ       STOCK|140560260|306151180|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  12D XMUN  Munich                0LZ       0LZ|XMUN                          EUR  Yellow Cake Plc
+  FT  XSTU  STU                   0LZ       0LZ:STU|547478589                 EUR  Yellow Cake PLC
+  OV  XSTU  Stuttgart             0LZ       STOCK|140560260|264827407|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  12D XSTU  XSTU                  JE00BF50RGJE00BF50RG45|XSTU                 EUR  Yellow Cake plc
+  OV  ?     Stuttgart TradeREBEL  0LZ       STOCK|140560260|404463722|JE00BF50EUR  YELLOW CAKE JE00BF50RG45
+  12D ?     LSE                   YCA       YCA|AIMX                          GBP  Yellow Cake Plc
+  12D ?     CBOE                  YCAL      YCAL|BCXE                         GBP  Yellow Cake Plc
+# Suche Bitcoin: 67 Treffer
+  BFX BFX   Bitfinex              BTCUSD    tBTCUSD                           USD  BTC in USD
+  BFX BFX   Bitfinex              BTCEUR    tBTCEUR                           EUR  BTC in EUR
+  BFX BFX   Bitfinex              BTCGBP    tBTCGBP                           GBP  BTC in GBP
+  BFX BFX   Bitfinex              BTCUST    tBTCUST                           USD  BTC in USDt
+  LS  LSEX  LS Exchange           A1TNV9    451698                            EUR  BITCOIN GROUP SE  O.N. DE000A1TNV91
+  LS  LSEX  LS Exchange           A41BDL    4222023                           EUR  BITCOIN TREASURY CORP. CA09175U1030
+  LS  LSEX  LS Exchange           A42943    4648434                           EUR  AFRICA BITCOIN CORP. LTD. ZAE000358925
+  LS  LSEX  LS Exchange           LSOMBT    3477761                           EUR  Micro Bitcoin Future LS000LSOMBT0
+  LS  LSEX  LS Exchange           LS0BTF    3475333                           EUR  Bitcoin Future LS000LSOBTF4
+  LS  LSEX  LS Exchange           A2T64E    982480                            EUR  21SHARES BITCOIN ETP OE CH0454664001
+  LS  LSEX  LS Exchange           A28M8D    1289784                           EUR  VANECK BITCOIN ETN29 DE000A28M8D0
+  LS  LSEX  LS Exchange           A3GRPD    1855709                           EUR  Valour Bitcoin (BTC) ETP CH0573883474
+  LS  LSEX  LS Exchange           A3GZ2Z    1880120                           EUR  21SHARES BITCOIN ETP OE CH1199067674
+  LS  LSEX  LS Exchange           A4AE1S    3178881                           EUR  XTRACKERS BITCOIN OENDETC CH1315732250
+  LS  LSEX  LS Exchange           A4AER6    3235660                           EUR  BITWISE EURO CORE BITCOIN DE000A4AER62
+  LS  LSEX  LS Exchange           A4A52B    3475313                           EUR  VALOUR BITCOIN PHYS STAK GB00BRBV3124
+  LS  LSEX  LS Exchange           LSOBCH    3477753                           EUR  Bitcoin Cash (BCH) LS000LSOBCH6
+  LS  LSEX  LS Exchange           LSOBTC    3477757                           EUR  Bitcoin (BTC) LS000LSOBTC1
+  FT  OOTC  PKC                   BCBC      BCBC:PKC|205721                   USD  Bitcoin Bancorp Inc
+  FT  OOTC  PKC                   CBTC      CBTC:PKC|13747402                 USD  XTRA Bitcoin Inc
+  12D OOTC  OTC                   CBTC      CBTC|PINX                         USD  Xtra Bitcoin Inc.
+  FT  SSME  STO                   BITCOIN XBBITCOIN XB:STO|88427259           SEK  CoinShares XBT Bitcoin Tracker One ETN
+  FT  SSME  STO                   Bitcoin XBBitcoin XB:STO|92194884           EUR  CoinShares XBT Bitcoin Tracker EUR ETN
+  12D SSME  OMX                   BITCOIN.XBBITCOIN.XBT|XSTO                  SEK  Bitcoin Tracker One XBT Provide
+  12D SSME  OMX                   BITCOIN.XBBITCOIN.XBTE|XSTO                 EUR  Bitcoin Tracker EUR XBT Provide
+  12D SSME  OMX                   BITCOIN XBBITCOIN XBT|XSTO                  SEK  Bitcoin Tracker One XBT Provider
+  12D XAMS  Euronext              BITC.XAMS BITC.XAMS|XAMS                    EUR  CoinShares Physical Bitcoin
+  12D XAMS  Euronext              BTCE.USD  BTCE.USD|XAMS                     USD  ETC Group Physical Bitcoin
+  FT  XASX  ASX                   BTXX      BTXX:ASX|894476799                AUD  DigitalX Bitcoin ETF
+  FT  XETR  GER                   ADEX      ADEX:GER|100848520                EUR  Bitcoin Group SE
+  FT  XHKG  HKG                   7376      7376:HKG|917003027                HKD  CSOP Bitcoin Futs Daily(-1x)InvrsProdETF
+  12D XLON  LSE                   BTIP      BTIP|XLON                         GBP  Invesco Physical Bitcoin
+  12D XLON  LSE                   BTIC      BTIC|XLON                         USD  Invesco Physical Bitcoin
+  12D XMIL  MTA                   WBTC.ETFP WBTC.ETFP|XMIL                    EUR  WisdomTree Physical Bitcoin
+  FT  XNAS  NAQ                   ABTC      ABTC:NAQ|455723159                USD  American Bitcoin Corp.
+  12D XPAR  Euronext              SBTCU.EUR SBTCU.EUR|XPAR                    EUR  Tracker Securities on Bitcoin (
+  12D XSWX  SIX                   BTCW.USD  BTCW.USD|XSWX                     USD  WisdomTree Physical Bitcoin
+  FT  XTKS  TYO                   8105      8105:TYO|28921                    JPY  Bitcoin Japan Corporation
+  FT  XTSE  TOR                   QBTC.U    QBTC.U:TOR|590251980              CAD  The Bitcoin Fund Class A
+  FT  ?     PCQ                   BTC       BTC:PCQ|918663849                 USD  Grayscale Bitcoin Mini Trust ETF
+  OV  ?     Bitfinex                        CRYPTO|BTCUSD|234033361|XC000A2YY6USD  Bitcoin (BTC) Kurs in US Dollar XC000A2YY636
+  OV  ?     Bitfinex                        CRYPTO|BTCUSD|234033038|XC000A2YY6EUR  Bitcoin (BTC) Kurs in US Dollar XC000A2YY636
+  OV  ?     Bitfinex                        CRYPTO|BTCEUR|234033361|EU000A2YZKUSD  Bitcoin Kurs in Euro EU000A2YZK67
+  OV  ?     Bitfinex                        CRYPTO|BTCEUR|234033038|EU000A2YZKEUR  Bitcoin Kurs in Euro EU000A2YZK67
+  OV  ?     CoinDesk Data                   CRYPTO|BCHUSD|431416571|XC000A3DJUUSD  Bitcoin Cash Kurs in US Dollar XC000A3DJU43
+  OV  ?     CoinDesk Data                   CRYPTO|BCHUSD|431416864|XC000A3DJUEUR  Bitcoin Cash Kurs in US Dollar XC000A3DJU43
+  OV  ?     CoinDesk Data                   CRYPTO|BCHEUR|431416571|EU000A2P6QUSD  Bitcoin Cash Kurs in Euro EU000A2P6QK6
+  OV  ?     CoinDesk Data                   CRYPTO|BCHEUR|431416864|EU000A2P6QEUR  Bitcoin Cash Kurs in Euro EU000A2P6QK6
+  12D ?     Bovespa               HODL11    HODL11|BVMF                       BRL  Investo ETF Mktvcctr Bitcoin
+  12D ?     BSE                   WBIT      WBIT|XBUD                         HUF  WisdomTree Physical Bitcoin
+  12D ?     Binance               SOL/BTC   SOL/BTC|DIGITAL_CURRENCY          EUR  Solana Bitcoin
+  12D ?     Binance               XRP/BTC   XRP/BTC|DIGITAL_CURRENCY          EUR  XRP Bitcoin
+  12D ?     Binance               TRX/BTC   TRX/BTC|DIGITAL_CURRENCY          EUR  TRON Bitcoin
+  12D ?     Binance               DOGE/BTC  DOGE/BTC|DIGITAL_CURRENCY         EUR  Dogecoin Bitcoin
+  12D ?     Binance               LINK/BTC  LINK/BTC|DIGITAL_CURRENCY         EUR  Chainlink Bitcoin
+  12D ?     Binance               AAVE/BTC  AAVE/BTC|DIGITAL_CURRENCY         EUR  Aave Bitcoin
+  12D ?     Binance               AVAX/BTC  AVAX/BTC|DIGITAL_CURRENCY         EUR  Avalanche Bitcoin
+  12D ?     Binance               NEAR/BTC  NEAR/BTC|DIGITAL_CURRENCY         EUR  NEAR Protocol Bitcoin
+  12D ?     Binance               FIL/BTC   FIL/BTC|DIGITAL_CURRENCY          EUR  Filecoin Bitcoin
+  12D ?     Binance               ETC/BTC   ETC/BTC|DIGITAL_CURRENCY          EUR  Ethereum Classic Bitcoin
+  12D ?     Binance               PDOTN/BTC PDOTN/BTC|DIGITAL_CURRENCY        EUR  Polkadot Bitcoin
+  12D ?     Binance               ICP/BTC   ICP/BTC|DIGITAL_CURRENCY          EUR  Internet Computer Bitcoin
+  12D ?     Binance               ZEC/BTC   ZEC/BTC|DIGITAL_CURRENCY          EUR  Zcash Bitcoin
+  12D ?     Coinbase Pro          DOGE/BTC  DOGE/BTC|DIGITAL_CURRENCY         EUR  Dogecoin Bitcoin
+  12D ?     Binance               CAKE/BTC  CAKE/BTC|DIGITAL_CURRENCY         EUR  PancakeSwap Bitcoin
+  12D ?     Kraken                PDOTN/BTC PDOTN/BTC|DIGITAL_CURRENCY        EUR  Polkadot Bitcoin
+  12D ?     HitBTC                VET/BTC   VET/BTC|DIGITAL_CURRENCY          EUR  VeChain Bitcoin
+# Suche ERIC B: 33 Treffer
+  OV  BAAD  Baader Trading        ERCB      STOCK|85375|55747327|SE0000108656 EUR  Ericsson B SE0000108656
+  OV  BAAD  Baader Trading        ERCA      STOCK|7567114|315040058|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  GETX  gettex                ERCB      STOCK|85375|120473867|SE0000108656EUR  Ericsson B SE0000108656
+  OV  GETX  gettex                ERCA      STOCK|7567114|315049369|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  LSEX  LS Exchange           ERCB      STOCK|85375|244494565|SE0000108656EUR  Ericsson B SE0000108656
+  OV  LSEX  LS Exchange           ERCA      STOCK|7567114|244500410|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  LSTC  Lang & Schwarz        ERCB      STOCK|85375|5698266|SE0000108656  EUR  Ericsson B SE0000108656
+  OV  LSTC  Lang & Schwarz        ERCA      STOCK|7567114|179479690|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  OOTC  Nasdaq OTC            ERCB      STOCK|85375|10256772|SE0000108656 USD  Ericsson B SE0000108656
+  OV  QUOT  Quotrix               ERCB      STOCK|85375|134121618|SE0000108656EUR  Ericsson B SE0000108656
+  OV  QUOT  Quotrix               ERCA      STOCK|7567114|439654516|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+  FT  SSME  STO                   ERIC B    ERIC B:STO|100115                 SEK  Telefonaktiebolaget LM Ericsson
+  OV  TGAT  Tradegate BSX         ERCB      STOCK|85375|9385858|SE0000108656  EUR  Ericsson B SE0000108656
+  OV  XDUS  Düsseldorf            ERCB      STOCK|85375|20634|SE0000108656    EUR  Ericsson B SE0000108656
+  OV  XDUS  Düsseldorf            ERCA      STOCK|7567114|5713744|US2948216088EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XETR  Xetra                 ERCB      STOCK|85375|247977|SE0000108656   EUR  Ericsson B SE0000108656
+  OV  XFRA  Frankfurt             ERCB      STOCK|85375|247978|SE0000108656   EUR  Ericsson B SE0000108656
+  OV  XFRA  Frankfurt             ERCA      STOCK|7567114|262620|US2948216088 EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XHAM  Hamburg               ERCB      STOCK|85375|20633|SE0000108656    EUR  Ericsson B SE0000108656
+  OV  XHAM  Hamburg               ERCA      STOCK|7567114|7469217|US2948216088EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XHAN  Hannover              ERCB      STOCK|85375|1950456|SE0000108656  EUR  Ericsson B SE0000108656
+  OV  XHAN  Hannover              ERCA      STOCK|7567114|307252049|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XLON  London Stock Exchange ERCA      STOCK|7567114|207477281|US29482160USD  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XMUN  München               ERCB      STOCK|85375|20631|SE0000108656    EUR  Ericsson B SE0000108656
+  OV  XMUN  München               ERCA      STOCK|7567114|17294|US2948216088  EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XNAS  Nasdaq                SLZ0      STOCK|22956527|26580170|US29405E50USD  Enveric Biosciences US29405E5050
+  OV  XNAS  Nasdaq                ERCA      STOCK|7567114|262622|US2948216088 USD  Telefonaktiebolaget LM ADR B US2948216088
+  OV  XSTU  Stuttgart             ERCB      STOCK|85375|20632|SE0000108656    EUR  Ericsson B SE0000108656
+  OV  XSTU  Stuttgart             ERCA      STOCK|7567114|17293|US2948216088  EUR  Telefonaktiebolaget LM ADR B US2948216088
+  OV  ?     LSE European TR       ERCB      STOCK|85375|41841167|SE0000108656 SEK  Ericsson B SE0000108656
+  OV  ?     Societe Generale      ERCB      STOCK|85375|10337127|SE0000108656 EUR  Ericsson B SE0000108656
+  OV  ?     Stuttgart TradeREBEL  ERCB      STOCK|85375|404416658|SE0000108656EUR  Ericsson B SE0000108656
+  OV  ?     Societe Generale      ERCA      STOCK|7567114|360525065|US29482160EUR  Telefonaktiebolaget LM ADR B US2948216088
+# Suche CCJ: 76 Treffer
+  OV  BAAD  Baader Trading        CJ6       STOCK|88013|46986205|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  BAAD  Baader Trading        CCJ       STOCK|87728|330062954|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  GETX  gettex                CJ6       STOCK|88013|120529997|CA13321L1085EUR  Cameco CA13321L1085
+  OV  GETX  gettex                CCJ       STOCK|87728|330068567|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  LSEX  LS Exchange           CJ6       STOCK|88013|244499310|CA13321L1085EUR  Cameco CA13321L1085
+  OV  LSEX  LS Exchange           CCJ       STOCK|87728|244500516|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  LSEX  LS Exchange           8EH       STOCK|101042231|536172128|GB00BYSREUR  CC JAP.+GROWTH TR. LS-,01 GB00BYSRMH16
+  OV  LSTC  Lang & Schwarz        CJ6       STOCK|88013|23714718|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  LSTC  Lang & Schwarz        CCJ       STOCK|87728|121898715|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  LSTC  Lang & Schwarz        8EH       STOCK|101042231|536176798|GB00BYSREUR  CC JAP.+GROWTH TR. LS-,01 GB00BYSRMH16
+  OV  QUOT  Quotrix               CJ6       STOCK|88013|134126786|CA13321L1085EUR  Cameco CA13321L1085
+  OV  QUOT  Quotrix               CCJ       STOCK|87728|134128714|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  TGAT  Tradegate BSX         CJ6       STOCK|88013|12654542|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  TGAT  Tradegate BSX         CCJ       STOCK|87728|35373060|US1720621010 EUR  Cincinnati Financial US1720621010
+  OV  XCNQ  Toronto CNSX          CJ6       STOCK|88013|41538588|CA13321L1085 CAD  Cameco CA13321L1085
+  OV  XDUS  Düsseldorf            CJ6       STOCK|88013|30739815|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  XDUS  Düsseldorf            CCJ       STOCK|87728|32323697|US1720621010 EUR  Cincinnati Financial US1720621010
+  12D XDUS  XDUS                  CCJ       CCJ|XDUS                          EUR  Cincinnati Financial Corporation
+  OV  XETR  Xetra                 CCJ       STOCK|87728|564446743|US1720621010EUR  Cincinnati Financial US1720621010
+  12D XETR  XETR                  CCJ       CCJ|XETR                          EUR  Cincinnati Financial Corporation
+  OV  XFRA  Frankfurt             CJ6       STOCK|88013|97142|CA13321L1085    EUR  Cameco CA13321L1085
+  OV  XFRA  Frankfurt             CCJ       STOCK|87728|26151441|US1720621010 EUR  Cincinnati Financial US1720621010
+  OV  XFRA  Frankfurt             8EH       STOCK|101042231|331660939|GB00BYSREUR  CC JAP.+GROWTH TR. LS-,01 GB00BYSRMH16
+  12D XFRA  FSX                   CCJ       CCJ|XFRA                          EUR  Cincinnati Financial Corporation
+  OV  XHAM  Hamburg               CJ6       STOCK|88013|457255113|CA13321L1085EUR  Cameco CA13321L1085
+  OV  XHAM  Hamburg               CCJ       STOCK|87728|531432345|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  XHAN  Hannover              CJ6       STOCK|88013|457255114|CA13321L1085EUR  Cameco CA13321L1085
+  OV  XHAN  Hannover              CCJ       STOCK|87728|582963396|US1720621010EUR  Cincinnati Financial US1720621010
+  12D XHAN  XHAN                  CCJ       CCJ|XHAN                          EUR  CCJ
+  OV  XLON  London Stock Exchange CJ6       STOCK|88013|116742511|CA13321L1085CAD  Cameco CA13321L1085
+  OV  XLON  London Stock Exchange CCJ       STOCK|87728|207805479|US1720621010USD  Cincinnati Financial US1720621010
+  OV  XLON  London Stock Exchange 8EH       STOCK|101042231|149058612|GB00BYSRGBP  CC JAP.+GROWTH TR. LS-,01 GB00BYSRMH16
+  12D XLON  LSE                   CCJI      CCJI|XLON                         GBP  CC Japan Income & Growth Trust plc
+  OV  XMUN  München               CJ6       STOCK|88013|8299137|CA13321L1085  EUR  Cameco CA13321L1085
+  OV  XMUN  München               CCJ       STOCK|87728|329997210|US1720621010EUR  Cincinnati Financial US1720621010
+  12D XMUN  Munich                CCJ       CCJ|XMUN                          EUR  Cincinnati Financial Corporation
+  OV  XNAS  Nasdaq                CCJ       STOCK|87728|258175|US1720621010   USD  Cincinnati Financial US1720621010
+  12D XNAS  NASDAQ                CCJDX     CCJDX|XNAS                        USD  CI Canadian Investment Corporate Class (Class EF shares) NL
+  12D XNAS  NASDAQ                CCJIX     CCJIX|XNAS                        USD  CI Canadian Investment Corporate Class (Class F shares) NL
+  12D XNAS  NASDAQ                CCJNX     CCJNX|XNAS                        USD  CI Canadian Investment Corporate Class (Class IT8 shares) NL
+  12D XNAS  NASDAQ                CCJAX     CCJAX|XNAS                        USD  CI Canadian Investment Corporate Class (Class D shares) ISC
+  12D XNAS  NASDAQ                CCJBX     CCJBX|XNAS                        USD  CI Canadian Investment Corporate Class (Class E shares) FE
+  12D XNAS  NASDAQ                CCJCX     CCJCX|XNAS                        USD  CI Canadian Investment Corporate Class (Class E shares) U$ FE
+  12D XNAS  NASDAQ                CCJEX     CCJEX|XNAS                        USD  CI Canadian Investment Corporate Class (Class EFT5 shares) NL
+  12D XNAS  NASDAQ                CCJFX     CCJFX|XNAS                        USD  CI Canadian Investment Corporate Class (Class EFT8 shares) NL
+  12D XNAS  NASDAQ                CCJGX     CCJGX|XNAS                        USD  CI Canadian Investment Corporate Class (Class ET5 shares) ISC
+  12D XNAS  NASDAQ                CCJHX     CCJHX|XNAS                        USD  CI Canadian Investment Corporate Class (Class ET8 shares) ISC
+  12D XNAS  NASDAQ                CCJJX     CCJJX|XNAS                        USD  CI Canadian Investment Corporate Class (Class F shares) U$ NL
+  12D XNAS  NASDAQ                CCJKX     CCJKX|XNAS                        USD  CI Canadian Investment Corporate Class (Class FT5 shares) NL
+  12D XNAS  NASDAQ                CCJLX     CCJLX|XNAS                        USD  CI Canadian Investment Corporate Class (Class FT8 shares) NL
+  12D XNAS  NASDAQ                CCJMX     CCJMX|XNAS                        USD  CI Canadian Investment Corporate Class (Class I shares) NL
+  12D XNAS  NASDAQ                CCJOX     CCJOX|XNAS                        USD  CI Canadian Investment Corporate Class (Class O shares) NL
+  12D XNAS  NASDAQ                CCJPX     CCJPX|XNAS                        USD  CI Canadian Investment Corporate Class (Class O shares) U$ NL
+  FT  XNYS  NYQ                   CCJ       CCJ:NYQ|71569                     USD  Cameco Corporation
+  OV  XNYS  NYSE                  CJ6       STOCK|88013|97140|CA13321L1085    USD  Cameco CA13321L1085
+  12D XNYS  NYSE                  CCJ       CCJ|XNYS                          USD  Cameco Corporation
+  OV  XSTU  Stuttgart             CJ6       STOCK|88013|11399077|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  XSTU  Stuttgart             CCJ       STOCK|87728|138144421|US1720621010EUR  Cincinnati Financial US1720621010
+  OV  XSTU  Stuttgart             8EH       STOCK|101042231|331508062|GB00BYSREUR  CC JAP.+GROWTH TR. LS-,01 GB00BYSRMH16
+  12D XSTU  XSTU                  CCJ       CCJ|XSTU                          EUR  Cincinnati Financial Corporation
+  FT  XSWX  SWX                   CCJ       CCJ:SWX|1089943358                CHF  Cameco Corporation
+  OV  XSWX  Swiss Exchange        CJ6       STOCK|88013|568873985|CA13321L1085CHF  Cameco CA13321L1085
+  OV  XSWX  Swiss Exchange        CJ6       STOCK|88013|568874034|CA13321L1085USD  Cameco CA13321L1085
+  FT  ?     BRN                   CCJ       CCJ:BRN|968008494                      Cameco Corporation
+  FT  ?     BUE                   CCJ       CCJ:BUE|1109318352                     Cameco Corporation
+  FT  ?     MEX                   CCJN      CCJN:MEX|960073713                     Cameco Corporation
+  OV  ?     Stuttgart TradeREBEL  CJ6       STOCK|88013|404436340|CA13321L1085EUR  Cameco CA13321L1085
+  OV  ?     Societe Generale      CJ6       STOCK|88013|72663863|CA13321L1085 EUR  Cameco CA13321L1085
+  OV  ?     Societe Generale      CCJ       STOCK|87728|46671354|US1720621010 EUR  Cincinnati Financial US1720621010
+  OV  ?     Stuttgart TradeREBEL  CCJ       STOCK|87728|404436201|US1720621010EUR  Cincinnati Financial US1720621010
+  12D ?     BCBA                  CCJ       CCJ|XBUE                          ARS  Cameco Corporation Depositary Receipt
+  12D ?     IEX                   CCJ       CCJ|IEXG                          USD  Cameco Corporation
+  12D ?     BCBA                  CCJD      CCJD|XBUE                         USD  Cameco Corporation Depositary Receipt
+  12D ?     CBOE                  CCJIL     CCJIL|BCXE                        GBP  CC Japan Income & Growth Trust plc
+  12D ?     BMV                   CCJN      CCJN|XMEX                         MXN  CAMECO CORP
+  12D ?     SET                   CCJ23     CCJ23|XBKK                        THB  Cameco Corporation Depositary Receipt

@@ -1,0 +1,100 @@
+# Werteprüfung (2026-10-30 21:04:54 +0000)
+
+## SAP @ Xetra
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  OnVista          210.6500 EUR       21:30      Abw. -0.28 % | 31.12.: 208.3500 | vor 30 T: 185.6600 | Verlauf bis 2026-10-30  << ZEIT AUSSERHALB DER HANDELSZEIT
+  Financial Times  211.2500 EUR       17:30      Abw. +0.00 % | 31.12.: 208.3500 | vor 30 T: 185.6600 | Verlauf bis 2026-10-30
+
+## SAP @ Tradegate
+  OnVista          210.7500 EUR       22:02      Abw. -0.14 % | 31.12.: 209.5000 | vor 30 T: 184.5000 | Verlauf bis 2026-10-29
+  Tradegate        211.0500 EUR       22:00      Abw. +0.00 % | 31.12.: - | vor 30 T: - | Verlauf bis -
+
+## Cameco @ gettex
+  OnVista          68.6100 EUR        21:53      Abw. +0.00 % | 31.12.: 79.0600 | vor 30 T: 76.5100 | Verlauf bis 2026-10-29
+
+## SAP @ LS Exchange
+  OnVista          209.9500 EUR       22:00      Abw. -0.36 % | 31.12.: 209.0000 | vor 30 T: 184.2600 | Verlauf bis 2026-10-29
+  Lang & Schwarz   210.7000 EUR       23:00      Abw. +0.00 % | 31.12.: 209.1750 | vor 30 T: 184.5600 | Verlauf bis 2026-10-30
+
+## SAP @ Frankfurt
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  OnVista          209.4000 EUR       19:55      Abw. +0.00 % | 31.12.: 208.9000 | vor 30 T: 184.3400 | Verlauf bis 2026-10-29
+  Financial Times  209.4000 EUR       22:00      Abw. +0.00 % | 31.12.: 208.9000 | vor 30 T: 184.3400 | Verlauf bis 2026-10-30
+
+## Toyota Motor @ Tokio
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  3070.0000 JPY      15:30      Abw. +0.00 % | 31.12.: 3356.0000 | vor 30 T: 2920.0000 | Verlauf bis 2026-10-30
+
+## Yellow Cake @ London
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  OnVista          5.3000 GBP         16:35      Abw. +0.00 % | 31.12.: 5.9200 | vor 30 T: 5.4250 | Verlauf bis 2026-10-30
+  Financial Times  5.3000 GBP         16:30      Abw. +0.00 % | 31.12.: 5.9200 | vor 30 T: 5.4250 | Verlauf bis 2026-10-30
+
+## Cameco @ Toronto
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  107.6000 CAD       16:00      Abw. +0.00 % | 31.12.: 125.6800 | vor 30 T: 123.3800 | Verlauf bis 2026-10-30
+
+## Skyharbour Resources @ TSX Venture
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  0.3400 CAD         16:00      Abw. +0.00 % | 31.12.: 0.4100 | vor 30 T: 0.3550 | Verlauf bis 2026-10-30
+
+## Apple @ Nasdaq
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  OnVista          344.6300 USD       16:00      Abw. +0.00 % | 31.12.: 271.8600 | vor 30 T: 333.0200 | Verlauf bis 2026-10-30
+  Financial Times  344.6300 USD       16:00      Abw. +0.00 % | 31.12.: 271.8600 | vor 30 T: 333.0200 | Verlauf bis 2026-10-30
+
+## Cameco @ NYSE
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  OnVista          76.9100 USD        16:00      Abw. +0.00 % | 31.12.: 91.4900 | vor 30 T: 86.6700 | Verlauf bis 2026-10-30
+  Financial Times  76.9100 USD        16:00      Abw. +0.00 % | 31.12.: 91.4900 | vor 30 T: 86.6700 | Verlauf bis 2026-10-30
+
+## Paladin Energy @ FINRA Other OTC
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  nicht verfügbar: Nicht gefunden: Paladin Energy an FINRA Other OTC
+  OnVista          5.1350 USD         15:43      Abw. +0.00 % | 31.12.: 6.3000 | vor 30 T: 6.6300 | Verlauf bis 2026-10-30
+
+## TotalEnergies @ Euronext Paris
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  85.4300 EUR        17:30      Abw. +0.00 % | 31.12.: 55.5900 | vor 30 T: 75.7000 | Verlauf bis 2026-10-30
+
+## Eni @ Euronext Mailand
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  27.1350 EUR        17:30      Abw. +0.00 % | 31.12.: 16.1400 | vor 30 T: 24.0200 | Verlauf bis 2026-10-30
+
+## Nestle @ SIX Swiss Exchange
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  OnVista          84.7000 CHF        17:30      Abw. +0.00 % | 31.12.: 78.7400 | vor 30 T: 76.0200 | Verlauf bis 2026-10-30
+  Financial Times  84.7000 CHF        17:30      Abw. +0.00 % | 31.12.: 78.7400 | vor 30 T: 76.0200 | Verlauf bis 2026-10-30
+
+## Equinor @ Euronext Oslo
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  447.5000 NOK       16:20      Abw. +0.00 % | 31.12.: 237.0000 | vor 30 T: 399.5000 | Verlauf bis 2026-10-30
+
+## Paladin Energy @ ASX Sydney
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  7.4700 AUD         16:00      Abw. +0.00 % | 31.12.: 9.5900 | vor 30 T: 9.4900 | Verlauf bis 2026-10-30
+
+## Ericsson B @ First North Stockholm
+  Yahoo Finance    nicht verfügbar: Gedrosselt: Too Many Requests
+
+  Financial Times  109.0500 SEK       17:30      Abw. +0.00 % | 31.12.: 90.6000 | vor 30 T: 92.0400 | Verlauf bis 2026-10-30
+
+## Bitcoin @ Bitfinex
+  Bitfinex         76958.0000 USD     21:05      Abw. +0.00 % | 31.12.: 87720.0000 | vor 30 T: 83607.0000 | Verlauf bis 2026-10-30
+
+# Ergebnis: 1 Auffälligkeiten
+  - SAP @ Xetra: OnVista Kurszeit 21:30 außerhalb der Handelszeit (falscher Handelsplatz?)

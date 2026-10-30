@@ -1,0 +1,141 @@
+# Provider-Matrix (2026-10-30 21:00:36 +0000)
+
+## SAP @ Xetra
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|82849|163500|DE0007164600    Kurs 210.650 EUR      21:30      vorher 208.850 | Verlauf 292 Tage 2025-09-05..2026-10-30 EUR letzter 211.250
+  Financial Times SAPX:GER|247848                    Kurs 211.250 EUR      17:30      vorher 208.900 | Verlauf 297 Tage 2025-09-01..2026-10-30 EUR letzter 211.250
+  EODHD           SAP.XETRA                          Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     SAP|XETR                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   SAP.DEX                            Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## SAP @ Tradegate
+  OnVista         STOCK|82849|9386131|DE0007164600   Kurs 211.050 EUR      21:59      vorher 209.300 | Verlauf 292 Tage 2025-09-05..2026-10-29 EUR letzter 209.300
+  Tradegate       DE0007164600                       Kurs 211.050 EUR      22:00      vorher 209.300
+
+## Cameco @ gettex
+  OnVista         STOCK|88013|120529997|CA13321L1085 Kurs 68.610 EUR       21:53      vorher 74.000 | Verlauf 292 Tage 2025-09-05..2026-10-29 EUR letzter 74.000
+
+## SAP @ LS Exchange
+  OnVista         STOCK|82849|244494482|DE0007164600 Kurs 209.950 EUR      22:00      vorher 208.350 | Verlauf 292 Tage 2025-09-05..2026-10-29 EUR letzter 208.350
+  Lang & Schwarz  34313                              Kurs 210.725 EUR      22:55      vorher 209.300 | Verlauf 409 Tage 2025-09-05..2026-10-30 EUR letzter 210.700
+
+## SAP @ Frankfurt
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|82849|163497|DE0007164600    Kurs 209.400 EUR      19:55      vorher 208.550 | Verlauf 292 Tage 2025-09-05..2026-10-29 EUR letzter 208.550
+  Financial Times SAP:FRA|247850                     Kurs 209.400 EUR      22:00      vorher 208.550 | Verlauf 297 Tage 2025-09-01..2026-10-30 EUR letzter 209.400
+  EODHD           SAP.F                              Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     SAP|XFRA                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   SAP.FRK                            Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Toyota Motor @ Tokio
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times 7203:TYO|27182                     Kurs 3070.000 JPY     15:30      vorher 3077.000 | Verlauf 283 Tage 2025-09-01..2026-10-30 JPY letzter 3070.000
+  EODHD           7203.TSE                           Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     7203|XJPX                          Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+
+## Yellow Cake @ London
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|140560260|221723203|JE00BF50 Kurs 5.300 GBP        16:35      vorher 5.350 | Verlauf 293 Tage 2025-09-05..2026-10-30 GBP letzter 5.300
+  Financial Times YCA:LSE|477828121                  Kurs 5.300 GBP        16:30      vorher 5.350 | Verlauf 297 Tage 2025-09-01..2026-10-30 GBP letzter 5.300
+  EODHD           YCA.LSE                            Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     YCA|XLON                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   YCA.LON                            Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Cameco @ Toronto
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times CCO:TOR|71674                      Kurs 107.600 CAD      16:00      vorher 116.630 | Verlauf 293 Tage 2025-09-02..2026-10-30 CAD letzter 107.600
+  EODHD           CCO.TO                             Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     CCO|XTSE                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   CCO.TRT                            Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Skyharbour Resources @ TSX Venture
+  Yahoo Finance   SYH.V                              Kurs-FEHLER Gedrosselt: Too Many Requests
+ | Verlauf-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times SYH:CVE|264058                     Kurs 0.340 CAD        16:00      vorher 0.340 | Verlauf 293 Tage 2025-09-02..2026-10-30 CAD letzter 0.340
+  EODHD           SYH.V                              Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     SYH|XTSX                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   SYH.TRV                            Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Apple @ Nasdaq
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|86627|253929|US0378331005    Kurs 344.630 USD      16:00      vorher 348.910 | Verlauf 291 Tage 2025-09-05..2026-10-30 USD letzter 344.630
+  Financial Times AAPL:NSQ|36276                     Kurs 344.630 USD      16:00      vorher 348.910 | Verlauf 294 Tage 2025-09-02..2026-10-30 USD letzter 344.630
+  EODHD           AAPL.US                            Kurs 344.630 USD      16:29      vorher 348.910 | Verlauf 291 Tage 2025-09-05..2026-10-30 USD letzter 344.630
+  Twelve Data     AAPL|XNAS                          Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   AAPL                               Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Cameco @ NYSE
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|88013|97140|CA13321L1085     Kurs 76.910 USD       16:00      vorher 83.490 | Verlauf 291 Tage 2025-09-05..2026-10-30 USD letzter 76.910
+  Financial Times CCJ:NYQ|71569                      Kurs 76.910 USD       16:00      vorher 83.490 | Verlauf 294 Tage 2025-09-02..2026-10-30 USD letzter 76.910
+  EODHD           CCJ.US                             Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     CCJ|XNYS                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   CCJ                                Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Paladin Energy @ FINRA Other OTC
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|173056|457977375|AU000000PDN Kurs 5.135 USD        15:43      vorher 5.556 | Verlauf 289 Tage 2025-09-05..2026-10-30 USD letzter 5.135
+  Financial Times Symbol-FEHLER Nicht gefunden: Paladin Energy an FINRA Other OTC
+  EODHD           PALAF.US                           Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     PALAF|PINX                         Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   PALAF                              Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## TotalEnergies @ Euronext Paris
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times TTE:PAR|271072                     Kurs 85.430 EUR       17:30      vorher 84.600 | Verlauf 298 Tage 2025-09-01..2026-10-30 EUR letzter 85.430
+  EODHD           TTE.PA                             Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     TTE|XPAR                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+  Alpha Vantage   TTE.PAR                            Kurs-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds. | Verlauf-FEHLER Gedrosselt: The **demo** API key is for demo purposes only. Please claim your free API key at (https://www.alphavantage.co/support/#api-key) to explore our full API offerings. It takes fewer than 20 seconds.
+
+## Eni @ Euronext Mailand
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times ENI:MIL|98835                      Kurs 27.135 EUR       17:30      vorher 26.890 | Verlauf 297 Tage 2025-09-01..2026-10-30 EUR letzter 27.135
+  EODHD           ENI.MI                             Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     ENI|XMIL                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+
+## Nestle @ SIX Swiss Exchange
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  OnVista         STOCK|20817512|100533|CH0038863350 Kurs 84.700 CHF       17:30      vorher 82.810 | Verlauf 290 Tage 2025-09-05..2026-10-30 CHF letzter 84.700
+  Financial Times NESN:SWX|211037                    Kurs 84.700 CHF       17:30      vorher 82.810 | Verlauf 294 Tage 2025-09-01..2026-10-30 CHF letzter 84.700
+  EODHD           NESN.SW                            Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     NESN|XSWX                          Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+
+## Equinor @ Euronext Oslo
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times EQNR:OSL|261247                    Kurs 447.500 NOK      16:20      vorher 435.400 | Verlauf 294 Tage 2025-09-01..2026-10-30 NOK letzter 447.500
+  EODHD           EQNR.OL                            Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     EQNR|XOSL                          Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+
+## Paladin Energy @ ASX Sydney
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times PDN:ASX|879705953                  Kurs 7.470 AUD        16:00      vorher 7.900 | Verlauf 297 Tage 2025-09-01..2026-10-30 AUD letzter 7.470
+  EODHD           PDN.AU                             Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     PDN|XASX                           Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+
+## Ericsson B @ First North Stockholm
+  Yahoo Finance   Symbol-FEHLER Gedrosselt: Too Many Requests
+
+  Financial Times ERIC B:STO|100115                  Kurs 109.050 SEK      17:30      vorher 109.150 | Verlauf 293 Tage 2025-09-01..2026-10-30 SEK letzter 109.050
+  EODHD           ERIC-B.ST                          Kurs-FEHLER HTTP 403: Forbidden. Please contact support@eodhistoricaldata.com | Verlauf-FEHLER HTTP 403: Forbidden
+  Twelve Data     ERIC B|SSME                        Kurs-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co | Verlauf-FEHLER HTTP 401: {"code":401,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.co
+
+## Bitcoin @ Bitfinex
+  Bitfinex        tBTCUSD                            Kurs 76958.000 USD    21:04      vorher 79836.000 | Verlauf 421 Tage 2025-09-05..2026-10-30 USD letzter 76935.000
+
+## IBM @ NYSE
+  Alpha Vantage   IBM                                Kurs 257.770 USD      16:00      vorher 258.280 | Verlauf 291 Tage 2025-09-05..2026-10-30 USD letzter 257.770
+

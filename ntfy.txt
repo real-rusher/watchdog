@@ -1,0 +1,3 @@
+ntfy topic watchdog-syq7gjxcac4znnar:
+{"id":"hkcsM2JABSKX","time":1793394292,"expires":1793437492,"event":"message","topic":"watchdog-syq7gjxcac4znnar","title":"Öl & Gas · Tradegate","message":"Durchbruch der 200-Tage-Linie nach unten am 16.10. · Kurs 72,54 €","priority":4,"tags":["red_circle","chart_with_downwards_trend"]}
+

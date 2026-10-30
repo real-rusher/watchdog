@@ -1,0 +1,18 @@
+# Depot-Aktualisierung: 13 Kurse, 13 Verläufe, 0 Fehler, 8.4 s
+
+Cameco                TGAT  68,96 €       -7,062 % -9,903 % -12,929 %red    -23,261 % Q:OV H:OV n=1500
+Paladin Energy        XASX  4,697 €       -5,812 % -19,34 % -13,893 %red    -31,125 % Q:FT H:FT n=1488
+NexGen Energy         XTSE  7,395 €       -4,49 %  -8,18 %  -5,808 % red    -22,787 % Q:FT H:FT n=1480
+Yellow Cake           XLON  6,356 €       -0,699 % +0,136 % -6,307 % red    -8,457 %  Q:OV H:OV n=1486
+Skyharbour Resources  XTSX  0,218 €       -0,186 % -1,163 % -14,512 %red    -23,839 % Q:FT H:FT n=1480
+Equinor               XOSL  43,396 €      +2,973 % +18,419 %+117 %   green  +25,726 % Q:FT H:FT n=1482
+TotalEnergies         XPAR  85,43 €       +0,981 % +12,853 %+53,679 %green  +15,482 % Q:FT H:FT n=1511
+Eni                   XMIL  27,135 €      +0,911 % +12,968 %+68,123 %green  +20,577 % Q:FT H:FT n=1500
+Newmont               XNYS  95,426 €      -5,001 % -6,055 % +12,294 %red    -5,187 %  Q:OV H:OV n=1479
+Toyota Motor          XTKS  17,475 €      -0,091 % +6,687 % -4,461 % red    -2,687 %  Q:FT H:FT n=1442
+SAP                   XETR  210,65 €      +0,862 % +13,46 % +1,104 % green  +27,296 % Q:OV H:OV n=1499
+Nestlé                XSWX  92,125 €      +2,594 % +14,86 % +8,728 % green  +6,783 %  Q:OV H:OV n=1481
+Bitcoin               BFX   68.862,334 €  -3,998 % -6,475 % -7,76 %  green  +5,148 %  Q:BFX H:BFX n=2151
+
+FX: AUD=1509 CAD=1509 CHF=1509 GBP=1509 JPY=1509 NOK=1509 USD=1509
+Health: bitfinex: ok 2 / err 0, ft: ok 14 / err 0, onvista: ok 10 / err 0, yahoo: ok 0 / err 7

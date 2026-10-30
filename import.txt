@@ -1,0 +1,95 @@
+Object 0x7635d402c1c0 of class _MultiHandle deallocated with non-zero retain count 2. This object's deinit, or something called from it, may have created a strong reference to self which outlived deinit, resulting in a dangling reference.
+/home/runner/work/_temp/9974ff14-36c4-4097-a090-aa55a9599a61.sh: line 12:  3202 Aborted                    (core dumped) timeout 300 $BIN import "$f" --resolve
+
+Object 0x785ef001d0d0 of class _MultiHandle deallocated with non-zero retain count 2. This object's deinit, or something called from it, may have created a strong reference to self which outlived deinit, resulting in a dangling reference.
+/home/runner/work/_temp/9974ff14-36c4-4097-a090-aa55a9599a61.sh: line 12:  3239 Aborted                    (core dumped) timeout 300 $BIN import "$f" --resolve
+
+FEHLER: Das ist eine alte Excel-Datei (.xls). Bitte in Excel über Datei > Speichern unter als Excel-Arbeitsmappe (.xlsx) oder CSV speichern.
+
+# Import depot_libreoffice.xlsx: Blatt Depot, 7 Zeilen, 4 Werte, gelesen in 32 ms
+  Wertpapier                   -> Name
+  ISIN                         -> ISIN
+  WKN                          -> WKN
+  Stück                        -> Stück
+  Kaufkurs in EUR              -> Kaufkurs pro Stück
+  Kaufdatum                    -> Kaufdatum
+  Börse                        -> Börse
+  Depot                        -> Bank/Depot
+  Thema                        -> Thema
+  Notiz                        -> Notiz
+  Cameco Corp.                   CA13321L1085  150       2.976,00 €     lots 2  => Tradegate CJ6 (OV)
+      i aus 2 Zeilen zusammengefasst
+  Toyota Motor Corp.             JP3633400001  100       1.150,00 €     lots 1  => Tokio 7203 (FT+12D)
+  Equinor ASA                    NO0010096985  12,145    287,836 €      lots 1  => Euronext Oslo EQNR (FT)
+  Kazatomprom GDR                US63253R2013  -         -              lots 0  => London KAP (OV+FT)
+  gefunden: 4 von 4
+
+# Import depot_openpyxl.xlsx: Blatt Depot, 6 Zeilen, 4 Werte, gelesen in 31 ms
+  Wertpapier                   -> Name
+  ISIN                         -> ISIN
+  WKN                          -> WKN
+  Stück                        -> Stück
+  Kaufkurs in EUR              -> Kaufkurs pro Stück
+  Kaufdatum                    -> Kaufdatum
+  Börse                        -> Börse
+  Depot                        -> Bank/Depot
+  Thema                        -> Thema
+  Notiz                        -> Notiz
+  Cameco Corp.                   CA13321L1085  150       2.976,00 €     lots 2  => Tradegate CJ6 (OV)
+      i aus 2 Zeilen zusammengefasst
+  Toyota Motor Corp.             JP3633400001  100       1.150,00 €     lots 1  => Tokio 7203 (FT+12D)
+  Equinor ASA                    NO0010096985  12,145    287,836 €      lots 1  => Euronext Oslo EQNR (FT)
+  Kazatomprom GDR                US63253R2013  -         -              lots 0  => London KAP (OV+FT)
+  gefunden: 4 von 4
+
+# Import english_broker.csv: Blatt english_broker.csv, 2 Zeilen, 2 Werte, gelesen in 6 ms
+  Symbol                       -> Kürzel
+  Description                  -> Name
+  Quantity                     -> Stück
+  Cost Basis                   -> Kaufwert gesamt
+  Date Acquired                -> Kaufdatum
+  Currency                     -> Währung
+  NEWMONT CORP                   NEM           100       1.712,40 $     lots 1  => Tradegate NEM (OV)
+      i Kaufpreis in USD, wird zum EZB-Kurs vom Kaufdatum in Euro umgerechnet
+  CAMECO CORP                    CCJ           1.200     17.880,00 $    lots 1  => Tradegate CJ6 (OV)
+      i Kaufpreis in USD, wird zum EZB-Kurs vom Kaufdatum in Euro umgerechnet
+  gefunden: 2 von 2
+
+# Import excel_unicode.txt: Blatt excel_unicode.txt, 2 Zeilen, 2 Werte, gelesen in 8 ms
+  Name                         -> Name
+  ISIN                         -> ISIN
+  Anzahl                       -> Stück
+  Kaufwert                     -> Kaufwert gesamt
+  Kaufdatum                    -> Kaufdatum
+  SAP SE                         DE0007164600  25        2.380,00 €     lots 1  => Tradegate SAP (OV)
+  Nestlé S.A.                    CH0038863350  10        1.050,00 €     lots 1  => Tradegate NESR (OV)
+  gefunden: 2 von 2
+
+# Import isin_liste.txt: Blatt isin_liste.txt, 3 Zeilen, 3 Werte, gelesen in 1 ms
+  Spalte 1                     -> ISIN
+  CA13321L1085                   CA13321L1085  -         -              lots 0  => Tradegate CJ6 (OV)
+  JP3633400001                   JP3633400001  -         -              lots 0  => Tradegate TOM (OV)
+  NO0010096985                   NO0010096985  -         -              lots 0  => Tradegate DNQ (OV)
+  gefunden: 3 von 3
+
+# Import mac_roman.csv: Blatt mac_roman.csv, 2 Zeilen, 2 Werte, gelesen in 10 ms
+  Bezeichnung                  -> Name
+  ISIN                         -> ISIN
+  Stück                        -> Stück
+  Kaufkurs                     -> Kaufkurs pro Stück
+  Kaufdatum                    -> Kaufdatum
+  Thema                        -> Thema
+  Nestlé                         CH0038863350  10        1.050,00 €     lots 1  => Tradegate NESR (OV)
+  Österreichische Post           AT0000APOST4  40        1.260,00 €     lots 1  => Tradegate O3P (OV)
+  gefunden: 2 von 2
+
+# Import namen_liste.txt: Blatt namen_liste.txt, 3 Zeilen, 3 Werte, gelesen in 12 ms
+  Spalte 1                     -> Name
+  Cameco                                       -         -              lots 0  => Tradegate CJ6 (OV)
+      i ohne ISIN, wird über den Namen gesucht
+  Paladin Energy                               -         -              lots 0  => Tradegate PUR (OV)
+      i ohne ISIN, wird über den Namen gesucht
+  NexGen Energy                                -         -              lots 0  => Tradegate 6NE (OV)
+      i ohne ISIN, wird über den Namen gesucht
+  gefunden: 3 von 3
+

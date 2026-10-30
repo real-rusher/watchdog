@@ -1,0 +1,68 @@
+Building for debugging...
+[Provisioning 3 / 7]
+[Pre-planning 1 / 183]
+[Planning deferred tasks]
+[43 / 70] WatchdogCore
+[44 / 70] WatchdogCore
+[48 / 70]
+[56 / 80] WatchdogCoreTests-product
+[62 / 80] WatchdogCoreTests-product
+[63 / 80] WatchdogCoreTests-product
+[65 / 80]
+[66 / 80] WatchdogCoreTests-product
+[66 / 80] watchdog-cli-product
+[74 / 82] WatchdogCore-product
+[74 / 82] WatchdogCoreTests-product
+[75 / 82] WatchdogCoreTests-test-runner
+[78 / 85] WatchdogCoreTests-test-runner
+[82 / 85] WatchdogCoreTests-test-runner
+[86 / 86] WatchdogCoreTests-test-runner
+Build complete! (18.51 secs)
+error: Process '/home/runner/work/watchdog/watchdog/Core/.build/out/Products/Debug-linux-x86_64/WatchdogCoreTests-test-runner' exited with unexpected signal code 6
+Test Suite 'All tests' started at 2026-10-30 20:59:36.977
+Test Suite 'Debug-linux-x86_64.xctest' started at 2026-10-30 20:59:37.078
+Test Suite 'CatalogTests' started at 2026-10-30 20:59:37.078
+Test Case 'CatalogTests.testMarketHours' started at 2026-10-30 20:59:37.078
+Test Case 'CatalogTests.testMarketHours' passed (0.018 seconds)
+Test Case 'CatalogTests.testOtherMappings' started at 2026-10-30 20:59:37.096
+Test Case 'CatalogTests.testOtherMappings' passed (0.007 seconds)
+Test Case 'CatalogTests.testYahooMapping' started at 2026-10-30 20:59:37.103
+Test Case 'CatalogTests.testYahooMapping' passed (0.101 seconds)
+Test Suite 'CatalogTests' passed at 2026-10-30 20:59:37.204
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.126 (0.126) seconds
+Test Suite 'CompanyNameTests' started at 2026-10-30 20:59:37.204
+Test Case 'CompanyNameTests.testOtherCompany' started at 2026-10-30 20:59:37.204
+Test Case 'CompanyNameTests.testOtherCompany' passed (0.001 seconds)
+Test Case 'CompanyNameTests.testSameCompany' started at 2026-10-30 20:59:37.205
+Test Case 'CompanyNameTests.testSameCompany' passed (0.006 seconds)
+Test Case 'CompanyNameTests.testUndecidable' started at 2026-10-30 20:59:37.210
+Test Case 'CompanyNameTests.testUndecidable' passed (0.0 seconds)
+Test Suite 'CompanyNameTests' passed at 2026-10-30 20:59:37.211
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
+Test Suite 'CostTests' started at 2026-10-30 20:59:37.211
+Test Case 'CostTests.testPurchaseWithoutPriceIsNotProfit' started at 2026-10-30 20:59:37.211
+Test Case 'CostTests.testPurchaseWithoutPriceIsNotProfit' passed (0.002 seconds)
+Test Suite 'CostTests' passed at 2026-10-30 20:59:37.212
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'CurrentnessTests' started at 2026-10-30 20:59:37.213
+Test Case 'CurrentnessTests.testAfterTheCloseTheClosingPriceIsCurrent' started at 2026-10-30 20:59:37.213
+Test Case 'CurrentnessTests.testAfterTheCloseTheClosingPriceIsCurrent' passed (0.0 seconds)
+Test Case 'CurrentnessTests.testHistoryGetsThreeHoursAfterTheClose' started at 2026-10-30 20:59:37.213
+Test Case 'CurrentnessTests.testHistoryGetsThreeHoursAfterTheClose' passed (0.0 seconds)
+Test Case 'CurrentnessTests.testJustOpenedYesterdaysCloseIsCurrent' started at 2026-10-30 20:59:37.213
+Test Case 'CurrentnessTests.testJustOpenedYesterdaysCloseIsCurrent' passed (0.0 seconds)
+Test Case 'CurrentnessTests.testVenueTicker' started at 2026-10-30 20:59:37.213
+Test Case 'CurrentnessTests.testVenueTicker' passed (0.0 seconds)
+Test Case 'CurrentnessTests.testWhileTradingAnHourOldPriceIsNotCurrent' started at 2026-10-30 20:59:37.213
+Test Case 'CurrentnessTests.testWhileTradingAnHourOldPriceIsNotCurrent' passed (0.0 seconds)
+Test Suite 'CurrentnessTests' passed at 2026-10-30 20:59:37.213
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'DemoDataTests' started at 2026-10-30 20:59:37.213
+Test Case 'DemoDataTests.testStressDepotShapes' started at 2026-10-30 20:59:37.213
+Object 0x774bb8012cc0 of class _MultiHandle deallocated with non-zero retain count 2. This object's deinit, or something called from it, may have created a strong reference to self which outlived deinit, resulting in a dangling reference.
+◇ Test run started.
+↳ Testing Library Version: 6.4.1 (804dc4530ef3666)
+↳ Target Platform: x86_64-unknown-linux-gnu
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+Note: Some test targets reported failures:
+  - WatchdogCoreTests (XCTest)
