@@ -15,6 +15,8 @@ struct WatchdogMobileApp: App {
         WindowGroup {
             RootView()
                 .environment(model)
+                // German dates and numbers everywhere, independent of the system language (as on the Mac).
+                .environment(\.locale, Locale(identifier: "de_DE"))
                 .onAppear {
                     let m = model
                     notifications.open = { id in Task { @MainActor in m.selection = id } }

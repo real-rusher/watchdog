@@ -210,6 +210,7 @@ struct VenueSearch: View {
     @State private var results: [[ListingOption]] = []
     @State private var loading = false
     @State private var started = false
+    @FocusState private var fieldFocused: Bool
 
     var body: some View {
         List {
@@ -218,6 +219,7 @@ struct VenueSearch: View {
                     Image(systemName: "magnifyingglass").foregroundStyle(Palette.inkSoft)
                     TextField("ISIN, WKN, Name oder Kürzel", text: $query)
                         .textInputAutocapitalization(.never).autocorrectionDisabled().submitLabel(.search)
+                        .focused($fieldFocused)
                     if loading { ProgressView() }
                 }
             } footer: {
@@ -247,7 +249,12 @@ struct VenueSearch: View {
             }
         }
         .onAppear {
-            if !started { started = true; query = initialQuery }
+            if !started {
+                started = true
+                query = initialQuery
+                // Ready to type right away.
+                if initialQuery.isEmpty { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { fieldFocused = true } }
+            }
         }
         .task(id: query) {
             try? await Task.sleep(nanoseconds: 450_000_000)

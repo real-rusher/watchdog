@@ -5,6 +5,7 @@ import WatchdogCore
 struct RootView: View {
     @Environment(MobileModel.self) private var model
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.horizontalSizeClass) private var sizeClass
     /// iPad: list and detail side by side, also upright.
     @State private var columns: NavigationSplitViewVisibility = .all
 
@@ -13,27 +14,18 @@ struct RootView: View {
         Group {
             if model.needsFolder {
                 OnboardingView()
+            } else if sizeClass == .compact {
+                // iPhone: a plain stack, so the selection mode never jumps to an empty detail page.
+                NavigationStack {
+                    DepotListView(split: false)
+                        .modifier(ListToolbar())
+                        .navigationDestination(item: $m.selection) { PositionDetailView(id: $0) }
+                }
+                .tint(Palette.ink)
             } else {
                 NavigationSplitView(columnVisibility: $columns) {
-                    DepotListView()
-                        .navigationTitle("Watchdog")
-                        .toolbar {
-                            ToolbarItem(placement: .topBarLeading) {
-                                Button(model.isSelecting ? "Fertig" : "Auswählen") {
-                                    model.isSelecting.toggle()
-                                    model.marked = []
-                                }
-                                .disabled(model.depot.positions.isEmpty && !model.isSelecting)
-                            }
-                            ToolbarItemGroup(placement: .topBarTrailing) {
-                                if !model.isSelecting {
-                                    Button { model.editor = .add } label: { Image(systemName: "plus") }
-                                        .accessibilityLabel("Wert hinzufügen")
-                                    Button { model.showSettings = true } label: { Image(systemName: "gearshape") }
-                                        .accessibilityLabel("Einstellungen")
-                                }
-                            }
-                        }
+                    DepotListView(split: true)
+                        .modifier(ListToolbar())
                         .navigationSplitViewColumnWidth(min: 340, ideal: 560, max: 900)
                 } detail: {
                     if let id = model.selection, model.position(id) != nil {
@@ -53,6 +45,33 @@ struct RootView: View {
         .sheet(isPresented: $m.showSettings) { MobileSettingsView() }
         .sheet(item: $m.editor) { MobileEditor(target: $0) }
         .overlay(alignment: .bottom) { UndoBanner() }
+    }
+}
+
+/// Title and buttons above the list: selection mode, add, settings.
+struct ListToolbar: ViewModifier {
+    @Environment(MobileModel.self) private var model
+
+    func body(content: Content) -> some View {
+        content
+            .navigationTitle("Watchdog")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(model.isSelecting ? "Fertig" : "Auswählen") {
+                        model.isSelecting.toggle()
+                        model.marked = []
+                    }
+                    .disabled(model.depot.positions.isEmpty && !model.isSelecting)
+                }
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    if !model.isSelecting {
+                        Button { model.editor = .add } label: { Image(systemName: "plus") }
+                            .accessibilityLabel("Wert hinzufügen")
+                        Button { model.showSettings = true } label: { Image(systemName: "gearshape") }
+                            .accessibilityLabel("Einstellungen")
+                    }
+                }
+            }
     }
 }
 
@@ -123,6 +142,8 @@ private enum Col {
 struct DepotListView: View {
     @Environment(MobileModel.self) private var model
     @State private var pendingDelete: Set<UUID> = []
+    /// iPad: the list drives the detail column through its selection. iPhone: tapping a row pushes the detail.
+    var split: Bool
 
     var body: some View {
         @Bindable var m = model
@@ -130,8 +151,10 @@ struct DepotListView: View {
             if model.isSelecting {
                 List(selection: $m.marked) { content }
                     .environment(\.editMode, .constant(.active))
-            } else {
+            } else if split {
                 List(selection: $m.selection) { content }
+            } else {
+                List { content }
             }
         }
         .listStyle(.plain)
@@ -183,7 +206,7 @@ struct DepotListView: View {
         ForEach(model.sections) { s in
             Section {
                 ForEach(s.positions) { p in
-                    PositionRow(position: p)
+                    row(p)
                         .tag(p.id)
                         .focusEffectDisabled()
                         .listRowBackground(model.selection == p.id && !model.isSelecting ? Palette.selection : Palette.surface)
@@ -202,6 +225,16 @@ struct DepotListView: View {
                 }
                 .textCase(nil)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func row(_ p: Position) -> some View {
+        if split || model.isSelecting {
+            PositionRow(position: p)
+        } else {
+            Button { model.selection = p.id } label: { PositionRow(position: p).contentShape(Rectangle()) }
+                .buttonStyle(.plain)
         }
     }
 }
