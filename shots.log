@@ -1,0 +1,55 @@
+iPhone A765D722-4A0B-4A3A-99B7-112DC46F1647
+installed
+de.realrusher.watchdog: 14164
+shot out/ios/1-list-light.png
+shot out/ios/2-list-dark.png
+de.realrusher.watchdog: 18791
+shot out/ios/3-detail-dark.png
+shot out/ios/4-detail-light.png
+de.realrusher.watchdog: 20645
+shot out/ios/5-themes-light.png
+de.realrusher.watchdog: 22535
+shot out/ios/7-edit-light.png
+de.realrusher.watchdog: 24013
+shot out/ios/8-add-light.png
+de.realrusher.watchdog: 26052
+shot out/ios/9-select-light.png
+de.realrusher.watchdog: 27795
+shot out/ios/10-edit-dark.png
+de.realrusher.watchdog: 30119
+shot out/ios/6-list-largetext.png
+iPad 8263B284-48BD-4DEF-8C9A-CCE8BBC8F362
+de.realrusher.watchdog: 35058
+shot out/ipad/1-split-light.png
+shot out/ipad/2-split-dark.png
+Watch D0E86BCA-9AC4-4DF3-8050-82C03EA55E82
+installed
+de.realrusher.watchdog.watchkitapp: 40900
+shot out/watch/1-list.png
+out/ios:
+total 8008
+drwxr-xr-x  12 runner  staff      384 Oct 30 21:13 .
+drwxr-xr-x  13 runner  staff      416 Oct 30 21:05 ..
+-rw-r--r--@  1 runner  staff   337588 Oct 30 21:09 1-list-light.png
+-rw-r--r--@  1 runner  staff   249080 Oct 30 21:13 10-edit-dark.png
+-rw-r--r--@  1 runner  staff   332652 Oct 30 21:09 2-list-dark.png
+-rw-r--r--@  1 runner  staff   401279 Oct 30 21:10 3-detail-dark.png
+-rw-r--r--@  1 runner  staff   402943 Oct 30 21:10 4-detail-light.png
+-rw-r--r--@  1 runner  staff   345963 Oct 30 21:10 5-themes-light.png
+-rw-r--r--@  1 runner  staff   280319 Oct 30 21:13 6-list-largetext.png
+-rw-r--r--@  1 runner  staff   241853 Oct 30 21:11 7-edit-light.png
+-rw-r--r--@  1 runner  staff  1013425 Oct 30 21:12 8-add-light.png
+-rw-r--r--@  1 runner  staff   474737 Oct 30 21:12 9-select-light.png
+
+out/ipad:
+total 2344
+drwxr-xr-x   4 runner  staff     128 Oct 30 21:17 .
+drwxr-xr-x  13 runner  staff     416 Oct 30 21:05 ..
+-rw-r--r--@  1 runner  staff  599978 Oct 30 21:17 1-split-light.png
+-rw-r--r--@  1 runner  staff  595458 Oct 30 21:17 2-split-dark.png
+
+out/watch:
+total 88
+drwxr-xr-x   3 runner  staff     96 Oct 30 21:20 .
+drwxr-xr-x  13 runner  staff    416 Oct 30 21:05 ..
+-rw-r--r--@  1 runner  staff  43062 Oct 30 21:20 1-list.png

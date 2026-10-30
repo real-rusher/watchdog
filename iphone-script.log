@@ -1,0 +1,26 @@
+TERM environment variable not set.
+
+[1mWatchdog auf iPhone und Apple Watch bringen[0m
+Xcode 16.4 gefunden.
+
+[1mNeuesten Stand von GitHub laden[0m
+Watchdog 1.0.9.
+
+[1mXcodeGen laden (einmalig)[0m
+
+[1mProjekt vorbereiten[0m
+
+[1mApp bauen (beim ersten Mal einige Minuten)[0m
+/Users/runner/Library/Caches/Watchdog-iPhone/build/Build/Products/Release-iphoneos/Watchdog.app
+/Users/runner/Library/Caches/Watchdog-iPhone/build/Build/Products/Release-iphoneos/Watchdog.app/Watch/Watchdog.app
+
+[1mFertig (Test ohne iPhone).[0m
+exit 0
+watch embeds before: 1 after: 0
+complication kept: 1
+de.realrusher.wd-ci
+de.realrusher.wd-ci.watchkitapp
+de.realrusher.wd-ci.watchkitapp.complication
+bundle de.realrusher.wd-ci background de.realrusher.wd-ci.check
+team from settings: [] (expected A1B2C3D4E5)
+team without anything: [] (expected empty)

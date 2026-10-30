@@ -1,0 +1,2 @@
+build/m/Build/Products/Debug-watchsimulator/Watchdog.app
+build/m/Build/Products/Debug-iphonesimulator/Watchdog.app
