@@ -1,0 +1,161 @@
+ProductName:		macOS
+ProductVersion:		26.6.2
+
+================ a-normal-ohne-quarantaene
+   Prozess vorhanden
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-463 target:[osservice<com.apple.backgroundtaskmanagement.agent(501)>:983] explanation:"uielement:983" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-495 target:[app<application.de.realrusher.watchdog.2987527.2987532(501)>:1785] explanation:"foregroundApp:1785" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-463 0>
+   log: 	]><RBAssertion| identifier:164-338-506 target:[app<application.de.realrusher.watchdog.2987527.2987532(501)>:1785] explanation:"com.apple.frontboard.after-life.interrupted" originator:[osservice<com.apple.controlcenter(501)>:338] intransientState:<RBAssertionIntransientState| strt:After-Originator-Exit end:Invalidate nvld:30.00 warn:0.00dom prevSus runningReason:10001 legRes:0 doms:com.apple.frontboard:AfterLife-Interrupted invOnConds:(null)> suspended: attributes:[
+   log: 	]><RBAssertion| identifier:164-127-518 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.softwareupdated(200)>:264])(200)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1800:1800] explanation:"backgroundApp:1800" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+
+================ b-normal-mit-quarantaene
+   Prozess vorhanden
+   [CoreServicesUIAgent] “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: <RBAssertion| identifier:164-127-528 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.SoftwareUpdateNotificationManager(501)>:425])(501)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1814:1814] explanation:"backgroundApp:1814" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+   log: 	]><RBAssertion| identifier:164-127-580 target:[app<application.de.realrusher.watchdog.2989294.2989299(501)>:1958] explanation:"foregroundApp:1958" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+   log: 	]><RBAssertion| identifier:164-127-540 target:[app<application.com.apple.systemevents.1152921500312102920.1152921500312102925(501)>:1876] explanation:"uielement:1876" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+   log: 	]><RBAssertion| identifier:164-127-518 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.softwareupdated(200)>:264])(200)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1800:1800] explanation:"backgroundApp:1800" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+
+================ c-nicht-ausfuehrbar
+   kein Prozess
+   [CoreServicesUIAgent] The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 			com.apple.runningboard.assertions.launchservices,
+   log: 			com.apple.runningboard.launch_extensions,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.private.xpc.launchd.app-server,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.runningboard.launchprocess
+
+================ d-nicht-ausfuehrbar-quarantaene
+   kein Prozess
+   [CoreServicesUIAgent] The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 			com.apple.runningboard.assertions.launchservices,
+   log: 			com.apple.runningboard.launch_extensions,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.private.xpc.launchd.app-server,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.runningboard.launchprocess
+
+================ e-signatur-kaputt
+   Prozess vorhanden
+   [CoreServicesUIAgent] The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+   log: 	<RBSInheritance| environment:(none) name:com.apple.frontboard.visibility origID:164-166-686 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-677 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-676 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-677 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.frontboard.visibility origID:164-166-678 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.boardservices.endpoint-injection origID:164-338-681 payload 15602811699437581470>
+   log: <RBAssertion| identifier:164-166-684 target:[app<application.de.realrusher.watchdog.2990347.2990352(501)>:2897] explanation:"AppDrawing" active originator:[osservice<com.apple.WindowServer(88)>:166] transientState:<RBAssertionTransientState| policies:[
+   log: 	]><RBAssertion| identifier:164-166-685 target:[app<application.de.realrusher.watchdog.2990347.2990352(501)>:2897] explanation:"AppVisible" active originator:[osservice<com.apple.WindowServer(88)>:166] transientState:<RBAssertionTransientState| policies:[
+   log: 	]><RBAssertion| identifier:164-338-682 target:[app<application.de.realrusher.watchdog.2990347.2990352(501)>:2897] explanation:"com.apple.frontboard.after-life.interrupted" originator:[osservice<com.apple.controlcenter(501)>:338] intransientState:<RBAssertionIntransientState| strt:After-Originator-Exit end:Invalidate nvld:30.00 warn:0.00dom prevSus runningReason:10001 legRes:0 doms:com.apple.frontboard:AfterLife-Interrupted invOnConds:(null)> suspended: attributes:[
+   log: 	]><RBAssertion| identifier:164-166-686 target:[app<application.de.realrusher.watchdog.2990347.2990352(501)>:2897] explanation:"FUSBProcessWindowState: visible" active originator:[osservice<com.apple.WindowServer(88)>:166] transientState:<RBAssertionTransientState| policies:[
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-540 0>
+
+================ f-signatur-kaputt-quarantaene
+   Prozess vorhanden
+   [CoreServicesUIAgent] “Watchdog” is damaged and can’t be opened. You should move it to the Trash., Safari created this file today at 9:22 PM., The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-717 target:[app<application.de.realrusher.watchdog.2990577.2990582(501)>:3140] explanation:"foregroundApp:3140" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+   log: 	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Delayed-Relative end:Invalidate nvld:30.00 warn:5.00dom prevSus runningReason:4 legRes:0 doms:com.apple.common:FinishTaskUninterruptable invOnConds:(null)> processState:<RBProcessState| role:Background> suspended: attributes:[
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-540 target:[app<application.com.apple.systemevents.1152921500312102920.1152921500312102925(501)>:1876] explanation:"uielement:1876" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20246 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractive invOnConds:(null)> processState:<RBProcessState| role:UserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+   log: 	SupportsBackgroundAudio> intransientState:<RBAssertionIntransientState| strt:Delayed-Relative end:Invalidate nvld:30.00 warn:5.00dom prevSus runningReason:4 legRes:0 doms:com.apple.common:FinishTaskUninterruptable invOnConds:(null)> processState:<RBProcessState| role:Background> suspended: attributes:[
+   log: 	]><RBAssertion| identifier:164-99-670 target:[osservice<com.apple.metadata.mds.index(308)>:514:514] explanation:"App is holding power assertion" active originator:[osservice<com.apple.powerd>:99] transientState:<RBAssertionTransientState| policies:[
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-518 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.softwareupdated(200)>:264])(200)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1800:1800] explanation:"backgroundApp:1800" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+
+================ g-programmdatei-veraendert
+   Prozess vorhanden
+   [CoreServicesUIAgent] “Watchdog” is damaged and can’t be opened. You should move it to the Trash., Safari created this file today at 9:22 PM., The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+   log: 	]><RBAssertion| identifier:164-127-751 target:[app<application.de.realrusher.watchdog.2990928.2990933(501)>:3438] explanation:"foregroundApp:3438" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-518 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.softwareupdated(200)>:264])(200)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1800:1800] explanation:"backgroundApp:1800" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+   log: 	]><RBAssertion| identifier:164-338-757 target:[app<application.de.realrusher.watchdog.2990928.2990933(501)>:3438] explanation:"com.apple.frontboard.after-life.interrupted" originator:[osservice<com.apple.controlcenter(501)>:338] intransientState:<RBAssertionIntransientState| strt:After-Originator-Exit end:Invalidate nvld:30.00 warn:0.00dom prevSus runningReason:10001 legRes:0 doms:com.apple.frontboard:AfterLife-Interrupted invOnConds:(null)> suspended: attributes:[
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-752 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-751 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-752 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-540 0>
+
+================ h-keine-leserechte
+   kein Prozess
+   [CoreServicesUIAgent] You do not have permission to open the application “Watchdog”., Contact your computer or network administrator for assistance., “Watchdog” is damaged and can’t be opened. You should move it to the Trash., Safari created this file today at 9:22 PM., The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 			com.apple.runningboard.assertions.launchservices,
+   log: 			com.apple.runningboard.launch_extensions,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.private.xpc.launchd.app-server,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess,
+   log: 			com.apple.runningboard.launchprocess
+   log: 			com.apple.runningboard.launchprocess
+
+================ i-zweiter-start-waehrend-abfrage
+   Prozess vorhanden
+   [CoreServicesUIAgent] “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy., You do not have permission to open the application “Watchdog”., Contact your computer or network administrator for assistance., “Watchdog” is damaged and can’t be opened. You should move it to the Trash., Safari created this file today at 9:22 PM., The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-811 0>
+   log: 	]>><RBAssertion| identifier:164-127-813 target:[osservice<com.apple.Finder(501)>:4048] explanation:"foregroundApp:4048" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+   log: 	]><RBAssertion| identifier:164-127-823 target:[app<application.de.realrusher.watchdog.2991386.2991391(501)>:4268] explanation:"foregroundApp:4268" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20248 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveNonFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveNonFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveNonFocal" sourceEnvironment:"(null)">
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-518 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.softwareupdated(200)>:264])(200)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1800:1800] explanation:"backgroundApp:1800" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+   log: 2026-10-30 21:23:39.273 Df dmd[343:7ca] Received xpc stream event (distributed notification matching) with name: com.apple.LaunchServices.applicationRegistered user info: {
+   log: 2026-10-30 21:23:39.290 Df siriactionsd[358:4c98] [com.apple.shortcuts:Daemon] Firing event: <distributed notification: com.apple.LaunchServices.applicationRegistered, userInfo: [AnyHashable("CFBundleDisplayName"): Watchdog, AnyHashable("isPlaceholder"): 0, AnyHashable("bundleIDs"): <__NSSingleObjectArrayI 0xafd0be980>(
+
+================ j-provenance
+   Prozess vorhanden
+   [CoreServicesUIAgent] “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy., You do not have permission to open the application “Watchdog”., Contact your computer or network administrator for assistance., “Watchdog” is damaged and can’t be opened. You should move it to the Trash., Safari created this file today at 9:22 PM., The application “Watchdog” can’t be opened., , The application “Watchdog” can’t be opened., , “Watchdog” Not Opened, Apple could not verify “Watchdog” is free of malware that may harm your Mac or compromise your privacy.
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractive" sourceEnvironment:"(null)">
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-839 0>
+   log: 			]> inheritanceManager:<RBClientInheritanceManager| >><RBAssertion| identifier:164-127-518 target:[xpcservice<com.apple.textkit.nsattributedstringagent([osservice<com.apple.softwareupdated(200)>:264])(200)>{vt hash: 0}{definition:com.apple.textkit.nsattributedstringagent[standard][client]}:1800:1800] explanation:"backgroundApp:1800" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20249 legRes:0 doms:com.apple.launchservicesd:RoleNonUserInteractive invOnConds:(null)> processState:<RBProcessState| role:NonUserInteractive> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleNonUserInteractive" sourceEnvironment:"(null)">
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-852 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-853 0>,
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-853 0>,
+   log: 	]>><RBAssertion| identifier:164-127-853 target:[app<application.de.realrusher.watchdog.2991748.2991753(501)>:4620] explanation:"frontmost:4620" active originator:[osservice<com.apple.coreservices.launchservicesd>:127] transientState:<RBAssertionTransientState| policies:[
+   log: 	]> intransientState:<RBAssertionIntransientState| strt:Unspecified end:WarnOnly nvld:0.00 warn:0.00dom prevSus runningReason:20247 legRes:0 doms:com.apple.launchservicesd:RoleUserInteractiveFocal invOnConds:(null)> processState:<RBProcessState| role:UserInteractiveFocal> suspended: attributes:[
+   log: 	<RBSDomainAttribute| domain:"com.apple.launchservicesd" name:"RoleUserInteractiveFocal" sourceEnvironment:"(null)">
+   log: 	<RBSInheritance| environment:(none) name:com.apple.launchservices.userfacing origID:164-127-540 0>
