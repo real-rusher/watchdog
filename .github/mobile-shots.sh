@@ -46,6 +46,16 @@ xcrun simctl ui "$IPHONE" appearance light; sleep 3
 shot "$IPHONE" out/ios/4-detail-light.png
 run "$IPHONE" $ID 25 --demo --grouping Themen
 shot "$IPHONE" out/ios/5-themes-light.png
+run "$IPHONE" $ID 25 --demo --edit-first
+shot "$IPHONE" out/ios/7-edit-light.png
+run "$IPHONE" $ID 30 --demo --add
+shot "$IPHONE" out/ios/8-add-light.png
+run "$IPHONE" $ID 25 --demo --select
+shot "$IPHONE" out/ios/9-select-light.png
+xcrun simctl ui "$IPHONE" appearance dark; sleep 3
+run "$IPHONE" $ID 25 --demo --edit-first
+shot "$IPHONE" out/ios/10-edit-dark.png
+xcrun simctl ui "$IPHONE" appearance light
 xcrun simctl ui "$IPHONE" content_size accessibility-extra-large; sleep 2
 run "$IPHONE" $ID 25 --demo
 shot "$IPHONE" out/ios/6-list-largetext.png

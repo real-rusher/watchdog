@@ -1,24 +1,6 @@
 import SwiftUI
 import WatchdogCore
 
-/// A security at one venue, merged from the search results of several providers.
-struct LotDraft: Identifiable, Equatable {
-    var id = UUID()
-    var date = Date()
-    var quantity = ""
-    var price = ""
-    var priceIsTotal = false
-
-    var parsedQuantity: Double? { Lenient.germanDouble(quantity) }
-    var parsedPrice: Double? { Lenient.germanDouble(price) }
-    var total: Double? {
-        guard let q = parsedQuantity, let p = parsedPrice else { return nil }
-        return priceIsTotal ? p : p * q
-    }
-    var isEmpty: Bool { quantity.trimmingCharacters(in: .whitespaces).isEmpty && price.trimmingCharacters(in: .whitespaces).isEmpty }
-    var isValid: Bool { (parsedQuantity ?? 0) > 0 && (parsedPrice ?? -1) >= 0 }
-}
-
 struct PositionEditor: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -105,7 +87,7 @@ struct PositionEditor: View {
             note = p.note
             forcedProvider = p.listing.preferredProvider
             lots = p.lots.sorted { $0.day < $1.day }.map {
-                LotDraft(id: $0.id, date: $0.day.date, quantity: Self.plain($0.quantity), price: Self.plain($0.totalCostEUR, decimals: 2), priceIsTotal: true)
+                LotDraft(id: $0.id, date: $0.day.date, quantity: LotDraft.plain($0.quantity), price: LotDraft.plain($0.totalCostEUR, decimals: 2), priceIsTotal: true)
             }
             searching = false
         }
@@ -310,14 +292,6 @@ struct PositionEditor: View {
 
     private static let newMarker = UUID(uuidString: "00000000-0000-0000-0000-00000000FFFF")!
 
-    /// Number for editing: German decimal comma, no thousands grouping (so it parses back unambiguously).
-    static func plain(_ v: Double, decimals: Int? = nil) -> String {
-        if let d = decimals { return String(format: "%.\(d)f", v).replacingOccurrences(of: ".", with: ",") }
-        if v == v.rounded() { return String(Int(v)) }
-        var s = String(format: "%.8f", v)
-        while s.hasSuffix("0") { s.removeLast() }
-        return s.replacingOccurrences(of: ".", with: ",")
-    }
 
     private var lotsFooter: String {
         let valid = lots.filter { !$0.isEmpty }

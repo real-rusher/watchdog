@@ -31,6 +31,27 @@ final class MobileModel {
     var isRefreshing = false
     var selection: UUID?
     var showSettings = false
+    /// Add or edit sheet.
+    var editor: EditorTarget?
+    /// Selection mode: several values marked for bank, theme or deleting.
+    var isSelecting = false
+    var marked: Set<UUID> = []
+    /// "3 Werte gelöscht" with an undo button for a few seconds.
+    var undoText: String?
+    private var undoPositions: [Position]?
+    /// The depot as last read or written; saving merges against it, so changes made on the Mac meanwhile stay.
+    private var base: DepotFile?
+
+    enum EditorTarget: Identifiable, Equatable {
+        case add
+        case edit(UUID)
+        var id: String {
+            switch self {
+            case .add: return "add"
+            case .edit(let u): return u.uuidString
+            }
+        }
+    }
     var ledger: NotificationLedger?
     var notificationStatus: UNAuthorizationStatus = .notDetermined
     var grouping: Grouping {
@@ -75,8 +96,16 @@ final class MobileModel {
             readDepot()
             await recompute()
             await refresh()
-            if isDemo, ProcessInfo.processInfo.arguments.contains("--open-first") {
-                selection = depot.positions.first { snapshot?.metrics[$0.id]?.ampel.state == .red }?.id ?? depot.positions.first?.id
+            if isDemo {
+                let args = ProcessInfo.processInfo.arguments
+                let first = depot.positions.first { snapshot?.metrics[$0.id]?.ampel.state == .red }?.id ?? depot.positions.first?.id
+                if args.contains("--open-first") { selection = first }
+                if args.contains("--edit-first"), let first { editor = .edit(first) }
+                if args.contains("--add") { editor = .add }
+                if args.contains("--select") {
+                    isSelecting = true
+                    marked = Set(depot.positions.prefix(3).map(\.id))
+                }
             }
         }
         if !isDemo { requestNotifications() }
@@ -101,6 +130,7 @@ final class MobileModel {
             try DepotAccess.remember(url)
             folder = url
             depot = try DepotAccess.readDepot(in: url)
+            base = depot
             depotError = nil
             Task {
                 await recompute()
@@ -119,6 +149,7 @@ final class MobileModel {
         do {
             let d = try DepotAccess.readDepot(in: folder)
             if d.modifiedAt != depot.modifiedAt || d.positions.count != depot.positions.count { depot = d }
+            base = d
             depotError = nil
         } catch {
             depotError = error.localizedDescription
@@ -127,10 +158,10 @@ final class MobileModel {
 
     // MARK: Prices
 
-    func refresh(force: Bool = false) async {
+    func refresh(force: Bool = false, only: Set<UUID>? = nil) async {
         guard !isRefreshing, !needsFolder else { return }
         isRefreshing = true
-        let summary = await engine.refresh(depot: depot, keys: [:], force: force)
+        let summary = await engine.refresh(depot: depot, keys: [:], force: force, only: only)
         await recompute()
         isRefreshing = false
         announce(summary.events)
@@ -233,6 +264,182 @@ final class MobileModel {
             let symbols = await engine.knownSymbols()
             watch.send(WatchSnapshot.make(depot: depot, snapshot: snapshot, ledger: ledger, symbols: symbols))
         }
+    }
+
+    // MARK: Editing
+
+    /// Applies a change and saves it right away, merged with what the Mac wrote meanwhile.
+    func change(backup: Bool = false, _ body: (inout DepotFile) -> Void) {
+        var d = depot
+        body(&d)
+        depot = d
+        if !isDemo, let folder {
+            if let written = DepotAccess.writeDepot(d, base: base, in: folder, backup: backup) {
+                base = written
+                if DepotMerge.fileChanged(base: d, theirs: written) { depot = written }
+                depotError = nil
+            } else {
+                depotError = "Speichern in iCloud Drive fehlgeschlagen. Die Änderung ist nur auf diesem iPhone und geht beim nächsten Lesen verloren."
+            }
+        }
+        Task { await recompute() }
+    }
+
+    func add(_ p: Position) {
+        change { $0.positions.append(p) }
+        selection = p.id
+        Task { await refresh(force: true, only: [p.id]) }
+    }
+
+    /// A new venue, ticker, ISIN, WKN or name: the value is looked up again from scratch.
+    func update(_ p: Position) {
+        guard let old = position(p.id) else { return }
+        change { d in
+            if let i = d.positions.firstIndex(where: { $0.id == p.id }) { d.positions[i] = p }
+        }
+        if old.listing != p.listing || old.isin != p.isin || old.wkn != p.wkn || old.name != p.name {
+            Task {
+                await engine.reset(listingKey: old.listing.key)
+                await engine.reset(listingKey: p.listing.key)
+                await refresh(force: true, only: [p.id])
+            }
+        }
+    }
+
+    /// Deletes values after a backup in iCloud Drive; "Rückgängig" brings them back for a few seconds.
+    func delete(_ ids: Set<UUID>) {
+        let gone = depot.positions.filter { ids.contains($0.id) }
+        guard !gone.isEmpty else { return }
+        undoPositions = gone
+        change(backup: true) { $0.positions.removeAll { ids.contains($0.id) } }
+        if let s = selection, ids.contains(s) { selection = nil }
+        marked.subtract(ids)
+        Task { for id in ids { await engine.forget(position: id) } }
+        undoText = gone.count == 1 ? "\u{201E}\(gone[0].name)\u{201C} gelöscht." : "\(gone.count) Werte gelöscht."
+    }
+
+    func assignBank(_ bank: UUID?, to ids: Set<UUID>) {
+        let name = bank.flatMap { depot.bank($0)?.name } ?? "Ohne Bank"
+        assign(ids, text: "Bank \u{201E}\(name)\u{201C}") { $0.bankID = bank }
+    }
+
+    func assignTheme(_ theme: UUID?, to ids: Set<UUID>) {
+        let name = theme.flatMap { depot.theme($0)?.name } ?? "Ohne Thema"
+        assign(ids, text: "Thema \u{201E}\(name)\u{201C}") { $0.themeID = theme }
+    }
+
+    private func assign(_ ids: Set<UUID>, text: String, _ apply: (inout Position) -> Void) {
+        guard !ids.isEmpty else { return }
+        undoPositions = depot.positions.filter { ids.contains($0.id) }
+        change { d in
+            for i in d.positions.indices where ids.contains(d.positions[i].id) { apply(&d.positions[i]) }
+        }
+        undoText = ids.count == 1 ? "\(text) für 1 Wert gesetzt." : "\(text) für \(ids.count) Werte gesetzt."
+    }
+
+    /// Puts back only the values the last delete or assignment touched.
+    func undo() {
+        guard let old = undoPositions else { return }
+        undoPositions = nil
+        undoText = nil
+        change { d in
+            for p in old {
+                if let i = d.positions.firstIndex(where: { $0.id == p.id }) { d.positions[i] = p } else { d.positions.append(p) }
+            }
+        }
+        Task { await refresh(force: true, only: Set(old.map(\.id))) }
+    }
+
+    /// "Ist dieselbe Firma": the source's company is this value after all; stored in the depot for every device.
+    func confirmCompany(_ p: Position, _ n: ListingNotice) {
+        guard let provider = n.provider, let symbol = n.symbol else { return }
+        let key = p.listing.key
+        change { d in
+            for i in d.positions.indices where d.positions[i].listing.key == key {
+                var c = d.positions[i].listing.confirmedSymbols ?? [:]
+                c[provider.rawValue] = symbol
+                d.positions[i].listing.confirmedSymbols = c
+            }
+        }
+        Task {
+            await engine.confirmedCompany(listingKey: key)
+            await refresh(force: true, only: [p.id])
+        }
+    }
+
+    // Banks and themes
+
+    var banks: [Bank] { depot.banks.sorted { $0.sortIndex < $1.sortIndex } }
+    var themes: [Theme] { depot.themes.sorted { $0.sortIndex < $1.sortIndex } }
+
+    func addBank(_ name: String) {
+        let n = name.trimmingCharacters(in: .whitespaces)
+        guard !n.isEmpty else { return }
+        change { $0.banks.append(Bank(name: n, sortIndex: ($0.banks.map(\.sortIndex).max() ?? -1) + 1)) }
+    }
+
+    func renameBank(_ id: UUID, _ name: String) {
+        let n = name.trimmingCharacters(in: .whitespaces)
+        guard !n.isEmpty, depot.bank(id)?.name != n else { return }
+        change { d in if let i = d.banks.firstIndex(where: { $0.id == id }) { d.banks[i].name = n } }
+    }
+
+    /// Values of a deleted bank stay, they move to "Ohne Bank".
+    func deleteBanks(_ ids: [UUID]) {
+        change { d in
+            d.banks.removeAll { ids.contains($0.id) }
+            for i in d.positions.indices where d.positions[i].bankID.map(ids.contains) == true { d.positions[i].bankID = nil }
+        }
+    }
+
+    func moveBanks(from: IndexSet, to: Int) {
+        var list = banks
+        list.move(fromOffsets: from, toOffset: to)
+        let order = Dictionary(uniqueKeysWithValues: list.enumerated().map { ($1.id, $0) })
+        change { d in for i in d.banks.indices { d.banks[i].sortIndex = order[d.banks[i].id] ?? i } }
+    }
+
+    func addTheme(_ name: String) {
+        let n = name.trimmingCharacters(in: .whitespaces)
+        guard !n.isEmpty else { return }
+        let palette = ["#C8A200", "#2D6CB5", "#15774A", "#C1352A", "#7A4FB0", "#2E8C8C", "#9C5B2E"]
+        change { d in
+            d.themes.append(Theme(name: n, sortIndex: (d.themes.map(\.sortIndex).max() ?? -1) + 1, color: palette[d.themes.count % palette.count]))
+        }
+    }
+
+    func renameTheme(_ id: UUID, _ name: String) {
+        let n = name.trimmingCharacters(in: .whitespaces)
+        guard !n.isEmpty, depot.theme(id)?.name != n else { return }
+        change { d in if let i = d.themes.firstIndex(where: { $0.id == id }) { d.themes[i].name = n } }
+    }
+
+    func recolorTheme(_ id: UUID, _ hex: String) {
+        guard depot.theme(id)?.color != hex else { return }
+        change { d in if let i = d.themes.firstIndex(where: { $0.id == id }) { d.themes[i].color = hex } }
+    }
+
+    func deleteThemes(_ ids: [UUID]) {
+        change { d in
+            d.themes.removeAll { ids.contains($0.id) }
+            for i in d.positions.indices where d.positions[i].themeID.map(ids.contains) == true { d.positions[i].themeID = nil }
+        }
+    }
+
+    func moveThemes(from: IndexSet, to: Int) {
+        var list = themes
+        list.move(fromOffsets: from, toOffset: to)
+        let order = Dictionary(uniqueKeysWithValues: list.enumerated().map { ($1.id, $0) })
+        change { d in for i in d.themes.indices { d.themes[i].sortIndex = order[d.themes[i].id] ?? i } }
+    }
+
+    // Search for the add sheet and for changing the venue
+
+    func search(_ query: String) async -> [[ListingOption]] {
+        let q = query.trimmingCharacters(in: .whitespaces)
+        guard q.count >= 2 else { return [] }
+        let cands = await engine.search(q, depot: depot, keys: [:])
+        return ListingOption.build(cands, query: q, catalog: catalog)
     }
 
     // MARK: Navigation

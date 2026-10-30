@@ -48,6 +48,23 @@ enum DepotAccess {
         return try result.get()
     }
 
+    /// Saves the depot, merged with what the Mac wrote since `base`, coordinated with iCloud. Optionally backs up first.
+    static func writeDepot(_ mine: DepotFile, base: DepotFile?, in folder: URL, backup: Bool) -> DepotFile? {
+        let file = folder.appendingPathComponent(depotName)
+        let store = stores[file] ?? DepotStore(url: file)
+        stores[file] = store
+        var out: DepotFile?
+        var coordError: NSError?
+        NSFileCoordinator().coordinate(writingItemAt: file, options: .forMerging, error: &coordError) { _ in
+            if backup { store.backupNow() }
+            out = try? store.saveMerging(mine, base: base)
+        }
+        return coordError == nil ? out : nil
+    }
+
+    /// One store per file, so the hourly backup is not made on every save.
+    nonisolated(unsafe) private static var stores: [URL: DepotStore] = [:]
+
     /// Reads and writes the shared ledger ("Mitteilungen.json") without overwriting what the Mac wrote at the same moment.
     static func updateLedger<T>(in folder: URL, _ change: (inout NotificationLedger) -> T) -> (T, NotificationLedger)? {
         let file = LedgerFile(folder: folder)

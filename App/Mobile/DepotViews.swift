@@ -18,9 +18,20 @@ struct RootView: View {
                     DepotListView()
                         .navigationTitle("Watchdog")
                         .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button { model.showSettings = true } label: { Image(systemName: "gearshape") }
-                                    .accessibilityLabel("Einstellungen")
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button(model.isSelecting ? "Fertig" : "Auswählen") {
+                                    model.isSelecting.toggle()
+                                    model.marked = []
+                                }
+                                .disabled(model.depot.positions.isEmpty && !model.isSelecting)
+                            }
+                            ToolbarItemGroup(placement: .topBarTrailing) {
+                                if !model.isSelecting {
+                                    Button { model.editor = .add } label: { Image(systemName: "plus") }
+                                        .accessibilityLabel("Wert hinzufügen")
+                                    Button { model.showSettings = true } label: { Image(systemName: "gearshape") }
+                                        .accessibilityLabel("Einstellungen")
+                                }
                             }
                         }
                         .navigationSplitViewColumnWidth(min: 340, ideal: 560, max: 900)
@@ -40,6 +51,8 @@ struct RootView: View {
         // Dots, gauges and spacing grow with the system text size; the text itself scales on its own.
         .environment(\.uiScale, Self.scale(typeSize))
         .sheet(isPresented: $m.showSettings) { MobileSettingsView() }
+        .sheet(item: $m.editor) { MobileEditor(target: $0) }
+        .overlay(alignment: .bottom) { UndoBanner() }
     }
 }
 
@@ -67,7 +80,7 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 18) {
                 Image(systemName: "chart.line.uptrend.xyaxis").font(.system(size: 44)).foregroundStyle(Palette.signal)
                 Text("Watchdog auf dem iPhone").type(26, .bold).foregroundStyle(Palette.ink)
-                Text("Das iPhone zeigt dasselbe Depot wie der Mac. Werte werden am Mac angelegt und bearbeitet; die Mac-App legt das Depot in iCloud Drive im Ordner \u{201E}Watchdog\u{201C} ab.")
+                Text("Das iPhone zeigt und bearbeitet dasselbe Depot wie der Mac. Die Mac-App legt es in iCloud Drive im Ordner \u{201E}Watchdog\u{201C} ab.")
                     .type(16).foregroundStyle(Palette.ink)
                 Text("Bitte diesen Ordner einmal auswählen. Danach liest Watchdog ihn bei jedem Start von selbst.")
                     .type(16).foregroundStyle(Palette.inkSoft)
@@ -109,52 +122,140 @@ private enum Col {
 
 struct DepotListView: View {
     @Environment(MobileModel.self) private var model
+    @State private var pendingDelete: Set<UUID> = []
 
     var body: some View {
         @Bindable var m = model
-        List(selection: $m.selection) {
-            SummaryHeader()
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowBackground(Palette.canvas)
-                .listRowSeparator(.hidden)
-            Picker("Gruppierung", selection: $m.grouping) {
-                ForEach(MobileModel.Grouping.allCases) { Text($0.rawValue).tag($0) }
-            }
-            .pickerStyle(.segmented)
-            .listRowBackground(Palette.canvas)
-            .listRowSeparator(.hidden)
-            ColumnHeader()
-                .listRowBackground(Palette.canvas)
-                .listRowSeparator(.hidden)
-            if model.depot.positions.isEmpty {
-                Text(model.depotError ?? "Das Depot ist leer. Werte werden in der Mac-App angelegt.")
-                    .type(15).foregroundStyle(Palette.inkSoft)
-                    .listRowBackground(Palette.canvas)
-            }
-            ForEach(model.sections) { s in
-                Section {
-                    ForEach(s.positions) { p in
-                        PositionRow(position: p)
-                            .tag(p.id)
-                            .focusEffectDisabled()
-                            .listRowBackground(model.selection == p.id ? Palette.selection : Palette.surface)
-                            .listRowSeparatorTint(Palette.rule)
-                    }
-                } header: {
-                    HStack(spacing: 8) {
-                        if let c = s.color { Circle().fill(c).frame(width: 9, height: 9) }
-                        Text(s.title).type(15, .semibold).foregroundStyle(Palette.ink)
-                        Text(s.positions.count == 1 ? "1 Wert" : "\(s.positions.count) Werte").type(12).foregroundStyle(Palette.inkSoft)
-                        Spacer()
-                    }
-                    .textCase(nil)
-                }
+        Group {
+            if model.isSelecting {
+                List(selection: $m.marked) { content }
+                    .environment(\.editMode, .constant(.active))
+            } else {
+                List(selection: $m.selection) { content }
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Palette.canvas)
         .refreshable { await model.refresh(force: true) }
+        .toolbar {
+            if model.isSelecting {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    SelectionActions(ids: model.marked) { pendingDelete = $0 }
+                }
+            }
+        }
+        .confirmationDialog(pendingDelete.count == 1 ? "1 Wert löschen?" : "\(pendingDelete.count) Werte löschen?",
+                            isPresented: Binding(get: { !pendingDelete.isEmpty }, set: { if !$0 { pendingDelete = [] } }),
+                            titleVisibility: .visible) {
+            Button("Löschen", role: .destructive) {
+                model.delete(pendingDelete)
+                pendingDelete = []
+            }
+        } message: {
+            Text("Vorher wird das Depot in iCloud Drive gesichert. Direkt danach lässt es sich rückgängig machen.")
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        @Bindable var m = model
+        SummaryHeader()
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .listRowBackground(Palette.canvas)
+            .listRowSeparator(.hidden)
+        Picker("Gruppierung", selection: $m.grouping) {
+            ForEach(MobileModel.Grouping.allCases) { Text($0.rawValue).tag($0) }
+        }
+        .pickerStyle(.segmented)
+        .listRowBackground(Palette.canvas)
+        .listRowSeparator(.hidden)
+        ColumnHeader()
+            .listRowBackground(Palette.canvas)
+            .listRowSeparator(.hidden)
+        if model.depot.positions.isEmpty {
+            Text(model.depotError ?? "Das Depot ist leer. Mit + oben rechts einen Wert hinzufügen.")
+                .type(15).foregroundStyle(Palette.inkSoft)
+                .listRowBackground(Palette.canvas)
+        } else if let e = model.depotError {
+            Text(e).type(13).foregroundStyle(Palette.down).listRowBackground(Palette.canvas)
+        }
+        ForEach(model.sections) { s in
+            Section {
+                ForEach(s.positions) { p in
+                    PositionRow(position: p)
+                        .tag(p.id)
+                        .focusEffectDisabled()
+                        .listRowBackground(model.selection == p.id && !model.isSelecting ? Palette.selection : Palette.surface)
+                        .listRowSeparatorTint(Palette.rule)
+                        .swipeActions(edge: .trailing) {
+                            Button("Löschen", role: .destructive) { pendingDelete = [p.id] }
+                            Button("Bearbeiten") { model.editor = .edit(p.id) }.tint(Palette.inkSoft)
+                        }
+                }
+            } header: {
+                HStack(spacing: 8) {
+                    if let c = s.color { Circle().fill(c).frame(width: 9, height: 9) }
+                    Text(s.title).type(15, .semibold).foregroundStyle(Palette.ink)
+                    Text(s.positions.count == 1 ? "1 Wert" : "\(s.positions.count) Werte").type(12).foregroundStyle(Palette.inkSoft)
+                    Spacer()
+                }
+                .textCase(nil)
+            }
+        }
+    }
+}
+
+/// Bottom bar in selection mode: bank and theme for all marked values, or delete them.
+struct SelectionActions: View {
+    @Environment(MobileModel.self) private var model
+    let ids: Set<UUID>
+    let delete: (Set<UUID>) -> Void
+
+    var body: some View {
+        Menu("Bank") {
+            ForEach(model.banks) { b in Button(b.name) { model.assignBank(b.id, to: ids) } }
+            Button("Ohne Bank") { model.assignBank(nil, to: ids) }
+        }
+        .disabled(ids.isEmpty)
+        Spacer()
+        Text(ids.isEmpty ? "Werte antippen" : ids.count == 1 ? "1 ausgewählt" : "\(ids.count) ausgewählt")
+            .font(.footnote).foregroundStyle(Palette.inkSoft)
+        Spacer()
+        Menu("Thema") {
+            ForEach(model.themes) { t in Button(t.name) { model.assignTheme(t.id, to: ids) } }
+            Button("Ohne Thema") { model.assignTheme(nil, to: ids) }
+        }
+        .disabled(ids.isEmpty)
+        Button(role: .destructive) { delete(ids) } label: { Image(systemName: "trash") }
+            .disabled(ids.isEmpty)
+            .accessibilityLabel("Ausgewählte löschen")
+    }
+}
+
+/// "3 Werte gelöscht." with an undo button, for 15 seconds.
+struct UndoBanner: View {
+    @Environment(MobileModel.self) private var model
+
+    var body: some View {
+        if let text = model.undoText {
+            HStack(spacing: 12) {
+                Text(text).type(14).foregroundStyle(Palette.ink).lineLimit(2)
+                Spacer(minLength: 8)
+                Button("Rückgängig") { model.undo() }.type(14, .semibold)
+            }
+            .padding(14)
+            .background(Palette.surface, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Palette.rule))
+            .shadow(color: .black.opacity(0.15), radius: 8, y: 2)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 24)
+            .transition(.move(edge: .bottom).combined(with: .opacity))
+            .task(id: text) {
+                try? await Task.sleep(nanoseconds: 15_000_000_000)
+                if model.undoText == text { withAnimation { model.undoText = nil } }
+            }
+        }
     }
 }
 

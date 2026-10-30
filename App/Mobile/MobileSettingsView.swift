@@ -14,8 +14,9 @@ struct MobileSettingsView: View {
                     LabeledContent("Ordner", value: model.isDemo ? "Beispieldepot" : (model.folder?.lastPathComponent ?? "nicht gewählt"))
                     LabeledContent("Werte", value: "\(model.depot.positions.count)")
                     if let e = model.depotError { Text(e).foregroundStyle(Palette.down) }
+                    NavigationLink("Banken und Themen") { GroupsView() }
                     if !model.isDemo { Button("Anderen Ordner wählen") { picking = true } }
-                    Text("Werte werden in der Mac-App angelegt, bearbeitet und importiert. Das iPhone liest das Depot aus iCloud Drive.")
+                    Text("Mac und iPhone bearbeiten dasselbe Depot in iCloud Drive. Speichern beide kurz nacheinander, bleiben die Änderungen beider erhalten. Importieren und die übrigen Einstellungen gehen am Mac.")
                         .font(.footnote).foregroundStyle(Palette.inkSoft)
                 }
                 Section("Mitteilungen") {

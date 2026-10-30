@@ -16,7 +16,7 @@ struct PositionDetailView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     header(p, m)
                     if let f = model.freshness(p), f.isProblem || f.level == .noTradeToday { freshnessNotice(f) }
-                    if let n = model.notice(p) { tickerNotice(n) }
+                    if let n = model.notice(p) { tickerNotice(n, p) }
                     if m?.quoteSuspect == true {
                         box(icon: "questionmark", caution: true, title: "Kurs unbestätigt",
                             text: model.snapshot?.status[p.listing.key]?.plausibilityNote ?? "Großer Kurssprung, den keine zweite Quelle bestätigt. Signale warten auf den Schlusskurs.")
@@ -33,6 +33,11 @@ struct PositionDetailView: View {
             .background(Palette.canvas)
             .navigationTitle(p.name)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Bearbeiten") { model.editor = .edit(p.id) }
+                }
+            }
             .task(id: "\(id)|\(range.rawValue)|\(model.snapshot?.lastRefresh?.timeIntervalSince1970 ?? 0)") { await loadChart(p) }
         }
     }
@@ -99,9 +104,17 @@ struct PositionDetailView: View {
         return box(icon: f.isProblem ? "exclamationmark.triangle.fill" : "clock", caution: f.isProblem, title: title, text: text)
     }
 
-    private func tickerNotice(_ n: ListingNotice) -> some View {
-        let extra = n.needsUser ? "\nBestätigen oder korrigieren lässt sich das in der Mac-App." : ""
-        return box(icon: n.needsUser ? "questionmark.circle.fill" : "checkmark.circle", caution: n.needsUser, title: n.headline, text: n.detail + extra)
+    private func tickerNotice(_ n: ListingNotice, _ p: Position) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            box(icon: n.needsUser ? "questionmark.circle.fill" : "checkmark.circle", caution: n.needsUser, title: n.headline, text: n.detail)
+            if n.needsUser, n.symbol != nil, n.provider != nil {
+                HStack(spacing: 18) {
+                    Button("Ist dieselbe Firma") { model.confirmCompany(p, n) }.type(15, .semibold)
+                    Button("Wert bearbeiten") { model.editor = .edit(p.id) }.type(15)
+                }
+                .padding(.leading, 12)
+            }
+        }
     }
 
     private func verdict(_ m: PositionMetrics?) -> some View {
