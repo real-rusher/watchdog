@@ -1,0 +1,24 @@
+Xcode 16.4
+Build version 16F6
+ProductName:		macOS
+ProductVersion:		15.8.2
+BuildVersion:		24H232
+Version: 2.46.0
+signature ok
+x86_64 arm64
+total 21640
+drwxr-xr-x  15 runner  staff      480 Oct 30 21:09 .
+drwxr-xr-x  12 runner  staff      384 Oct 30 21:09 ..
+-rw-r--r--   1 runner  staff        0 Oct 30 21:07 app-stress.log
+-rw-r--r--   1 runner  staff     2191 Oct 30 21:07 app.log
+-rw-r--r--   1 runner  staff     3600 Oct 30 21:02 build-tail.txt
+-rw-r--r--   1 runner  staff   130765 Oct 30 21:02 build.log
+-rw-r--r--   1 runner  staff    28293 Oct 30 21:03 core-tests-mac.txt
+-rw-r--r--   1 runner  staff     2437 Oct 30 21:05 fxcheck-mac.txt
+drwxr-xr-x  31 runner  staff      992 Oct 30 21:07 shots
+drwxr-xr-x  32 runner  staff     1024 Oct 30 21:09 stress
+-rw-r--r--   1 runner  staff     6046 Oct 30 21:05 verify-mac.txt
+-rw-r--r--   1 runner  staff      138 Oct 30 21:09 versions.txt
+-rw-r--r--   1 runner  staff      334 Oct 30 21:02 warnings.txt
+-rw-r--r--@  1 runner  staff  5831441 Oct 30 21:09 Watchdog.dmg
+-rw-r--r--   1 runner  staff  5051850 Oct 30 21:09 Watchdog.zip

@@ -1,0 +1,120 @@
+snapshot start 2026-10-30 21:05:39 +0000 stress=false
+refresh done: Optional(13) quotes, failures Optional(0)
+Cameco | Kurs 68,96 € | Wert 8.275,20 € | heute -7,1 % | seit Kauf +376 % | 1.1. -12,9 % | 30T -9,9 % | Ampel red
+Paladin Energy | Kurs 4,709 € | (7,47 AUD) | Wert 1.883,75 € | heute -5,6 % | seit Kauf +16,3 % | 1.1. -13,7 % | 30T -19,1 % | Ampel red
+NexGen Energy | Kurs 7,403 € | (11,54 CAD) | Wert 3.331,41 € | heute -4,4 % | seit Kauf +52,1 % | 1.1. -5,7 % | 30T -8,1 % | Ampel red
+Yellow Cake | Kurs 6,361 € | (5,30 £) | Wert 1.590,25 € | heute -0,6 % | seit Kauf -10,7 % | 1.1. -6,2 % | 30T +0,2 % | Ampel red
+Skyharbour Resources | Kurs 0,2181 € | (0,34 CAD) | Wert - | heute -0,1 % | seit Kauf - | 1.1. -14,4 % | 30T -2,4 % | Ampel red
+Equinor | Kurs 43,58 € | (447,50 NOK) | Wert 3.486,59 € | heute +3,4 % | seit Kauf +279 % | 1.1. +117 % | 30T +18,9 % | Ampel green
+TotalEnergies | Kurs 85,43 € | Wert 3.417,20 € | heute +1,0 % | seit Kauf +66,7 % | 1.1. +53,7 % | 30T +12,9 % | Ampel green
+Eni | Kurs 27,14 € | Wert 4.070,25 € | heute +0,9 % | seit Kauf +109 % | 1.1. +68,1 % | 30T +13,0 % | Ampel green
+Newmont | Kurs 95,48 € | (106,61 $) | Wert 9.547,73 € | heute -4,9 % | seit Kauf +512 % | 1.1. +12,4 % | 30T -6,0 % | Ampel red frisch
+Toyota Motor | Kurs 17,46 € | (3.070,00 ¥) | Wert 1.746,14 € | heute -0,2 % | seit Kauf +51,8 % | 1.1. -4,5 % | 30T +6,6 % | Ampel red
+SAP | Kurs 211,25 € | Wert 5.281,25 € | heute +1,1 % | seit Kauf +122 % | 1.1. +1,4 % | 30T +13,8 % | Ampel green
+Nestlé | Kurs 92,05 € | (84,70 CHF) | Wert - | heute +2,5 % | seit Kauf - | 1.1. +8,6 % | 30T +14,8 % | Ampel green
+Bitcoin | Kurs 68.910,08 € | (76.945,00 $) | Wert 10.336,51 € | heute -3,9 % | seit Kauf +331 % | 1.1. -7,7 % | 30T -6,4 % | Ampel green
+screen (0.0, 59.0, 1024.0, 684.0), scroller legacy=true
+captured 1-main-light 1500x684
+captured 2-detail-light 1500x684
+captured 1-main-dark 1500x684
+captured 2-detail-dark 1500x684
+captured 2b-toyota-euro 1500x684
+captured 2c-toyota-yen 1500x684
+TOYOTA Kurs 3.070,00 ¥ = 17,46 €, Kurs 1 € = 175.8160 JPY, live true
+LIVEFX AUD 1 € = 1.5862 (2026-10-30 21:04:43 +0000)
+LIVEFX CAD 1 € = 1.5588 (2026-10-30 21:04:43 +0000)
+LIVEFX CHF 1 € = 0.9202 (2026-10-30 21:04:43 +0000)
+LIVEFX GBP 1 € = 0.8332 (2026-10-30 21:04:43 +0000)
+LIVEFX JPY 1 € = 175.8160 (2026-10-30 21:04:43 +0000)
+LIVEFX NOK 1 € = 10.2679 (2026-10-30 21:04:43 +0000)
+LIVEFX USD 1 € = 1.1166 (2026-10-30 21:05:43 +0000)
+captured 7-outage-light 1500x684
+captured 3-themes-dark 1500x684
+captured 4-narrow-light 760x684
+captured 5-add-light 620x644
+captured 6-settings-sources 760x680
+captured 6-settings-signals 760x680
+captured 6-settings-notifications 760x680
+captured 6-settings-exchanges 760x680
+BEISPIEL Titel: TEST Cameco: fällt unter die 200-Tage-Linie | Text: Kurs 68,96 € · 200-Tage-Linie 89,86 € · Abstand -23,3 % · Tradegate · 30.10. · Beispiel, kein echtes Signal
+BEISPIEL ntfy: angekommen {"id":"OxReyWBpj4sU","time":1793394390,"expires":1793437590,"event":"message","topic":"watchdog-b75ms8y7vmvk3rd7","title":"TEST Cameco: fällt unter die 200-Tage-Linie","message":"Kurs 68,96 € · 200-Tage-Linie 89,86 € · Abstand -23,3 % · Tradegate · 30.10. · Beispiel, kein echtes Signal","priority":4,"tags":["red_circle","chart_with_downwards_trend"]}
+
+KORREKTUR Alico: AOE -> ALCO symbols ["yahoo": "ALCO"] | Kurs 37,40 $ vom 2026-10-30 20:00:01 +0000 | Hinweis -: 
+   Abfragen: Yahoo Finance: ok; Yahoo Finance: ok
+KORREKTUR IMMUCELL CORP. DL-,10: IUL -> ICCC symbols ["yahoo": "ICCC"] | Kurs 10,26 $ vom 2026-10-30 20:00:00 +0000 | Hinweis -: 
+   Abfragen: Yahoo Finance: ok; Yahoo Finance: ok
+KORREKTUR Metalla Royalty & Streaming: FCA.UN -> MTA symbols ["yahoo": "MTA.V"] | Kurs 10,01 CAD vom 2026-10-30 19:59:59 +0000 | Hinweis Kürzel korrigiert: Yahoo Finance lieferte unter FCA-UN.V Daten einer anderen Firma (Firm Capital Apartment Real Estate Investment Trust). Kürzel FCA.UN durch MTA ersetzt; diese Daten wurden verworfen und Kurs und Verlauf neu geladen.
+   Abfragen: Yahoo Finance: ok; Yahoo Finance: ok
+KORREKTUR DGH INTERNATIONAL AB: AXL1 -> AXL1 symbols [:] | Kurs - vom - | Hinweis Kürzel prüfen: Yahoo Finance liefert unter AXL1.F Daten einer anderen Firma (Axfood AB (publ)), der Wert heißt „DGH INTERNATIONAL AB“. Diese Daten werden nicht verwendet. Der Wert hat keine ISIN, deshalb lässt sich das richtige Kürzel nicht von selbst finden. Abhilfe: Wert bearbeiten und die ISIN eintragen oder die Börse neu auswählen; Watchdog sucht dann sofort neu. Oder bestätigen, dass es dieselbe Firma ist. Solange gibt es für diesen Wert keine Kurse.
+   Abfragen: Yahoo Finance: kennt den Wert nicht; OnVista: kennt den Wert nicht; Financial Times: kennt den Wert nicht
+   Daten: missing keine Kurse
+KORREKTUR Google: GOOGL -> GOOGL symbols [:] | Kurs 279,84 $ vom 2026-10-30 20:00:00 +0000 | Hinweis Kürzel prüfen: Yahoo Finance liefert unter GOOGL Daten einer anderen Firma (Alphabet Inc.), der Wert heißt „Google“. Diese Daten werden nicht verwendet. Über die ISIN ließ sich kein passendes Kürzel finden. Bitte Kürzel und ISIN des Werts prüfen, oder bestätigen, dass es dieselbe Firma ist. Kurs und Verlauf kommen solange von OnVista, deren Name passt.
+   Abfragen: Yahoo Finance: kennt den Wert nicht; OnVista: ok; Yahoo Finance: liefert unter GOOGL eine andere Firma (Alphabet Inc.); OnVista: ok
+captured 8-corrected-light 1500x684
+captured 9-corrected-detail-light 1500x684
+captured 9b-check-detail-light 1500x684
+captured 9c-confirm-detail-light 1500x684
+captured 8-corrected-dark 1500x684
+captured 9-corrected-detail-dark 1500x684
+captured 9b-check-detail-dark 1500x684
+captured 9c-confirm-detail-dark 1500x684
+BESTÄTIGT Google: confirmedSymbols ["yahoo": "GOOGL"]
+KORREKTUR Alico: AOE -> ALCO symbols ["yahoo": "ALCO"] | Kurs 37,40 $ vom 2026-10-30 20:00:01 +0000 | Hinweis -: 
+   Abfragen: Yahoo Finance: ok; Yahoo Finance: ok
+KORREKTUR IMMUCELL CORP. DL-,10: IUL -> ICCC symbols ["yahoo": "ICCC"] | Kurs 10,26 $ vom 2026-10-30 20:00:00 +0000 | Hinweis -: 
+   Abfragen: Yahoo Finance: ok; Yahoo Finance: ok
+KORREKTUR Metalla Royalty & Streaming: FCA.UN -> MTA symbols ["yahoo": "MTA.V"] | Kurs 10,01 CAD vom 2026-10-30 19:59:59 +0000 | Hinweis Kürzel korrigiert: Yahoo Finance lieferte unter FCA-UN.V Daten einer anderen Firma (Firm Capital Apartment Real Estate Investment Trust). Kürzel FCA.UN durch MTA ersetzt; diese Daten wurden verworfen und Kurs und Verlauf neu geladen.
+   Abfragen: Yahoo Finance: ok; Yahoo Finance: ok
+KORREKTUR DGH INTERNATIONAL AB: AXL1 -> AXL1 symbols [:] | Kurs - vom - | Hinweis Kürzel prüfen: Yahoo Finance liefert unter AXL1.F Daten einer anderen Firma (Axfood AB (publ)), der Wert heißt „DGH INTERNATIONAL AB“. Diese Daten werden nicht verwendet. Der Wert hat keine ISIN, deshalb lässt sich das richtige Kürzel nicht von selbst finden. Abhilfe: Wert bearbeiten und die ISIN eintragen oder die Börse neu auswählen; Watchdog sucht dann sofort neu. Oder bestätigen, dass es dieselbe Firma ist. Solange gibt es für diesen Wert keine Kurse.
+   Abfragen: Yahoo Finance: kennt den Wert nicht; OnVista: kennt den Wert nicht; Financial Times: kennt den Wert nicht
+   Daten: missing keine Kurse
+KORREKTUR Google: GOOGL -> GOOGL symbols [:] | Kurs 279,84 $ vom 2026-10-30 20:00:01 +0000 | Hinweis -: 
+   Abfragen: Yahoo Finance: ok
+captured 9d-confirmed-light 1500x684
+IMPORT depot_openpyxl.xlsx: Blatt Depot, Spalten Wertpapier=Name, ISIN=ISIN, WKN=WKN, Stück=Stück, Kaufkurs in EUR=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Börse=Börse, Depot=Bank/Depot, Thema=Thema, Notiz=Notiz
+   Cameco Corp. [CA13321L1085] 150 Stk, 2.976,00 € => Tradegate CJ6
+   Toyota Motor Corp. [JP3633400001] 100 Stk, 1.150,00 € => Tokio 7203
+   Equinor ASA [NO0010096985] 12,145 Stk, 287,84 € => Euronext Oslo EQNR
+   Kazatomprom GDR [US63253R2013] - Stk, ohne Preis => London KAP.IL
+IMPORT depot_libreoffice.xlsx: Blatt Depot, Spalten Wertpapier=Name, ISIN=ISIN, WKN=WKN, Stück=Stück, Kaufkurs in EUR=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Börse=Börse, Depot=Bank/Depot, Thema=Thema, Notiz=Notiz
+   Cameco Corp. [CA13321L1085] 150 Stk, 2.976,00 € => Tradegate CJ6
+   Toyota Motor Corp. [JP3633400001] 100 Stk, 1.150,00 € => Tokio 7203
+   Equinor ASA [NO0010096985] 12,145 Stk, 287,84 € => Euronext Oslo EQNR
+   Kazatomprom GDR [US63253R2013] - Stk, ohne Preis => London KAP.IL
+IMPORT depot.ods: Blatt Depot, Spalten Wertpapier=Name, ISIN=ISIN, WKN=WKN, Stück=Stück, Kaufkurs in EUR=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Börse=Börse, Depot=Bank/Depot, Thema=Thema, Notiz=Notiz
+   Cameco Corp. [CA13321L1085] 150 Stk, 2.976,00 € => Tradegate CJ6
+   Toyota Motor Corp. [JP3633400001] 100 Stk, 1.150,00 € => Tokio 7203
+   Equinor ASA [NO0010096985] 12,145 Stk, 287,84 € => Euronext Oslo EQNR
+   Kazatomprom GDR [US63253R2013] - Stk, ohne Preis => London KAP.IL
+IMPORT comdirect_umsaetze.csv: Blatt comdirect_umsaetze.csv, Spalten Buchungstag=Nicht verwenden, Geschäftstag=Kaufdatum, Stück / Nom.=Stück, Bezeichnung=Name, WKN=WKN, Währung=Währung, Ausführungskurs=Kaufkurs pro Stück, Umsatz in EUR=Kaufwert gesamt
+   UBS-ETF-MSCI WLD.S.R.DLAD [A1JA1R] 2,5 Stk, 249,96 € => Tradegate UIMM
+   UBS-ETF-MSCI E.MA.S.R.ADL [A110QD] 12,145 Stk, 150,00 € => Tradegate UEF5
+   CAMECO CORP. [882017] 100 Stk, 2.251,00 € => Tradegate CJ6
+   Müller Hdl. AG [A0LDTA] 10 Stk, 10.205,00 € => NICHT GEFUNDEN: Kein eindeutiger Treffer, bitte von Hand hinzufügen
+IMPORT excel_unicode.txt: Blatt excel_unicode.txt, Spalten Name=Name, ISIN=ISIN, Anzahl=Stück, Kaufwert=Kaufwert gesamt, Kaufdatum=Kaufdatum
+   SAP SE [DE0007164600] 25 Stk, 2.380,00 € => Tradegate SAP
+   Nestlé S.A. [CH0038863350] 10 Stk, 1.050,00 € => Tradegate NESR
+IMPORT mac_roman.csv: Blatt mac_roman.csv, Spalten Bezeichnung=Name, ISIN=ISIN, Stück=Stück, Kaufkurs=Kaufkurs pro Stück, Kaufdatum=Kaufdatum, Thema=Thema
+   Nestlé [CH0038863350] 10 Stk, 1.050,00 € => Tradegate NESR
+   Österreichische Post [AT0000APOST4] 40 Stk, 1.260,00 € => Tradegate O3P
+IMPORT english_broker.csv: Blatt english_broker.csv, Spalten Symbol=Kürzel, Description=Name, Quantity=Stück, Cost Basis=Kaufwert gesamt, Date Acquired=Kaufdatum, Currency=Währung
+   NEWMONT CORP [NEM] 100 Stk, 1.712,40 $ => Tradegate NEM
+   CAMECO CORP [CCJ] 1.200 Stk, 17.880,00 $ => Tradegate CJ6
+IMPORT isin_liste.txt: Blatt isin_liste.txt, Spalten Spalte 1=ISIN
+   CA13321L1085 [CA13321L1085] - Stk, ohne Preis => Tradegate CJ6
+   JP3633400001 [JP3633400001] - Stk, ohne Preis => Tradegate TOM
+   NO0010096985 [NO0010096985] - Stk, ohne Preis => Tradegate DNQ
+IMPORT namen_liste.txt: Blatt namen_liste.txt, Spalten Spalte 1=Name
+   Cameco [] - Stk, ohne Preis => Tradegate CJ6
+   Paladin Energy [] - Stk, ohne Preis => Tradegate PUR
+   NexGen Energy [] - Stk, ohne Preis => Tradegate 6NE
+IMPORT depot_alt.xls: Hinweis: Das ist eine alte Excel-Datei (.xls). Bitte in Excel über Datei > Speichern unter als Excel-Arbeitsmappe (.xlsx) oder CSV speichern.
+IMPORT gesamt: 27 von 28 gefunden
+captured 8-import-xlsx 880x644
+captured 8-import-xlsx-dark 880x644
+captured 8-import-result 880x644
+IMPORT übernommen: 1 neue Positionen, ergänzt: ["Cameco Corp.", "Toyota Motor Corp.", "Equinor ASA"], nicht gefunden: []
+NEU Kazatomprom GDR XLON KAP.IL: Kurs 54,81 €, Wert -, seit Kauf -, Käufe 0
+captured 8-after-import 1500x684
+captured 8-import-empty 880x644
+done

@@ -1,0 +1,78 @@
+snapshot start 2026-10-30 21:07:53 +0000 stress=true
+refresh done: Optional(39) quotes, failures Optional(2)
+Compagnie Financière Richemont SA Namensaktien A | Kurs 164,82 € | (151,54 CHF) | Wert 206.027,88 € | heute +1,5 % | seit Kauf +37,4 % | 1.1. +16,1 % | 30T +9,3 % | Ampel green
+Berkshire Hathaway Inc. Class A | Kurs 675.775,51 € | (754.976,40 $) | Wert 2.027.326,52 € | heute +0,8 % | seit Kauf +42,8 % | 1.1. +21,7 % | 30T +5,8 % | Ampel green
+Mini Penny Mining Corp. | Kurs 0,000585 € | (0,000914 CAD) | Wert 1.463,64 € | heute +1,0 % | seit Kauf -83,7 % | 1.1. -33,1 % | 30T -4,1 % | Ampel red
+Rakete Biotech | Kurs 79,90 € | (89,26 $) | Wert 798.978,59 € | heute +0,8 % | seit Kauf +6.558 % | 1.1. +885 % | 30T +32,2 % | Ampel green
+Riesenposition Versorger AG | Kurs 129,08 € | Wert 12.907.895,80 € | heute +1,2 % | seit Kauf +30,8 % | 1.1. +12,2 % | 30T +11,2 % | Ampel green
+Ohne Kaufpreis AG | Kurs 51,52 € | Wert 15.457,38 € | heute +1,2 % | seit Kauf - | 1.1. +15,8 % | 30T -2,0 % | Ampel green
+Toyota Motor Corp. | Kurs 16,88 € | (2.965,55 ¥) | Wert 6.752,16 € | heute +1,3 % | seit Kauf +29,8 % | 1.1. +25,3 % | 30T +10,6 % | Ampel green
+Yellow Cake plc | Kurs 6,302 € | (5,255 £) | Wert 12.604,23 € | heute +1,4 % | seit Kauf +34,1 % | 1.1. +22,7 % | 30T +5,4 % | Ampel green
+Frisch gefallen Uranium Ltd. | Kurs 11,39 € | Wert 5.694,40 € | heute 0,0 % | seit Kauf -5,1 % | 1.1. -12,3 % | 30T -35,9 % | Ampel red frisch
+Frisch gestiegen Gold Corp. | Kurs 34,20 € | Wert 6.840,18 € | heute 0,0 % | seit Kauf -2,3 % | 1.1. +32,4 % | 30T +53,0 % | Ampel green frisch
+Knapp an der Linie SE | Kurs 63,34 € | Wert 3.167,25 € | heute 0,0 % | seit Kauf +5,6 % | 1.1. +4,5 % | 30T -3,3 % | Ampel yellow frisch
+Absturz AG (Kurs unbestätigt) | Kurs 11,87 € | Wert 11.874,73 € | heute -48,0 % | seit Kauf -43,5 % | 1.1. -44,6 % | 30T -51,5 % | Ampel red frisch | UNBESTÄTIGT
+Keine Daten GmbH | Kurs - | Wert - | heute - | seit Kauf - | 1.1. - | 30T - | Ampel unknown | Daten: missing keine Kurse | Fehler: Verlauf: Yahoo Finance: Nicht gefunden: unknown-symbol-xyz
+Kurs: Yahoo Finance: Nicht gefunden: unknown-symbol-xyz
+Beobachtung mit einem extrem langen Namen, der auf keinem Bildschirm in eine Zeile passt | Kurs 27,82 € | (31,08 $) | Wert - | heute +0,8 % | seit Kauf - | 1.1. +50,1 % | 30T +7,1 % | Ampel green
+Bitcoin | Kurs 87.932,69 € | (98.238,40 $) | Wert 32.535,10 € | heute +0,8 % | seit Kauf +232 % | 1.1. +96,3 % | 30T +9,6 % | Ampel green
+Mehrfachkauf Minen Inc. | Kurs 12,30 € | (19,19 CAD) | Wert 16.602,38 € | heute +1,0 % | seit Kauf +4,4 % | 1.1. +35,8 % | 30T +4,0 % | Ampel green
+Rohstoffwert 01 | Kurs 1,489 € | (15,35 NOK) | Wert 148,89 € | heute +1,4 % | seit Kauf -83,5 % | 1.1. +33,3 % | 30T +10,0 % | Ampel green
+Rohstoffwert 02 | Kurs 10,81 € | (17,19 AUD) | Wert 2.161,89 € | heute +0,8 % | seit Kauf +20,1 % | 1.1. +32,0 % | 30T +11,4 % | Ampel green
+Rohstoffwert 03 | Kurs 0,726 € | (7,486 NOK) | Wert 217,80 € | heute +1,4 % | seit Kauf -91,9 % | 1.1. -11,9 % | 30T +7,8 % | Ampel red
+Rohstoffwert 04 | Kurs 12,27 € | (19,51 AUD) | Wert 4.906,02 € | heute +0,8 % | seit Kauf +36,3 % | 1.1. +35,4 % | 30T +3,8 % | Ampel green
+Rohstoffwert 05 | Kurs 1,968 € | (20,30 NOK) | Wert 984,16 € | heute +1,4 % | seit Kauf -78,1 % | 1.1. +36,3 % | 30T +3,8 % | Ampel green
+Rohstoffwert 06 | Kurs 5,228 € | (8,315 AUD) | Wert 3.137,05 € | heute +0,8 % | seit Kauf -41,9 % | 1.1. -22,4 % | 30T -1,4 % | Ampel red
+Rohstoffwert 07 | Kurs 2,282 € | (23,53 NOK) | Wert 1.597,60 € | heute +1,4 % | seit Kauf -74,6 % | 1.1. +31,4 % | 30T +13,3 % | Ampel green
+Rohstoffwert 08 | Kurs 16,15 € | (25,68 AUD) | Wert 12.919,10 € | heute +0,8 % | seit Kauf +79,4 % | 1.1. +30,0 % | 30T +14,5 % | Ampel green
+Rohstoffwert 09 | Kurs 0,988 € | (10,19 NOK) | Wert 889,18 € | heute +1,4 % | seit Kauf -89,0 % | 1.1. -15,9 % | 30T +11,9 % | Ampel red
+Rohstoffwert 10 | Kurs 18,03 € | (28,68 AUD) | Wert 18.033,50 € | heute +0,8 % | seit Kauf +100 % | 1.1. +33,7 % | 30T +13,3 % | Ampel green
+Rohstoffwert 11 | Kurs 2,859 € | (29,48 NOK) | Wert 3.145,19 € | heute +1,4 % | seit Kauf -68,2 % | 1.1. +41,1 % | 30T +11,7 % | Ampel green
+Rohstoffwert 12 | Kurs 6,823 € | (10,85 AUD) | Wert 8.187,53 € | heute +0,8 % | seit Kauf -24,2 % | 1.1. -20,7 % | 30T -4,1 % | Ampel red
+Rohstoffwert 13 | Kurs 2,944 € | (30,36 NOK) | Wert 3.827,09 € | heute +1,4 % | seit Kauf -67,3 % | 1.1. +33,5 % | 30T +2,9 % | Ampel green
+Rohstoffwert 14 | Kurs 20,08 € | (31,94 AUD) | Wert 28.118,94 € | heute +0,8 % | seit Kauf +123 % | 1.1. +26,0 % | 30T +2,9 % | Ampel green
+Rohstoffwert 15 | Kurs 1,188 € | (12,25 NOK) | Wert 1.781,65 € | heute +1,4 % | seit Kauf -86,8 % | 1.1. -21,8 % | 30T +6,6 % | Ampel red
+Rohstoffwert 16 | Kurs 22,71 € | (36,12 AUD) | Wert 36.341,87 € | heute +0,8 % | seit Kauf +152 % | 1.1. +32,2 % | 30T +8,9 % | Ampel green
+Rohstoffwert 17 | Kurs 3,586 € | (36,98 NOK) | Wert 6.096,75 € | heute +1,4 % | seit Kauf -60,2 % | 1.1. +40,4 % | 30T +8,2 % | Ampel green
+Rohstoffwert 18 | Kurs 8,212 € | (13,06 AUD) | Wert 14.782,33 € | heute +0,8 % | seit Kauf -8,8 % | 1.1. -21,9 % | 30T -6,7 % | Ampel red
+Rohstoffwert 19 | Kurs 3,616 € | (37,29 NOK) | Wert 6.870,04 € | heute +1,4 % | seit Kauf -59,8 % | 1.1. +33,6 % | 30T -1,2 % | Ampel green
+Rohstoffwert 20 | Kurs 26,12 € | (41,54 AUD) | Wert 52.233,57 € | heute +0,8 % | seit Kauf +190 % | 1.1. +30,3 % | 30T +11,2 % | Ampel green
+Rohstoffwert 21 | Kurs 1,449 € | (14,94 NOK) | Wert 3.042,68 € | heute +1,4 % | seit Kauf -83,9 % | 1.1. -19,3 % | 30T +6,1 % | Ampel red
+Rohstoffwert 22 | Kurs 27,09 € | (43,08 AUD) | Wert 59.599,43 € | heute +0,8 % | seit Kauf +201 % | 1.1. +33,0 % | 30T +3,0 % | Ampel green
+Rohstoffwert 23 | Kurs 4,206 € | (43,37 NOK) | Wert 9.673,99 € | heute +1,4 % | seit Kauf -53,3 % | 1.1. +33,6 % | 30T +3,7 % | Ampel green
+Rohstoffwert 24 | Kurs 9,738 € | (15,49 AUD) | Wert 23.370,40 € | heute +0,8 % | seit Kauf +8,2 % | 1.1. -27,8 % | 30T -1,2 % | Ampel red
+screen (0.0, 59.0, 1024.0, 684.0), scroller legacy=true
+captured s-1500-light 1500x684
+captured s-1180-light 1180x684
+captured s-960-light 960x684
+captured s-760-light 760x684
+captured s-560-light 560x684
+captured s-1500-dark 1500x684
+captured s-detail-Berkshire 1500x684
+captured s-detail-Mini-Penny 1500x684
+captured s-detail-Mehrfachkauf 1500x684
+captured s-detail-Absturz 1500x684
+captured s-detail-Keine-Daten 1500x684
+captured s-1180-detail 1180x684
+captured s-font14-1500 1500x684
+captured s-font14-960 960x684
+captured s-font16-1180 1180x684
+captured s-themes 1180x684
+captured s-list-by-value 1180x684
+captured s-editor 620x644
+captured s-marked 1180x684
+captured s-confirm-delete 260x336
+captured s-deleted-undo 1180x684
+DELETE marked: 40 -> 36, banner: 4 Werte gelöscht.
+UNDO: 40 Werte
+captured s-confirm-all 282x394
+captured s-all-removed 1180x684
+ALL removed: 0 Werte, 3 Banken, 3 Themen
+UNDO ALL: 40 Werte, 3 Banken
+captured s-settings-general 760x680
+captured s-sheet-detail 560x644
+rendered s-table-1400-10 1400x2064
+rendered s-table-1400-10-dark 1400x2064
+rendered s-table-900-10 900x2108
+rendered s-table-1100-14 1100x2925
+done

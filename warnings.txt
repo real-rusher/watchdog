@@ -1,0 +1,2 @@
+/Users/runner/work/watchdog/watchdog/App/Watchdog/Services/SnapshotRunner.swift:453:21: warning: 'CGWindowListCreateImage' was deprecated in macOS 14.0: Please use ScreenCaptureKit instead.
+2026-10-30 21:02:23.444 appintentsmetadataprocessor[6378:20397] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
